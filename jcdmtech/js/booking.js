@@ -1,88 +1,79 @@
-// /js/booking.js
-(() => {
-  const endpoint = "https://formspree.io/f/xgvljywo";
+(function () {
+  const form = document.getElementById('booking-form');
+  if (!form) return;
 
-  const form = document.getElementById("bookingForm");
-  const btn = document.getElementById("submitBtn");
-  const msgOk = document.getElementById("msgOk");
-  const msgErr = document.getElementById("msgErr");
-  const waBtn = document.getElementById("waBtn");
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
 
-  // 1) Fecha mínima = hoy
-  const fecha = document.getElementById("fecha");
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  fecha.min = `${yyyy}-${mm}-${dd}`;
+  // Prefija fecha mínima = hoy, evita pasados
+  const today = new Date(); today.setHours(0,0,0,0);
+  const inputFecha = form.querySelector('input[name="fecha"]');
+  if (inputFecha) inputFecha.min = today.toISOString().slice(0,10);
 
-  // 2) Build WhatsApp dynamic link
-  function buildWaLink() {
-    const nombre = document.getElementById("nombre").value || "";
-    const telefono = document.getElementById("telefono").value || "";
-    const f = fecha.value || "";
-    const hora = document.getElementById("hora").value || "";
-    const recogida = document.getElementById("recogida").value || "";
-    const destino = document.getElementById("destino").value || "";
-    const horas = document.getElementById("horas").value || "";
-    const pasajeros = document.getElementById("pasajeros").value || "";
-    const vehiculo = document.getElementById("tipo").value || "";
+  // Rellena metadatos
+  form.querySelector('input[name="page_url"]').value = location.href;
+  const params = new URLSearchParams(location.search);
+  ['utm_source','utm_medium','utm_campaign'].forEach(k=>{
+    const el = form.querySelector(`input[name="${k}"]`);
+    if (el && params.get(k)) el.value = params.get(k);
+  });
 
-    const text = `Hola, quiero reservar un chofer privado:
-- Nombre: ${nombre}
-- Teléfono: ${telefono}
-- Fecha/Hora: ${f} ${hora}
-- Recogida: ${recogida}
-- Destino: ${destino}
-- Horas: ${horas}
-- Pasajeros: ${pasajeros}
-- Vehículo: ${vehiculo}`;
+  // Validación rápida de teléfono (muy laxa, solo evita basura)
+  const isValidPhone = v => /^\+?[0-9 ().-]{7,}$/.test(v || '');
 
-    const phone = "13050000000"; // <— tu número en formato internacional sin +
-    waBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-  }
-
-  form.addEventListener("input", buildWaLink);
-  buildWaLink();
-
-  // 3) Envío AJAX a Formspree
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    msgOk.hidden = true;
-    msgErr.hidden = true;
+    msg.textContent = '';
+    msg.className = 'form-msg';
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
+    // Validación HTML5 + teléfono
+    if (!form.reportValidity()) return;
+    const tel = form.querySelector('[name="telefono"]').value;
+    if (!isValidPhone(tel)) {
+      msg.textContent = 'Por favor ingresa un teléfono válido (con código de país si aplica).';
+      msg.style.color = '#ff7575';
+      return;
+    }
+
+    // Antispam: si el honeypot tiene algo => aborta silenciosamente
+    if (form.querySelector('input[name="_gotcha"]').value) {
       return;
     }
 
     btn.disabled = true;
-    btn.textContent = "Enviando…";
+    btn.textContent = 'Enviando…';
 
     try {
-      const data = new FormData(form);
-      // (Opcional) agrega timestamp
-      data.append("enviado_en", new Date().toISOString());
+      const formData = new FormData(form);
 
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: data,
-        headers: { "Accept": "application/json" }
+      // Puedes agregar un subject legible en tu correo
+      const fecha = formData.get('fecha'), hora = formData.get('hora');
+      formData.set('_subject', `Reserva chofer • ${fecha || ''} ${hora || ''}`);
+
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
       });
 
       if (res.ok) {
         form.reset();
-        buildWaLink();
-        msgOk.hidden = false;
-        window.scrollTo({ top: msgOk.offsetTop - 40, behavior: "smooth" });
+        msg.textContent = '¡Reserva enviada! Te contactaremos a la brevedad por WhatsApp/Email.';
+        msg.style.color = '#6CFF8D';
+
+        // (Opcional) evento de conversión
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'booking_submitted' });
       } else {
-        msgErr.hidden = false;
+        throw new Error('Formspree error');
       }
-    } catch {
-      msgErr.hidden = false;
+    } catch (err) {
+      console.error(err);
+      msg.textContent = 'Ups, no pudimos enviar tu reserva. Inténtalo nuevamente o escríbenos por WhatsApp.';
+      msg.style.color = '#ff7575';
     } finally {
       btn.disabled = false;
-      btn.textContent = "Enviar solicitud";
+      btn.textContent = 'Reservar ahora';
     }
   });
 })();

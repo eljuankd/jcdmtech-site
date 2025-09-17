@@ -16,71 +16,62 @@
     <p>Completa el formulario o escribe por WhatsApp. Respondemos rápido.</p>
 
     <!-- Formspree: reemplaza el action por tu endpoint real -->
-    <form id="form-reserva" action="https://formspree.io/f/xgvljywo" method="POST" style="margin-top:1.5rem">
-      <!-- Asunto que llega al correo -->
-      <input type="hidden" name="_subject" value="Nueva reserva: Chofer privado" />
-      <!-- Redirección a página de gracias -->
-      <input type="hidden" name="_next" value="https://www.jcdmtech.com/chofer-privado/gracias.html" />
-      <!-- Honeypot anti-spam -->
-      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off"/>
+<form id="booking-form" class="form" action="https://formspree.io/f/xgvljywo" method="POST" novalidate>
+  <!-- honeypot antispam -->
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
 
-      <fieldset style="display:grid;gap:1rem;grid-template-columns:1fr 1fr">
-        <label>Nombre y apellido*
-          <input name="nombre" required autocomplete="name" />
-        </label>
-        <label>Teléfono (WhatsApp)*
-          <input name="telefono" required inputmode="tel" autocomplete="tel" />
-        </label>
+  <div class="grid-2">
+    <label>Nombre y apellido
+      <input type="text" name="nombre" required minlength="3" autocomplete="name" />
+    </label>
 
-        <label>Email
-          <input name="email" type="email" autocomplete="email" />
-        </label>
-        <label>Pasajeros
-          <input name="pasajeros" type="number" min="1" max="7" value="1" />
-        </label>
+    <label>Teléfono (WhatsApp)
+      <input type="tel" name="telefono" required inputmode="tel" placeholder="+1 305 000 0000" />
+    </label>
+  </div>
 
-        <label>Fecha*
-          <input name="fecha" type="date" required />
-        </label>
-        <label>Hora*
-          <input name="hora" type="time" required />
-        </label>
+  <div class="grid-3">
+    <label>Fecha
+      <input type="date" name="fecha" required />
+    </label>
 
-        <label>Origen*
-          <input name="origen" required placeholder="Hotel/ Dirección / Aeropuerto" />
-        </label>
-        <label>Destino*
-          <input name="destino" required placeholder="Dirección / Evento / Aeropuerto" />
-        </label>
+    <label>Hora
+      <input type="time" name="hora" required />
+    </label>
 
-        <label>Tipo de servicio
-          <select name="tipo">
-            <option value="traslado">Traslado puntual</option>
-            <option value="por-horas">Servicio por horas</option>
-            <option value="evento">Evento</option>
-          </select>
-        </label>
-        <label>Horas (si aplica)
-          <input name="horas" type="number" min="1" step="1" />
-        </label>
+    <label>Horas de servicio
+      <input type="number" name="duracion_horas" min="1" max="24" value="2" required />
+    </label>
+  </div>
 
-        <label style="grid-column:1/-1">Notas
-          <textarea name="notas" rows="4" placeholder="Vuelos, escalas, tiempo de espera, preferencias…"></textarea>
-        </label>
+  <div class="grid-2">
+    <label>Origen (dirección o punto)
+      <input type="text" name="origen" required placeholder="Hotel, aeropuerto, dirección…" />
+    </label>
 
-        <label style="grid-column:1/-1;display:flex;gap:.5rem;align-items:center">
-          <input type="checkbox" required />
-          <span>Acepto los <a href="/terminos.html" target="_blank">Términos</a> y la <a href="/privacidad.html" target="_blank">Política de privacidad</a>.</span>
-        </label>
-      </fieldset>
+    <label>Destino (opcional)
+      <input type="text" name="destino" placeholder="Evento, dirección…" />
+    </label>
+  </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:1rem">
-        <button type="submit" class="button button-primary">Enviar solicitud</button>
-        <a id="waButton" class="button" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
+  <label>Comentarios (opcional)
+    <textarea name="comentarios" rows="4" placeholder="Maletas, tipo de vehículo, notas…"></textarea>
+  </label>
 
-      <p id="form-msg" role="status" style="margin-top:.75rem;"></p>
-    </form>
+  <!-- Metadatos de trazabilidad -->
+  <input type="hidden" name="page_url" value="" />
+  <input type="hidden" name="utm_source" value="" />
+  <input type="hidden" name="utm_medium" value="" />
+  <input type="hidden" name="utm_campaign" value="" />
+
+  <!-- UX -->
+  <button type="submit" class="btn btn-primary" id="submitBtn">
+    Reservar ahora
+  </button>
+
+  <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
+</form>
+
   </main>
 
   <footer data-include="/partials/footer.html"></footer>
@@ -159,5 +150,17 @@
       }
     });
   </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Chofer privado por horas",
+  "provider": { "@type": "LocalBusiness", "name": "JCDM Technologies LLC" },
+  "areaServed": "Miami-Dade, Broward",
+  "availableChannel": "https://www.jcdmtech.com/reservar.html"
+}
+</script>
+
+
 </body>
 </html>

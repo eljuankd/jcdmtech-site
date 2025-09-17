@@ -94,3 +94,15 @@ h1{font-size:44px;margin:0 0 10px} h2{font-size:28px;margin:0 0 24px} h3{font-si
 .card { background: #0b0d12; border:1px solid #1b1f27; border-radius:1rem; padding:1.25rem; }
 .subtitle { opacity:.8; margin-bottom:1rem; }
 .legal { font-size:.9rem; opacity:.8; }
+
+.form { gap: 1rem; display: grid; }
+.grid-2 { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.form label { display: grid; gap: .5rem; font-weight: 500; }
+.form input, .form textarea { padding: .8rem 1rem; border: 1px solid #2b2f3a; border-radius: .6rem; background:#0f1220; color:#e9edf5; }
+.form input:focus, .form textarea:focus { outline: 2px solid #6CA7FF; border-color: transparent; }
+.form .hp { position:absolute; left:-9999px; width:1px; height:1px; }
+.form-msg { margin-top:.75rem; font-size:.95rem; }
+@media (max-width: 800px){
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
