@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gracias | JCDM</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header data-include="/partials/header.html"></header>
+  <main class="container" style="max-width:720px;margin:2rem auto;padding:0 1rem">
+    <h1>¡Gracias!</h1>
+    <p>Recibimos tu solicitud de chofer privado. Te contactaremos para confirmar detalles.</p>
+    <p><a href="/index.html" class="button">Volver al inicio</a></p>
+  </main>
+  <footer data-include="/partials/footer.html"></footer>
+  <script>
+    (async () => {
+      const load = async (sel) => {
+        const el = document.querySelector(sel);
+        const url = el?.getAttribute('data-include');
+        if (!url) return;
+        el.innerHTML = await fetch(url).then(r=>r.text());
+      };
+      await load('header[data-include]');
+      await load('footer[data-include]');
+    })();
+  </script>
+</body>
+</html>
