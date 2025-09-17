@@ -49,6 +49,7 @@
       // Puedes agregar un subject legible en tu correo
       const fecha = formData.get('fecha'), hora = formData.get('hora');
       formData.set('_subject', `Reserva chofer • ${fecha || ''} ${hora || ''}`);
+formData.set('_redirect', 'https://www.jcdmtech.com/gracias.html');
 
       const res = await fetch(form.action, {
         method: 'POST',
