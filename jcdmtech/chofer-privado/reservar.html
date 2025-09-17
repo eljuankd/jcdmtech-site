@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reservar chofer privado | JCDM</title>
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="/styles.css">
+  <meta name="description" content="Reserva tu chofer privado en Miami con JCDM Technologies LLC. Traslados ejecutivos, eventos y servicio por horas.">
+</head>
+<body>
+  <header data-include="/partials/header.html"></header>
+
+  <main class="container" style="max-width:960px;margin:2rem auto;padding:0 1rem">
+    <h1>Reservar chofer privado</h1>
+    <p>Completa el formulario o escribe por WhatsApp. Respondemos rápido.</p>
+
+    <!-- Formspree: reemplaza el action por tu endpoint real -->
+    <form id="form-reserva" action="https://formspree.io/f/XXXXX" method="POST" style="margin-top:1.5rem">
+      <!-- Asunto que llega al correo -->
+      <input type="hidden" name="_subject" value="Nueva reserva: Chofer privado" />
+      <!-- Redirección a página de gracias -->
+      <input type="hidden" name="_next" value="https://www.jcdmtech.com/chofer-privado/gracias.html" />
+      <!-- Honeypot anti-spam -->
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off"/>
+
+      <fieldset style="display:grid;gap:1rem;grid-template-columns:1fr 1fr">
+        <label>Nombre y apellido*
+          <input name="nombre" required autocomplete="name" />
+        </label>
+        <label>Teléfono (WhatsApp)*
+          <input name="telefono" required inputmode="tel" autocomplete="tel" />
+        </label>
+
+        <label>Email
+          <input name="email" type="email" autocomplete="email" />
+        </label>
+        <label>Pasajeros
+          <input name="pasajeros" type="number" min="1" max="7" value="1" />
+        </label>
+
+        <label>Fecha*
+          <input name="fecha" type="date" required />
+        </label>
+        <label>Hora*
+          <input name="hora" type="time" required />
+        </label>
+
+        <label>Origen*
+          <input name="origen" required placeholder="Hotel/ Dirección / Aeropuerto" />
+        </label>
+        <label>Destino*
+          <input name="destino" required placeholder="Dirección / Evento / Aeropuerto" />
+        </label>
+
+        <label>Tipo de servicio
+          <select name="tipo">
+            <option value="traslado">Traslado puntual</option>
+            <option value="por-horas">Servicio por horas</option>
+            <option value="evento">Evento</option>
+          </select>
+        </label>
+        <label>Horas (si aplica)
+          <input name="horas" type="number" min="1" step="1" />
+        </label>
+
+        <label style="grid-column:1/-1">Notas
+          <textarea name="notas" rows="4" placeholder="Vuelos, escalas, tiempo de espera, preferencias…"></textarea>
+        </label>
+
+        <label style="grid-column:1/-1;display:flex;gap:.5rem;align-items:center">
+          <input type="checkbox" required />
+          <span>Acepto los <a href="/terminos.html" target="_blank">Términos</a> y la <a href="/privacidad.html" target="_blank">Política de privacidad</a>.</span>
+        </label>
+      </fieldset>
+
+      <div style="display:flex;gap:.75rem;margin-top:1rem">
+        <button type="submit" class="button button-primary">Enviar solicitud</button>
+        <a id="waButton" class="button" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+
+      <p id="form-msg" role="status" style="margin-top:.75rem;"></p>
+    </form>
+  </main>
+
+  <footer data-include="/partials/footer.html"></footer>
+
+  <script>
+    // Carga header/footer parciales
+    (async () => {
+      const inc = async (sel) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        const url = el.getAttribute('data-include');
+        if (!url) return;
+        const html = await fetch(url, { cache: 'no-cache' }).then(r => r.text());
+        el.innerHTML = html;
+      };
+      await inc('header[data-include]');
+      await inc('footer[data-include]');
+    })();
+
+    // WhatsApp dinámico
+    const phone = 'PHONE_E164'; // <-- Reemplaza por tu número: 13051234567 (sin +)
+    const waBtn = document.getElementById('waButton');
+    function buildWaText() {
+      const f = document.getElementById('form-reserva');
+      const p = new URLSearchParams({
+        servicio: 'Chofer privado',
+        nombre: f.nombre.value || '',
+        telefono: f.telefono.value || '',
+        fecha: f.fecha.value || '',
+        hora: f.hora.value || '',
+        origen: f.origen.value || '',
+        destino: f.destino.value || '',
+        tipo: f.tipo.value || '',
+        horas: f.horas.value || '',
+        pasajeros: f.pasajeros.value || '',
+        notas: f.notas.value || '',
+      });
+      return `https://wa.me/${phone}?text=${encodeURIComponent(
+        'Reserva de chofer privado:\n' +
+        `Nombre: ${p.get('nombre')}\n` +
+        `Teléfono: ${p.get('telefono')}\n` +
+        `Fecha/Hora: ${p.get('fecha')} ${p.get('hora')}\n` +
+        `Origen: ${p.get('origen')}\n` +
+        `Destino: ${p.get('destino')}\n` +
+        `Tipo: ${p.get('tipo')} | Horas: ${p.get('horas')}\n` +
+        `Pasajeros: ${p.get('pasajeros')}\n` +
+        `Notas: ${p.get('notas')}`
+      )}`;
+    }
+    waBtn.href = buildWaText();
+    document.getElementById('form-reserva').addEventListener('input', () => {
+      waBtn.href = buildWaText();
+    });
+
+    // UX: mensaje rápido al enviar con Formspree (sin redirección)
+    const form = document.getElementById('form-reserva');
+    const msg = document.getElementById('form-msg');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Enviando…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        });
+        if (res.ok) {
+          msg.textContent = '¡Listo! Te contactaremos para confirmar la reserva.';
+          form.reset();
+          waBtn.href = buildWaText();
+        } else {
+          msg.textContent = 'No se pudo enviar. Intenta por WhatsApp.';
+        }
+      } catch {
+        msg.textContent = 'Error de red. Intenta por WhatsApp.';
+      }
+    });
+  </script>
+</body>
+</html>
