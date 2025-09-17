@@ -14,17 +14,8 @@
     <p><a href="/index.html" class="button">Volver al inicio</a></p>
   </main>
   <footer data-include="/partials/footer.html"></footer>
-  <script>
-    (async () => {
-      const load = async (sel) => {
-        const el = document.querySelector(sel);
-        const url = el?.getAttribute('data-include');
-        if (!url) return;
-        el.innerHTML = await fetch(url).then(r=>r.text());
-      };
-      await load('header[data-include]');
-      await load('footer[data-include]');
-    })();
-  </script>
+  
+<script src="/app.js" defer></script>
+
 </body>
 </html>

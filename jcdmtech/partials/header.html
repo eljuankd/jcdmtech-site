@@ -1,21 +1,24 @@
-
-<header class="nav">
+<header class="nav" role="banner">
   <div class="container">
-    <a class="brand" href="/">JCDM Technologies LLC</a>
-    <nav class="menu">
-      <a href="/">Inicio</a>
+    <a class="brand" href="/" aria-label="JCDM Technologies LLC">JCDM Technologies LLC</a>
+
+    <nav class="menu" aria-label="Navegación principal">
+      <a href="/" data-nav="home">Inicio</a>
+
       <div class="dropdown">
-        <button class="dropbtn">Servicios</button>
-        <div class="dropdown-content">
-          <a href="/chofer-privado/">Chofer privado</a>
-          <a href="/domotica/">Domótica</a>
-          <a href="/software/">Software</a>
-          <a href="/automatizaciones/">Automatizaciones</a>
+        <button class="dropbtn" aria-haspopup="true" aria-expanded="false">Servicios</button>
+        <div class="dropdown-content" role="menu">
+          <a href="/chofer-privado/" data-nav="chofer">Chofer privado</a>
+          <a href="/domotica/" data-nav="domotica">Domótica</a>
+          <a href="/software/" data-nav="software">Software</a>
+          <a href="/automatizaciones/" data-nav="automatizaciones">Automatizaciones</a>
         </div>
       </div>
-      <a href="/nosotros.html">Nosotros</a>
-      <a href="/blog/">Blog</a>
-      <a href="/contacto.html" class="btn btn-primary">Contacto</a>
+
+      <a href="/nosotros.html" data-nav="nosotros">Nosotros</a>
+      <a href="/blog/" data-nav="blog">Blog</a>
+      <a href="/contacto.html" class="btn btn-primary" data-nav="contacto">Contacto</a>
+
       <button id="themeToggle" aria-label="Cambiar tema" class="icon-btn">🌓</button>
     </nav>
   </div>

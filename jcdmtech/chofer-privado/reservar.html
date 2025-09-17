@@ -76,80 +76,8 @@
 
   <footer data-include="/partials/footer.html"></footer>
 
-  <script>
-    // Carga header/footer parciales
-    (async () => {
-      const inc = async (sel) => {
-        const el = document.querySelector(sel);
-        if (!el) return;
-        const url = el.getAttribute('data-include');
-        if (!url) return;
-        const html = await fetch(url, { cache: 'no-cache' }).then(r => r.text());
-        el.innerHTML = html;
-      };
-      await inc('header[data-include]');
-      await inc('footer[data-include]');
-    })();
 
-    // WhatsApp dinámico
-    const phone = '17863487458'; // <-- Reemplaza por tu número: 13051234567 (sin +)
-    const waBtn = document.getElementById('waButton');
-    function buildWaText() {
-      const f = document.getElementById('form-reserva');
-      const p = new URLSearchParams({
-        servicio: 'Chofer privado',
-        nombre: f.nombre.value || '',
-        telefono: f.telefono.value || '',
-        fecha: f.fecha.value || '',
-        hora: f.hora.value || '',
-        origen: f.origen.value || '',
-        destino: f.destino.value || '',
-        tipo: f.tipo.value || '',
-        horas: f.horas.value || '',
-        pasajeros: f.pasajeros.value || '',
-        notas: f.notas.value || '',
-      });
-      return `https://wa.me/${phone}?text=${encodeURIComponent(
-        'Reserva de chofer privado:\n' +
-        `Nombre: ${p.get('nombre')}\n` +
-        `Teléfono: ${p.get('telefono')}\n` +
-        `Fecha/Hora: ${p.get('fecha')} ${p.get('hora')}\n` +
-        `Origen: ${p.get('origen')}\n` +
-        `Destino: ${p.get('destino')}\n` +
-        `Tipo: ${p.get('tipo')} | Horas: ${p.get('horas')}\n` +
-        `Pasajeros: ${p.get('pasajeros')}\n` +
-        `Notas: ${p.get('notas')}`
-      )}`;
-    }
-    waBtn.href = buildWaText();
-    document.getElementById('form-reserva').addEventListener('input', () => {
-      waBtn.href = buildWaText();
-    });
 
-    // UX: mensaje rápido al enviar con Formspree (sin redirección)
-    const form = document.getElementById('form-reserva');
-    const msg = document.getElementById('form-msg');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      msg.textContent = 'Enviando…';
-      try {
-        const res = await fetch(form.action, {
-          method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: new FormData(form)
-        });
-        if (res.ok) {
-          msg.textContent = '¡Listo! Te contactaremos para confirmar la reserva.';
-          form.reset();
-          waBtn.href = buildWaText();
-        } else {
-          msg.textContent = 'No se pudo enviar. Intenta por WhatsApp.';
-        }
-      } catch {
-        msg.textContent = 'Error de red. Intenta por WhatsApp.';
-      }
-    });
-  </script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -161,6 +89,8 @@
 }
 </script>
 
+<script src="/js/app.js" defer></script>
+<script src="/booking.js" defer></script>
 
 </body>
 </html>
