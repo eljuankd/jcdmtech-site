@@ -14,7 +14,16 @@
     <p><a href="/index.html" class="button">Volver al inicio</a></p>
   </main>
   <footer data-include="/partials/footer.html"></footer>
-  
+
+<script>
+  const via = new URLSearchParams(location.search).get('via');
+  const p = document.getElementById('thanksMsg'); // o el elemento donde muestras el texto
+  if (!p) { /* no-op */ }
+  else if (via === 'wa') p.textContent = '¡Gracias! Abrimos WhatsApp para terminar la reserva. Te contactaremos a la brevedad.';
+  else if (via === 'email') p.textContent = '¡Gracias! Recibimos tu solicitud por email y te contactaremos enseguida.';
+</script>
+
+
 <script src="/app.js" defer></script>
 
 </body>

@@ -107,3 +107,9 @@ h1{font-size:44px;margin:0 0 10px} h2{font-size:28px;margin:0 0 24px} h3{font-si
 @media (max-width: 800px){
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
 }
+/* Selector de canal (WhatsApp/Email) */
+.choice-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:9999}
+.choice-card{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:1.25rem;width:min(420px,92%)}
+.choice-card .h3{font-size:1.125rem;margin:0 0 .25rem}
+.choice-actions{display:flex;gap:.75rem;margin-top:.75rem}
+.btn-ghost{background:transparent;border:1px solid var(--border)}

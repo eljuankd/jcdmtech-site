@@ -1,3 +1,4 @@
+// /js/booking.js
 (function () {
   const form = document.getElementById('booking-form');
   if (!form) return;
@@ -5,72 +6,104 @@
   const msg = document.getElementById('formMsg');
   const btn = document.getElementById('submitBtn');
 
-  // Prefija fecha mínima = hoy, evita pasados
+  // ---- Config ----
+  const WHATSAPP_NUMBER = '17863487458'; // tu número sin + ni símbolos
+
+  // ---- Prefijos / tracking ----
   const today = new Date(); today.setHours(0,0,0,0);
   const inputFecha = form.querySelector('input[name="fecha"]');
   if (inputFecha) inputFecha.min = today.toISOString().slice(0,10);
 
-  // Rellena metadatos
-  form.querySelector('input[name="page_url"]').value = location.href;
-  const params = new URLSearchParams(location.search);
+  const pageUrl = form.querySelector('input[name="page_url"]');
+  if (pageUrl) pageUrl.value = location.href;
+  const qs = new URLSearchParams(location.search);
   ['utm_source','utm_medium','utm_campaign'].forEach(k=>{
     const el = form.querySelector(`input[name="${k}"]`);
-    if (el && params.get(k)) el.value = params.get(k);
+    if (el && qs.get(k)) el.value = qs.get(k);
   });
 
-  // Validación rápida de teléfono (muy laxa, solo evita basura)
-  const isValidPhone = v => /^\+?[0-9 ().-]{7,}$/.test(v || '');
+  function collect() {
+    return Object.fromEntries(new FormData(form).entries());
+  }
+
+  function buildWhatsAppMessage(d) {
+    return (
+`*Reserva chofer privado*
+
+Nombre: ${d.nombre || '-'}
+Teléfono: ${d.telefono || '-'}
+${d.fecha ? 'Fecha: ' + d.fecha : ''} ${d.hora ? 'Hora: ' + d.hora : ''} ${d.duracion_horas ? 'Horas: ' + d.duracion_horas : ''}
+${d.origen ? 'Origen: ' + d.origen : ''} ${d.destino ? 'Destino: ' + d.destino : ''}
+${d.comentarios ? 'Notas: ' + d.comentarios : ''}
+
+Enviado desde jcdmtech.com`
+    ).trim();
+  }
+
+  // Mini-modal para elegir canal
+  function showChoice() {
+    return new Promise(resolve => {
+      const wrap = document.createElement('div');
+      wrap.className = 'choice-backdrop';
+      wrap.innerHTML = `
+        <div class="choice-card">
+          <h3 class="h3">¿Cómo quieres enviarlo?</h3>
+          <p>Elige WhatsApp (respuesta más rápida) o Email.</p>
+          <div class="choice-actions">
+            <button class="btn btn-primary" id="optWa">WhatsApp</button>
+            <button class="btn" id="optEmail">Email</button>
+          </div>
+          <button class="btn btn-ghost" id="optCancel" style="margin-top:.5rem;">Cancelar</button>
+        </div>`;
+      document.body.appendChild(wrap);
+
+      const cleanup = () => wrap.remove();
+      wrap.querySelector('#optWa').addEventListener('click', () => { cleanup(); resolve('whatsapp'); });
+      wrap.querySelector('#optEmail').addEventListener('click', () => { cleanup(); resolve('email'); });
+      wrap.querySelector('#optCancel').addEventListener('click', () => { cleanup(); resolve(null); });
+      document.addEventListener('keydown', function onKey(e){
+        if(e.key === 'Escape'){ document.removeEventListener('keydown', onKey); cleanup(); resolve(null); }
+      });
+    });
+  }
+
+  async function submitToFormspree() {
+    const fd = new FormData(form);
+    const fecha = fd.get('fecha'), hora = fd.get('hora');
+    fd.set('_subject', `Reserva chofer • ${fecha || ''} ${hora || ''}`.trim());
+    const res = await fetch(form.action, { method:'POST', headers:{ 'Accept':'application/json' }, body: fd });
+    if (!res.ok) throw new Error('Formspree error');
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.textContent = '';
-    msg.className = 'form-msg';
-
-    // Validación HTML5 + teléfono
-    if (!form.reportValidity()) return;
-    const tel = form.querySelector('[name="telefono"]').value;
-    if (!isValidPhone(tel)) {
-      msg.textContent = 'Por favor ingresa un teléfono válido (con código de país si aplica).';
-      msg.style.color = '#ff7575';
-      return;
-    }
-
-    // Antispam: si el honeypot tiene algo => aborta silenciosamente
-    if (form.querySelector('input[name="_gotcha"]').value) {
-      return;
-    }
-
     btn.disabled = true;
     btn.textContent = 'Enviando…';
 
+    const data = collect();
+
     try {
-      const formData = new FormData(form);
+      const choice = await showChoice();
 
-      // Puedes agregar un subject legible en tu correo
-      const fecha = formData.get('fecha'), hora = formData.get('hora');
-      formData.set('_subject', `Reserva chofer • ${fecha || ''} ${hora || ''}`);
-formData.set('_redirect', 'https://www.jcdmtech.com/chofer-privado/gracias.html');
-
-      const res = await fetch(form.action, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: formData
-      });
-
-      if (res.ok) {
-        form.reset();
-        msg.textContent = '¡Reserva enviada! Te contactaremos a la brevedad por WhatsApp/Email.';
-        msg.style.color = '#6CFF8D';
-
-        // (Opcional) evento de conversión
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: 'booking_submitted' });
-      } else {
-        throw new Error('Formspree error');
+      if (choice === 'whatsapp') {
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
+        window.open(url, '_blank', 'noopener');            // abre WA en pestaña nueva
+        window.location.href = '/chofer-privado/gracias.html?via=wa'; // redirige esta página
+        return;
       }
+
+      if (choice === 'email') {
+        await submitToFormspree();                         // envía por email (Formspree)
+        window.location.href = '/chofer-privado/gracias.html?via=email';
+        return;
+      }
+
+      // Cancelado
+      msg.textContent = 'Envío cancelado.';
     } catch (err) {
       console.error(err);
-      msg.textContent = 'Ups, no pudimos enviar tu reserva. Inténtalo nuevamente o escríbenos por WhatsApp.';
+      msg.textContent = 'Ups, no pudimos enviar tu reserva. Inténtalo de nuevo.';
       msg.style.color = '#ff7575';
     } finally {
       btn.disabled = false;
