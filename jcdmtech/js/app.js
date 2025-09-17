@@ -55,3 +55,26 @@ document.addEventListener("DOMContentLoaded", () => {
   include("#header", "/partials/header.html");
   include("#footer", "/partials/footer.html");
 });
+
+function setupMobileNav(){
+  const btn = document.getElementById('navToggle');
+  const nav = document.getElementById('siteNav');
+  if(!btn || !nav) return;
+
+  const toggle = () => {
+    const open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  };
+
+  btn.addEventListener('click', toggle);
+  // Cerrar al hacer click en un enlace
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+  }));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ... tus includes existentes ...
+  // Espera un tick para que el header esté inyectado
+  setTimeout(setupMobileNav, 0);
+});

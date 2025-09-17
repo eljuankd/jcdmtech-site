@@ -20,7 +20,7 @@
   <!-- honeypot antispam -->
   <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
 
-  <div class="grid-2">
+  <div class="grid grid-2">
     <label>Nombre y apellido
       <input type="text" name="nombre" required minlength="3" autocomplete="name" />
     </label>
@@ -30,7 +30,7 @@
     </label>
   </div>
 
-  <div class="grid-3">
+  <div class="grid grid-3">
     <label>Fecha
       <input type="date" name="fecha" required />
     </label>
@@ -44,7 +44,7 @@
     </label>
   </div>
 
-  <div class="grid-2">
+  <div class="grid grid-2">
     <label>Origen (dirección o punto)
       <input type="text" name="origen" required placeholder="Hotel, aeropuerto, dirección…" />
     </label>
@@ -65,11 +65,9 @@
   <input type="hidden" name="utm_campaign" value="" />
 
   <!-- UX -->
-  <button type="submit" class="btn btn-primary" id="submitBtn">
-    Reservar ahora
-  </button>
+<button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Reservar ahora</button>
 
-  <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
+  <p id="formMsg" role="status" aria-live="polite"></p>
 </form>
 
   </main>
