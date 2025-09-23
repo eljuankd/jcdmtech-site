@@ -111,3 +111,44 @@ Enviado desde jcdmtech.com`
     }
   });
 })();
+function generateCode(){ return Math.random().toString(36).slice(2,8).toUpperCase(); }
+
+form.addEventListener('submit', async (e) => {
+  // ...
+  const data = collect();
+  data.booking_code = generateCode();            // ← AQUI
+
+  const choice = await showChoice();
+  if (choice === 'whatsapp') {
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
+    window.open(url, '_blank', 'noopener');
+    window.location.href = `/chofer-privado/gracias.html?via=wa&code=${data.booking_code}`;
+    return;
+  }
+  if (choice === 'email') {
+    await submitToFormspree(data);
+    window.location.href = `/chofer-privado/gracias.html?via=email&code=${data.booking_code}`;
+    return;
+  }
+});
+function buildWhatsAppMessage(d) {
+  return (
+`*Reserva chofer privado*
+${d.booking_code ? `*CÓDIGO:* ${d.booking_code}\n` : ''}
+Nombre: ${d.nombre || '-'}
+Teléfono: ${d.telefono || '-'}
+${d.fecha ? 'Fecha: ' + d.fecha : ''} ${d.hora ? 'Hora: ' + d.hora : ''} ${d.duracion_horas ? 'Horas: ' + d.duracion_horas : ''}
+${d.origen ? 'Origen: ' + d.origen : ''} ${d.destino ? 'Destino: ' + d.destino : ''}
+${d.comentarios ? 'Notas: ' + d.comentarios : ''}
+
+Enviado desde jcdmtech.com`
+  ).trim();
+}
+async function submitToFormspree(data) {
+  const fd = new FormData(form);
+  const fecha = fd.get('fecha'), hora = fd.get('hora');
+  const code = data?.booking_code ? ` [#${data.booking_code}]` : '';
+  fd.set('_subject', `Reserva chofer${code} • ${fecha || ''} ${hora || ''}`.trim());
+  const res = await fetch(form.action, { method:'POST', headers:{ 'Accept':'application/json' }, body: fd });
+  if (!res.ok) throw new Error('Formspree error');
+}

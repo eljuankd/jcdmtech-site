@@ -4,6 +4,10 @@ async function include(where, url) {
   try {
     const res = await fetch(url, { cache: "no-store" });
     el.innerHTML = await res.text();
+    if (where === "#header") {
+  setupMobileNav();   // ← inicia el hamburguesa cuando ya existe en el DOM
+}
+
     if (where === "#footer") {
       const y = document.getElementById("year");
       if (y) y.textContent = new Date().getFullYear();
@@ -106,8 +110,4 @@ function setupMobileNav(){
   }));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // ... tus includes existentes ...
-  // Espera un tick para que el header esté inyectado
-  setTimeout(setupMobileNav, 0);
-});
+
