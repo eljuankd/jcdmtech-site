@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin | JCDM</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <h1>Panel Admin</h1>
+
+    <section class="card">
+      <h2>Vehículos</h2>
+      <form id="carForm" class="grid grid-3">
+        <input name="make" placeholder="Marca" required>
+        <input name="model" placeholder="Modelo" required>
+        <input name="year" type="number" placeholder="Año">
+        <input name="color" placeholder="Color">
+        <input name="plate" placeholder="Placa">
+        <input name="capacity" type="number" placeholder="Capacidad">
+        <button class="btn btn-primary" type="submit">Agregar</button>
+      </form>
+      <div id="carsList" class="list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Choferes</h2>
+      <form id="driverForm" class="grid grid-3">
+        <input name="full_name" placeholder="Nombre" required>
+        <input name="phone" placeholder="Teléfono" required>
+        <input name="license_no" placeholder="Licencia (opcional)">
+        <input name="notes" placeholder="Notas" class="grid-span-3">
+        <button class="btn btn-primary" type="submit">Agregar</button>
+      </form>
+      <div id="driversList" class="list"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+
+  <script src="/js/app.js" defer></script>
+  <script src="/js/supabase.config.js"></script>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const { url, anon } = window.__SUPABASE__;
+    const supabase = createClient(url, anon);
+
+    // Guard: sólo admin
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) location.href = "/login.html?next=/admin/";
+    const { data: prof } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
+    if (prof?.role !== "admin") location.href = "/";
+
+    // Vehículos
+    const carForm = document.getElementById("carForm");
+    const carsList = document.getElementById("carsList");
+
+    async function loadCars(){
+      const { data } = await supabase.from("vehicles").select("*").order("created_at",{ascending:false});
+      carsList.innerHTML = (data||[]).map(v => `
+        <div class="item">
+          <div>${v.year||""} ${v.make} ${v.model} • ${v.color||""} • ${v.plate||""}</div>
+          <button data-del="${v.id}" class="btn">Eliminar</button>
+        </div>`).join("") || "<p class='muted'>Sin vehículos</p>";
+      carsList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+        await supabase.from("vehicles").delete().eq("id", b.dataset.del); loadCars();
+      });
+    }
+    carForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const o = Object.fromEntries(new FormData(carForm).entries());
+      if (o.year) o.year = Number(o.year); if (o.capacity) o.capacity = Number(o.capacity);
+      await supabase.from("vehicles").insert(o);
+      carForm.reset(); loadCars();
+    };
+
+    // Choferes
+    const driverForm = document.getElementById("driverForm");
+    const driversList = document.getElementById("driversList");
+    async function loadDrivers(){
+      const { data } = await supabase.from("drivers").select("*").order("created_at",{ascending:false});
+      driversList.innerHTML = (data||[]).map(d => `
+        <div class="item">
+          <div>${d.full_name} • ${d.phone} ${d.license_no ? '• Lic: '+d.license_no : ''}</div>
+          <button data-del="${d.id}" class="btn">Eliminar</button>
+        </div>`).join("") || "<p class='muted'>Sin choferes</p>";
+      driversList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+        await supabase.from("drivers").delete().eq("id", b.dataset.del); loadDrivers();
+      });
+    }
+    driverForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const o = Object.fromEntries(new FormData(driverForm).entries());
+      await supabase.from("drivers").insert(o);
+      driverForm.reset(); loadDrivers();
+    };
+
+    loadCars(); loadDrivers();
+  </script>
+
+  <style>
+    .list .item{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:12px;padding:.5rem .75rem;margin:.35rem 0;background:var(--card)}
+    .grid-span-3{grid-column:1/-1}
+  </style>
+</body>
+</html>

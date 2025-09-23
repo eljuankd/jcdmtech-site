@@ -56,6 +56,39 @@ document.addEventListener("DOMContentLoaded", () => {
   include("#footer", "/partials/footer.html");
 });
 
+(async () => {
+  if (!window.__SUPABASE__) return; // no hacer nada si no hay supabase
+  const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+  const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+
+  async function refreshNav() {
+    const login = document.getElementById("navLogin");
+    const logout = document.getElementById("navLogout");
+    const admin = document.getElementById("navAdmin");
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      login?.setAttribute("style", "");
+      logout?.setAttribute("style", "display:none");
+      admin?.setAttribute("style", "display:none");
+      return;
+    }
+    login?.setAttribute("style", "display:none");
+    logout?.setAttribute("style", "");
+    const { data: prof } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
+    if (prof?.role === "admin") admin?.setAttribute("style", "");
+    else admin?.setAttribute("style", "display:none");
+  }
+
+  document.getElementById("navLogout")?.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    location.href = "/";
+  });
+
+  await refreshNav();
+})();
+
+
 function setupMobileNav(){
   const btn = document.getElementById('navToggle');
   const nav = document.getElementById('siteNav');

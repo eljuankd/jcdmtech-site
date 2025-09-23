@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceder | JCDM</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container">
+    <h1>Acceder</h1>
+    <p>Inicia sesión o crea tu cuenta para reservar más rápido.</p>
+
+    <form id="loginForm" class="card" style="max-width:420px">
+      <label>Email
+        <input type="email" name="email" required autocomplete="email">
+      </label>
+      <label>Contraseña (opcional)
+        <input type="password" name="password" autocomplete="current-password">
+      </label>
+      <div class="grid grid-2">
+        <button type="submit" class="btn btn-primary">Entrar</button>
+        <button type="button" id="signupBtn" class="btn">Crear cuenta</button>
+      </div>
+      <p id="loginMsg" class="muted"></p>
+    </form>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="/js/app.js" defer></script>
+  <script src="/js/supabase.config.js"></script>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const { url, anon } = window.__SUPABASE__;
+    const supabase = createClient(url, anon);
+
+    const next = new URLSearchParams(location.search).get("next") || "/";
+    const form = document.getElementById("loginForm");
+    const msg = document.getElementById("loginMsg");
+    const signupBtn = document.getElementById("signupBtn");
+
+    // Si ya hay sesión, redirige
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) location.href = next;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault(); msg.textContent = "Procesando…";
+      const fd = new FormData(form);
+      const email = fd.get("email"); const password = fd.get("password");
+
+      try {
+        if (password) {
+          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          location.href = next;
+        } else {
+          const { error } = await supabase.auth.signInWithOtp({
+            email, options: { emailRedirectTo: location.origin + next }
+          });
+          if (error) throw error;
+          msg.textContent = "Te enviamos un enlace de acceso. Revisa tu correo.";
+        }
+      } catch (err) {
+        msg.textContent = "Error: " + err.message;
+      }
+    });
+
+    signupBtn.addEventListener("click", async () => {
+      const fd = new FormData(form);
+      const email = fd.get("email"); const password = fd.get("password") || crypto.randomUUID();
+      try {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        const userId = data.user?.id;
+        if (userId) {
+          await supabase.from("profiles").upsert({ id: userId, role: "user" }, { onConflict: "id" });
+        }
+        msg.textContent = "Cuenta creada. Revisa tu correo para confirmar.";
+      } catch (err) {
+        msg.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
