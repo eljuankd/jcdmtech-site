@@ -1,24 +1,30 @@
+// --- Carga de parciales y hooks por sección ---
 async function include(where, url) {
   const el = document.querySelector(where);
   if (!el) return;
   try {
     const res = await fetch(url, { cache: "no-store" });
     el.innerHTML = await res.text();
+
     if (where === "#header") {
-  setupMobileNav();   // ← inicia el hamburguesa cuando ya existe en el DOM
-}
+      // El header ya existe en el DOM: ahora sí podemos enlazar todo
+      setupMobileNav();
+      setupDropdowns();
+      bindThemeToggle();
+      highlightNav();
+      setupAuthNav(); // <- mover la lógica supabase aquí evita correrla antes de tener el header
+    }
 
     if (where === "#footer") {
       const y = document.getElementById("year");
       if (y) y.textContent = new Date().getFullYear();
     }
-    bindThemeToggle();
-    highlightNav();
   } catch (e) {
     console.warn("No se pudo cargar", url, e);
   }
 }
 
+// --- Tema claro/oscuro (por si lo mantienes) ---
 function applyTheme(saved) {
   const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
   const theme = saved || (prefersDark ? "dark" : "light");
@@ -36,6 +42,7 @@ function bindThemeToggle() {
   });
 }
 
+// --- Resaltado del item activo ---
 function highlightNav() {
   const p = location.pathname;
   const map = [
@@ -50,49 +57,11 @@ function highlightNav() {
   ];
   const found = map.find(m => m.test(p));
   if (found) {
-    document.querySelectorAll(`[data-nav="${found.key}"]`)
-      .forEach(a => a.classList.add("active"));
+    document.querySelectorAll(`[data-nav="${found.key}"]`).forEach(a => a.classList.add("active"));
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  include("#header", "/partials/header.html");
-  include("#footer", "/partials/footer.html");
-});
-
-(async () => {
-  if (!window.__SUPABASE__) return; // no hacer nada si no hay supabase
-  const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-  const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
-
-  async function refreshNav() {
-    const login = document.getElementById("navLogin");
-    const logout = document.getElementById("navLogout");
-    const admin = document.getElementById("navAdmin");
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      login?.setAttribute("style", "");
-      logout?.setAttribute("style", "display:none");
-      admin?.setAttribute("style", "display:none");
-      return;
-    }
-    login?.setAttribute("style", "display:none");
-    logout?.setAttribute("style", "");
-    const { data: prof } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
-    if (prof?.role === "admin") admin?.setAttribute("style", "");
-    else admin?.setAttribute("style", "display:none");
-  }
-
-  document.getElementById("navLogout")?.addEventListener("click", async () => {
-    await supabase.auth.signOut();
-    location.href = "/";
-  });
-
-  await refreshNav();
-})();
-
-
+// --- Menú móvil (hamburguesa) ---
 function setupMobileNav(){
   const btn = document.getElementById('navToggle');
   const nav = document.getElementById('siteNav');
@@ -110,4 +79,76 @@ function setupMobileNav(){
   }));
 }
 
+// --- Dropdown accesible para “Servicios” (tap en móvil) ---
+function setupDropdowns(){
+  const dd = document.querySelector('.dropdown');
+  const btn = dd?.querySelector('.dropbtn');
+  const menu = dd?.querySelector('.dropdown-content');
+  if (!dd || !btn || !menu) return;
 
+  const open = () => { dd.classList.add('open'); btn.setAttribute('aria-expanded','true'); };
+  const close = () => { dd.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dd.classList.contains('open') ? close() : open();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!dd.contains(e.target)) close();
+  });
+}
+
+// --- Nav según sesión (Supabase) ---
+// Se ejecuta DESPUÉS de inyectar el header
+async function setupAuthNav() {
+  if (!window.__SUPABASE__) return;
+  const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+  const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+
+  const $login   = document.getElementById("navLogin");
+  const $logout  = document.getElementById("navLogout");
+  const $admin   = document.getElementById("navAdmin");
+  const $account = document.getElementById("navAccount");
+
+  async function render() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      $login?.setAttribute("style", "");
+      $logout?.setAttribute("style", "display:none");
+      $admin?.setAttribute("style", "display:none");
+      $account?.setAttribute("style", "display:none");
+      return;
+    }
+    // Hay sesión
+    $login?.setAttribute("style", "display:none");
+    $logout?.setAttribute("style", "");
+    $account?.setAttribute("style", ""); // mostrar “Mi cuenta”
+
+    // ¿Es admin?
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", session.user.id)
+      .single();
+
+    if (prof?.role === "admin") $admin?.setAttribute("style", "");
+    else $admin?.setAttribute("style", "display:none");
+  }
+
+  // Logout
+  $logout?.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    location.href = "/";
+  });
+
+  await render();
+  // Si cambia el estado de auth, re-render
+  supabase.auth.onAuthStateChange(() => render());
+}
+
+// --- Inicio: inyectar header/footer ---
+document.addEventListener("DOMContentLoaded", () => {
+  include("#header", "/partials/header.html");
+  include("#footer", "/partials/footer.html");
+});

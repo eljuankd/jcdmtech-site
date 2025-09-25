@@ -3,17 +3,54 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin | JCDM</title>
+
+  <title>Admin | JCDM Technologies LLC</title>
+  <meta name="description" content="Panel administrativo de JCDM Technologies LLC para gestionar vehículos y choferes.">
+  <link rel="canonical" href="https://www.jcdmtech.com/admin/">
+
+  <!-- Favicon & App Icons -->
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    .list .item{display:flex;gap:.75rem;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:12px;padding:.6rem .75rem;margin:.4rem 0;background:var(--card)}
+    .row-main{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+    .row-actions{display:flex;gap:.5rem}
+    .inline-edit{display:grid;gap:.5rem;grid-template-columns:repeat(6,minmax(0,1fr))}
+    .inline-edit input{width:100%}
+    .grid-span-3{grid-column:1/-1}
+    .muted-small{font-size:.9em;color:var(--muted)}
+    .toolbar{display:flex;gap:.5rem;align-items:center;justify-content:space-between;margin:.5rem 0}
+    .toolbar .right{display:flex;gap:.5rem;align-items:center}
+    .pill{display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:999px}
+    .success{background:#0f2e18;color:#a7f3d0;border:1px solid #14532d}
+    .error{background:#2a0f14;color:#fecaca;border:1px solid #7f1d1d}
+  </style>
 </head>
 <body>
   <div id="header"></div>
+
   <main class="container">
     <h1>Panel Admin</h1>
+    <p class="muted">Gestiona <strong>vehículos</strong> y <strong>choferes</strong>. Solo usuarios con rol <code>admin</code>.</p>
+    <div id="flash" class="form-msg" style="display:none"></div>
 
-    <section class="card">
-      <h2>Vehículos</h2>
-      <form id="carForm" class="grid grid-3">
+    <section class="card" aria-labelledby="vehiculos-h2">
+      <div class="toolbar">
+        <h2 id="vehiculos-h2">Vehículos</h2>
+        <div class="right">
+          <input id="carSearch" class="pill" placeholder="Buscar (marca, modelo, placa)" aria-label="Buscar vehículos">
+        </div>
+      </div>
+
+      <form id="carForm" class="grid grid-3" autocomplete="off">
         <input name="make" placeholder="Marca" required>
         <input name="model" placeholder="Modelo" required>
         <input name="year" type="number" placeholder="Año">
@@ -22,86 +59,245 @@
         <input name="capacity" type="number" placeholder="Capacidad">
         <button class="btn btn-primary" type="submit">Agregar</button>
       </form>
-      <div id="carsList" class="list"></div>
+
+      <div id="carsList" class="list" aria-live="polite" aria-busy="true"></div>
+      <p class="muted-small">Consejo: puedes <strong>editar en línea</strong> cada fila.</p>
     </section>
 
-    <section class="card">
-      <h2>Choferes</h2>
-      <form id="driverForm" class="grid grid-3">
+    <section class="card" aria-labelledby="choferes-h2">
+      <div class="toolbar">
+        <h2 id="choferes-h2">Choferes</h2>
+        <div class="right">
+          <input id="driverSearch" class="pill" placeholder="Buscar (nombre, teléfono)" aria-label="Buscar choferes">
+        </div>
+      </div>
+
+      <form id="driverForm" class="grid grid-3" autocomplete="off">
         <input name="full_name" placeholder="Nombre" required>
         <input name="phone" placeholder="Teléfono" required>
         <input name="license_no" placeholder="Licencia (opcional)">
         <input name="notes" placeholder="Notas" class="grid-span-3">
         <button class="btn btn-primary" type="submit">Agregar</button>
       </form>
-      <div id="driversList" class="list"></div>
+
+      <div id="driversList" class="list" aria-live="polite" aria-busy="true"></div>
     </section>
   </main>
+
   <div id="footer"></div>
 
-  <script src="/js/app.js" defer></script>
+  <!-- Orden: primero config (define window.__SUPABASE__), luego app y módulo -->
   <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const { url, anon } = window.__SUPABASE__;
     const supabase = createClient(url, anon);
 
-    // Guard: sólo admin
+    const flash = document.getElementById('flash');
+    const showFlash = (text, ok=true) => {
+      flash.textContent = text;
+      flash.style.display = 'block';
+      flash.classList.remove('error','success');
+      flash.classList.add(ok ? 'success' : 'error');
+      setTimeout(() => { flash.style.display='none'; }, 3000);
+    };
+
+    // Guard: solo admin
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) location.href = "/login.html?next=/admin/";
     const { data: prof } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
     if (prof?.role !== "admin") location.href = "/";
 
-    // Vehículos
-    const carForm = document.getElementById("carForm");
+    // ---------- Vehículos ----------
+    const carForm  = document.getElementById("carForm");
     const carsList = document.getElementById("carsList");
+    const carSearch = document.getElementById("carSearch");
+    let cars = [];
+
+    function carText(v){
+      return `${v.year || ""} ${v.make || ""} ${v.model || ""} • ${v.color || ""} • ${v.plate || ""}`.replace(/\s+/g,' ').trim();
+    }
+
+    function renderCars(filter=""){
+      const term = filter.trim().toLowerCase();
+      const data = !term ? cars : cars.filter(v => carText(v).toLowerCase().includes(term));
+
+      carsList.innerHTML = data.length ? data.map(v => `
+        <div class="item" data-id="${v.id}">
+          <div class="row-main">
+            <span>${carText(v)}</span>
+            ${v.capacity ? `<span class="pill muted-small" title="Capacidad">${v.capacity} pax</span>` : ''}
+          </div>
+          <div class="row-actions">
+            <button class="btn" data-edit="${v.id}" type="button">Editar</button>
+            <button class="btn" data-del="${v.id}" type="button">Eliminar</button>
+          </div>
+        </div>
+      `).join("") : "<p class='muted'>Sin vehículos</p>";
+
+      // Bind actions
+      carsList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+        const id = b.dataset.del;
+        if (!confirm("¿Eliminar este vehículo?")) return;
+        await supabase.from("vehicles").delete().eq("id", id);
+        cars = cars.filter(x => x.id !== id);
+        renderCars(term);
+        showFlash("Vehículo eliminado.");
+      });
+
+      carsList.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => startEditCar(b.dataset.edit));
+    }
+
+    function startEditCar(id){
+      const v = cars.find(x => x.id === id);
+      if (!v) return;
+      const row = carsList.querySelector(`[data-id="${id}"]`);
+      if (!row) return;
+      row.innerHTML = `
+        <div class="inline-edit">
+          <input name="make"     placeholder="Marca"   value="${(v.make||'').replace(/"/g,'&quot;')}">
+          <input name="model"    placeholder="Modelo"  value="${(v.model||'').replace(/"/g,'&quot;')}">
+          <input name="year"     type="number" placeholder="Año" value="${v.year || ''}">
+          <input name="color"    placeholder="Color"   value="${(v.color||'').replace(/"/g,'&quot;')}">
+          <input name="plate"    placeholder="Placa"   value="${(v.plate||'').replace(/"/g,'&quot;')}">
+          <input name="capacity" type="number" placeholder="Capacidad" value="${v.capacity || ''}">
+          <div class="grid-span-3" style="display:flex; gap:.5rem; justify-content:flex-end">
+            <button class="btn" data-cancel="${id}" type="button">Cancelar</button>
+            <button class="btn btn-primary" data-save="${id}" type="button">Guardar</button>
+          </div>
+        </div>
+      `;
+      row.querySelector('[data-cancel]')?.addEventListener('click', () => renderCars(carSearch.value));
+      row.querySelector('[data-save]')?.addEventListener('click', async () => {
+        const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i => [i.name, i.value]));
+        if (vals.year) vals.year = Number(vals.year);
+        if (vals.capacity) vals.capacity = Number(vals.capacity);
+        await supabase.from('vehicles').update(vals).eq('id', id);
+        const { data: updated } = await supabase.from('vehicles').select('*').eq('id', id).single();
+        const idx = cars.findIndex(x => x.id === id);
+        if (idx >= 0) cars[idx] = updated;
+        renderCars(carSearch.value);
+        showFlash("Vehículo actualizado.");
+      });
+    }
 
     async function loadCars(){
+      carsList.setAttribute('aria-busy','true');
       const { data } = await supabase.from("vehicles").select("*").order("created_at",{ascending:false});
-      carsList.innerHTML = (data||[]).map(v => `
-        <div class="item">
-          <div>${v.year||""} ${v.make} ${v.model} • ${v.color||""} • ${v.plate||""}</div>
-          <button data-del="${v.id}" class="btn">Eliminar</button>
-        </div>`).join("") || "<p class='muted'>Sin vehículos</p>";
-      carsList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
-        await supabase.from("vehicles").delete().eq("id", b.dataset.del); loadCars();
-      });
+      cars = data || [];
+      renderCars(carSearch.value || "");
+      carsList.setAttribute('aria-busy','false');
     }
-    carForm.onsubmit = async (e) => {
+
+    carForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const o = Object.fromEntries(new FormData(carForm).entries());
-      if (o.year) o.year = Number(o.year); if (o.capacity) o.capacity = Number(o.capacity);
-      await supabase.from("vehicles").insert(o);
-      carForm.reset(); loadCars();
-    };
+      if (o.year) o.year = Number(o.year);
+      if (o.capacity) o.capacity = Number(o.capacity);
+      const { data, error } = await supabase.from("vehicles").insert(o).select("*").single();
+      if (error) return showFlash(error.message, false);
+      cars.unshift(data);
+      carForm.reset();
+      renderCars(carSearch.value);
+      showFlash("Vehículo agregado.");
+    });
 
-    // Choferes
-    const driverForm = document.getElementById("driverForm");
-    const driversList = document.getElementById("driversList");
-    async function loadDrivers(){
-      const { data } = await supabase.from("drivers").select("*").order("created_at",{ascending:false});
-      driversList.innerHTML = (data||[]).map(d => `
-        <div class="item">
-          <div>${d.full_name} • ${d.phone} ${d.license_no ? '• Lic: '+d.license_no : ''}</div>
-          <button data-del="${d.id}" class="btn">Eliminar</button>
-        </div>`).join("") || "<p class='muted'>Sin choferes</p>";
+    carSearch.addEventListener('input', () => renderCars(carSearch.value));
+
+    // ---------- Choferes ----------
+    const driverForm   = document.getElementById("driverForm");
+    const driversList  = document.getElementById("driversList");
+    const driverSearch = document.getElementById("driverSearch");
+    let drivers = [];
+
+    function driverText(d){
+      return `${d.full_name || ""} • ${d.phone || ""} ${d.license_no ? '• Lic: '+d.license_no : ''}`.replace(/\s+/g,' ').trim();
+    }
+
+    function renderDrivers(filter=""){
+      const term = filter.trim().toLowerCase();
+      const data = !term ? drivers : drivers.filter(d => driverText(d).toLowerCase().includes(term));
+
+      driversList.innerHTML = data.length ? data.map(d => `
+        <div class="item" data-id="${d.id}">
+          <div class="row-main">
+            <span>${driverText(d)}</span>
+            ${d.notes ? `<span class="pill muted-small" title="Notas">${(d.notes||'').replace(/[<>&]/g,s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))}</span>` : ''}
+          </div>
+          <div class="row-actions">
+            <button class="btn" data-edit="${d.id}" type="button">Editar</button>
+            <button class="btn" data-del="${d.id}" type="button">Eliminar</button>
+          </div>
+        </div>
+      `).join("") : "<p class='muted'>Sin choferes</p>";
+
       driversList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
-        await supabase.from("drivers").delete().eq("id", b.dataset.del); loadDrivers();
+        const id = b.dataset.del;
+        if (!confirm("¿Eliminar este chofer?")) return;
+        await supabase.from("drivers").delete().eq("id", id);
+        drivers = drivers.filter(x => x.id !== id);
+        renderDrivers(term);
+        showFlash("Chofer eliminado.");
+      });
+
+      driversList.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => startEditDriver(b.dataset.edit));
+    }
+
+    function startEditDriver(id){
+      const d = drivers.find(x => x.id === id);
+      if (!d) return;
+      const row = driversList.querySelector(`[data-id="${id}"]`);
+      if (!row) return;
+      row.innerHTML = `
+        <div class="inline-edit">
+          <input name="full_name"  placeholder="Nombre"  value="${(d.full_name||'').replace(/"/g,'&quot;')}">
+          <input name="phone"      placeholder="Teléfono" value="${(d.phone||'').replace(/"/g,'&quot;')}">
+          <input name="license_no" placeholder="Licencia" value="${(d.license_no||'').replace(/"/g,'&quot;')}">
+          <input name="notes"      placeholder="Notas" class="grid-span-3" value="${(d.notes||'').replace(/"/g,'&quot;')}">
+          <div class="grid-span-3" style="display:flex; gap:.5rem; justify-content:flex-end">
+            <button class="btn" data-cancel="${id}" type="button">Cancelar</button>
+            <button class="btn btn-primary" data-save="${id}" type="button">Guardar</button>
+          </div>
+        </div>
+      `;
+      row.querySelector('[data-cancel]')?.addEventListener('click', () => renderDrivers(driverSearch.value));
+      row.querySelector('[data-save]')?.addEventListener('click', async () => {
+        const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i => [i.name, i.value]));
+        const { error } = await supabase.from('drivers').update(vals).eq('id', id);
+        if (error) return showFlash(error.message, false);
+        const { data: updated } = await supabase.from('drivers').select('*').eq('id', id).single();
+        const idx = drivers.findIndex(x => x.id === id);
+        if (idx >= 0) drivers[idx] = updated;
+        renderDrivers(driverSearch.value);
+        showFlash("Chofer actualizado.");
       });
     }
-    driverForm.onsubmit = async (e) => {
+
+    async function loadDrivers(){
+      driversList.setAttribute('aria-busy','true');
+      const { data } = await supabase.from("drivers").select("*").order("created_at",{ascending:false});
+      drivers = data || [];
+      renderDrivers(driverSearch.value || "");
+      driversList.setAttribute('aria-busy','false');
+    }
+
+    driverForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const o = Object.fromEntries(new FormData(driverForm).entries());
-      await supabase.from("drivers").insert(o);
-      driverForm.reset(); loadDrivers();
-    };
+      const { data, error } = await supabase.from("drivers").insert(o).select("*").single();
+      if (error) return showFlash(error.message, false);
+      drivers.unshift(data);
+      driverForm.reset();
+      renderDrivers(driverSearch.value);
+      showFlash("Chofer agregado.");
+    });
 
-    loadCars(); loadDrivers();
+    driverSearch.addEventListener('input', () => renderDrivers(driverSearch.value));
+
+    // Carga inicial
+    await Promise.all([loadCars(), loadDrivers()]);
   </script>
-
-  <style>
-    .list .item{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:12px;padding:.5rem .75rem;margin:.35rem 0;background:var(--card)}
-    .grid-span-3{grid-column:1/-1}
-  </style>
 </body>
 </html>

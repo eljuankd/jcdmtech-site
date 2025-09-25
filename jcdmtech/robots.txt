@@ -1,4 +1,12 @@
+# JCDM Technologies LLC — robots.txt
+
 User-agent: *
-Allow: /
+# Bloquea rutas que no deben consumirse en SEO
+Disallow: /admin/
+Disallow: /login.html
+Disallow: /chofer-privado/gracias.html
+
+# Todo lo demás permitido
+# (No hace falta poner "Allow: /" porque el permiso es el valor por defecto)
 
 Sitemap: https://www.jcdmtech.com/sitemap.xml

@@ -3,7 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Acceder | JCDM</title>
+
+  <title>Acceder | JCDM Technologies LLC</title>
+  <meta name="description" content="Inicia sesión o crea tu cuenta para reservar más rápido.">
+  <link rel="canonical" href="https://www.jcdmtech.com/login.html">
+
+  <!-- Favicon & App Icons -->
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JCDM Technologies LLC">
+  <meta property="og:title" content="Acceder">
+  <meta property="og:description" content="Inicia sesión o crea tu cuenta para reservar más rápido.">
+  <meta property="og:url" content="https://www.jcdmtech.com/login.html">
+  <meta property="og:image" content="https://www.jcdmtech.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -11,66 +36,105 @@
 
   <main class="container">
     <h1>Acceder</h1>
-    <p>Inicia sesión o crea tu cuenta para reservar más rápido.</p>
+    <p class="muted">Inicia sesión o crea tu cuenta para reservar más rápido.</p>
 
-    <form id="loginForm" class="card" style="max-width:420px">
+    <form id="loginForm" class="card" style="max-width:420px" novalidate>
       <label>Email
-        <input type="email" name="email" required autocomplete="email">
+        <input type="email" name="email" required autocomplete="email" />
       </label>
-      <label>Contraseña (opcional)
-        <input type="password" name="password" autocomplete="current-password">
+      <label>Contraseña <span class="muted" style="font-weight:400">(déjala vacía para recibir enlace mágico)</span>
+        <input type="password" name="password" autocomplete="current-password" />
       </label>
       <div class="grid grid-2">
         <button type="submit" class="btn btn-primary">Entrar</button>
         <button type="button" id="signupBtn" class="btn">Crear cuenta</button>
       </div>
-      <p id="loginMsg" class="muted"></p>
+      <div class="grid grid-2" style="margin-top:.5rem">
+        <button type="button" id="magicLinkBtn" class="btn">Acceder con enlace</button>
+        <button type="button" id="resetBtn" class="btn">Olvidé mi contraseña</button>
+      </div>
+      <p id="loginMsg" class="muted" aria-live="polite" role="status"></p>
     </form>
   </main>
 
   <div id="footer"></div>
 
-  <script src="/js/app.js" defer></script>
+  <!-- Orden correcto: primero config, luego app -->
   <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const { url, anon } = window.__SUPABASE__;
-    const supabase = createClient(url, anon);
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
 
     const next = new URLSearchParams(location.search).get("next") || "/";
     const form = document.getElementById("loginForm");
     const msg = document.getElementById("loginMsg");
     const signupBtn = document.getElementById("signupBtn");
+    const magicLinkBtn = document.getElementById("magicLinkBtn");
+    const resetBtn = document.getElementById("resetBtn");
 
     // Si ya hay sesión, redirige
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) location.href = next;
+    {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) location.href = next;
+      supabase.auth.onAuthStateChange((_e, s) => { if (s) location.href = next; });
+    }
+
+    function setMsg(text, ok = null){
+      msg.textContent = text || "";
+      msg.classList.remove("success","error");
+      if (ok === true) msg.classList.add("success");
+      if (ok === false) msg.classList.add("error");
+    }
+
+    async function signInWithPassword(email, password){
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      location.href = next;
+    }
+
+    async function sendMagicLink(email){
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: location.origin + next }
+      });
+      if (error) throw error;
+      setMsg("Te enviamos un enlace de acceso. Revisa tu correo.", true);
+    }
+
+    async function sendPasswordReset(email){
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: location.origin + "/login.html?next=" + encodeURIComponent(next)
+      });
+      if (error) throw error;
+      setMsg("Te enviamos un enlace para restablecer la contraseña.", true);
+    }
 
     form.addEventListener("submit", async (e) => {
-      e.preventDefault(); msg.textContent = "Procesando…";
+      e.preventDefault();
+      setMsg("Procesando…");
       const fd = new FormData(form);
-      const email = fd.get("email"); const password = fd.get("password");
+      const email = (fd.get("email") || "").toString().trim();
+      const password = (fd.get("password") || "").toString();
+
+      if (!email) return setMsg("Por favor, escribe tu email.", false);
 
       try {
-        if (password) {
-          const { error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) throw error;
-          location.href = next;
-        } else {
-          const { error } = await supabase.auth.signInWithOtp({
-            email, options: { emailRedirectTo: location.origin + next }
-          });
-          if (error) throw error;
-          msg.textContent = "Te enviamos un enlace de acceso. Revisa tu correo.";
-        }
+        if (password) await signInWithPassword(email, password);
+        else await sendMagicLink(email);
       } catch (err) {
-        msg.textContent = "Error: " + err.message;
+        setMsg("Error: " + err.message, false);
       }
     });
 
     signupBtn.addEventListener("click", async () => {
+      setMsg("Creando cuenta…");
       const fd = new FormData(form);
-      const email = fd.get("email"); const password = fd.get("password") || crypto.randomUUID();
+      const email = (fd.get("email") || "").toString().trim();
+      const password = (fd.get("password") || crypto.randomUUID()).toString();
+      if (!email) return setMsg("Escribe tu email para crear la cuenta.", false);
+
       try {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
@@ -78,10 +142,22 @@
         if (userId) {
           await supabase.from("profiles").upsert({ id: userId, role: "user" }, { onConflict: "id" });
         }
-        msg.textContent = "Cuenta creada. Revisa tu correo para confirmar.";
+        setMsg("Cuenta creada. Revisa tu correo para confirmar.", true);
       } catch (err) {
-        msg.textContent = "Error: " + err.message;
+        setMsg("Error: " + err.message, false);
       }
+    });
+
+    magicLinkBtn.addEventListener("click", async () => {
+      const email = (new FormData(form).get("email") || "").toString().trim();
+      if (!email) return setMsg("Escribe tu email para enviarte el enlace.", false);
+      try { await sendMagicLink(email); } catch (err) { setMsg("Error: " + err.message, false); }
+    });
+
+    resetBtn.addEventListener("click", async () => {
+      const email = (new FormData(form).get("email") || "").toString().trim();
+      if (!email) return setMsg("Escribe tu email para restablecer la contraseña.", false);
+      try { await sendPasswordReset(email); } catch (err) { setMsg("Error: " + err.message, false); }
     });
   </script>
 </body>

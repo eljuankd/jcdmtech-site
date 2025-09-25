@@ -3,28 +3,81 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Gracias | JCDM</title>
+
+  <title>Gracias | JCDM Technologies LLC</title>
+  <meta name="description" content="Tu solicitud fue enviada. Te contactaremos en breve para confirmar los detalles.">
+  <link rel="canonical" href="https://www.jcdmtech.com/chofer-privado/gracias.html">
+
+  <!-- Favicon & App Icons -->
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JCDM Technologies LLC">
+  <meta property="og:title" content="Gracias">
+  <meta property="og:description" content="Tu solicitud fue enviada. Te contactaremos en breve.">
+  <meta property="og:url" content="https://www.jcdmtech.com/chofer-privado/gracias.html">
+  <meta property="og:image" content="https://www.jcdmtech.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header data-include="/partials/header.html"></header>
+  <div id="header"></div>
+
   <main class="container" style="max-width:720px;margin:2rem auto;padding:0 1rem">
     <h1>¡Gracias!</h1>
-    <p>Recibimos tu solicitud de chofer privado. Te contactaremos para confirmar detalles.</p>
-    <p><a href="/index.html" class="button">Volver al inicio</a></p>
+    <p id="thanksMsg" class="form-msg success" role="status" aria-live="polite">
+      Recibimos tu solicitud. Te contactaremos para confirmar detalles.
+    </p>
+
+    <p id="codeWrap" style="display:none">
+      <span class="muted">Tu código de reserva:</span>
+      <span id="codeBox" class="kbd" style="margin-left:.5rem"></span>
+    </p>
+
+    <div class="grid grid-2" style="margin-top:1rem">
+      <a href="/chofer-privado/reservar.html" class="btn">Hacer otra reserva</a>
+      <a href="/index.html" class="btn btn-primary">Volver al inicio</a>
+    </div>
   </main>
-  <footer data-include="/partials/footer.html"></footer>
 
-<script>
-  const via = new URLSearchParams(location.search).get('via');
-  const p = document.getElementById('thanksMsg'); // o el elemento donde muestras el texto
-  if (!p) { /* no-op */ }
-  else if (via === 'wa') p.textContent = '¡Gracias! Abrimos WhatsApp para terminar la reserva. Te contactaremos a la brevedad.';
-  else if (via === 'email') p.textContent = '¡Gracias! Recibimos tu solicitud por email y te contactaremos enseguida.';
-</script>
+  <div id="footer"></div>
 
+  <!-- Carga ordenada: primero config, luego app -->
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
 
-<script src="/app.js" defer></script>
+  <script>
+    // Mensaje según canal (wa/email) y código de reserva
+    (function(){
+      const q = new URLSearchParams(location.search);
+      const via = q.get('via');
+      const code = q.get('code');
 
+      const p = document.getElementById('thanksMsg');
+      if (via === 'wa') {
+        p.textContent = '¡Gracias! Abrimos WhatsApp para terminar la reserva. Te contactaremos enseguida.';
+      } else if (via === 'email') {
+        p.textContent = '¡Gracias! Recibimos tu solicitud por email. Te contactaremos enseguida.';
+      } else {
+        p.textContent = 'Recibimos tu solicitud. Te contactaremos para confirmar detalles.';
+      }
+
+      if (code) {
+        document.getElementById('codeBox').textContent = '#' + code;
+        document.getElementById('codeWrap').style.display = '';
+      }
+    })();
+  </script>
 </body>
 </html>

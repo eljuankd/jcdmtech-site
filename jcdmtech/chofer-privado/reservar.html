@@ -3,108 +3,163 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reservar chofer privado | JCDM</title>
-  <link rel="icon" href="/assets/favicon.ico">
-  <link rel="stylesheet" href="/styles.css">
+
+  <title>Reservar chofer privado | JCDM Technologies LLC</title>
   <meta name="description" content="Reserva tu chofer privado en Miami con JCDM Technologies LLC. Traslados ejecutivos, eventos y servicio por horas.">
+  <link rel="canonical" href="https://www.jcdmtech.com/chofer-privado/reservar.html">
+
+  <!-- Favicon & App Icons -->
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
+
+  <!-- Theme color (barra del navegador) -->
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Social: Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JCDM Technologies LLC">
+  <meta property="og:title" content="Reservar chofer privado">
+  <meta property="og:description" content="Traslados ejecutivos y servicio por horas en Miami.">
+  <meta property="og:url" content="https://www.jcdmtech.com/chofer-privado/reservar.html">
+  <meta property="og:image" content="https://www.jcdmtech.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Social: Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reservar chofer privado">
+  <meta name="twitter:description" content="Traslados ejecutivos y servicio por horas en Miami.">
+  <meta name="twitter:image" content="https://www.jcdmtech.com/assets/og-image.png">
+
+  <!-- Preload logo -->
+  <link rel="preload" as="image" href="/assets/logo.png" imagesrcset="/assets/logo.png 1x, /assets/logo@2x.png 2x" fetchpriority="high">
+
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <div id="header"></div>
 
   <main class="container" style="max-width:960px;margin:2rem auto;padding:0 1rem">
     <h1>Reservar chofer privado</h1>
-    <p>Completa el formulario o escribe por WhatsApp. Respondemos rápido.</p>
+    <p class="muted">Completa el formulario o escribe por WhatsApp. Respondemos rápido.</p>
 
-    <!-- Formspree: reemplaza el action por tu endpoint real -->
-<form id="booking-form" class="form" action="https://formspree.io/f/xgvljywo" method="POST" novalidate>
-  <!-- honeypot antispam -->
-  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+    <!-- Formspree: usa tu endpoint real -->
+    <form id="booking-form" class="form" action="https://formspree.io/f/xgvljywo" method="POST" novalidate>
+      <!-- honeypot antispam -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
 
-  <div class="grid grid-2">
-    <label>Nombre y apellido
-      <input type="text" name="nombre" required minlength="3" autocomplete="name" />
-    </label>
+      <div class="grid grid-2">
+        <label for="bf-nombre">Nombre y apellido
+          <input id="bf-nombre" type="text" name="nombre" required minlength="3" autocomplete="name" />
+        </label>
 
-    <label>Teléfono (WhatsApp)
-      <input type="tel" name="telefono" required inputmode="tel" placeholder="+1 305 000 0000" />
-    </label>
-  </div>
+        <label for="bf-telefono">Teléfono (WhatsApp)
+          <input id="bf-telefono" type="tel" name="telefono" required inputmode="tel" autocomplete="tel"
+                 placeholder="+1 305 000 0000"
+                 pattern="^[0-9+()\\-\\s]{7,}$" />
+        </label>
+      </div>
 
-  <div class="grid grid-3">
-    <label>Fecha
-      <input type="date" name="fecha" required />
-    </label>
+      <div class="grid grid-3">
+        <label for="bf-fecha">Fecha
+          <input id="bf-fecha" type="date" name="fecha" required />
+        </label>
 
-    <label>Hora
-      <input type="time" name="hora" required />
-    </label>
+        <label for="bf-hora">Hora
+          <input id="bf-hora" type="time" name="hora" required step="300" />
+        </label>
 
-    <label>Horas de servicio
-      <input type="number" name="duracion_horas" min="1" max="24" value="2" required />
-    </label>
-  </div>
+        <label for="bf-duracion">Horas de servicio
+          <input id="bf-duracion" type="number" name="duracion_horas" min="1" max="24" value="2" required />
+        </label>
+      </div>
 
-  <div class="grid grid-2">
-    <label>Origen (dirección o punto)
-      <input type="text" name="origen" required placeholder="Hotel, aeropuerto, dirección…" />
-    </label>
+      <div class="grid grid-2">
+        <label for="bf-origen">Origen (dirección o punto)
+          <input id="bf-origen" type="text" name="origen" required placeholder="Hotel, aeropuerto, dirección…" autocomplete="street-address" />
+        </label>
 
-    <label>Destino (opcional)
-      <input type="text" name="destino" placeholder="Evento, dirección…" />
-    </label>
-  </div>
+        <label for="bf-destino">Destino (opcional)
+          <input id="bf-destino" type="text" name="destino" placeholder="Evento, dirección…" autocomplete="address-line2" />
+        </label>
+      </div>
 
-  <label>Comentarios (opcional)
-    <textarea name="comentarios" rows="4" placeholder="Maletas, tipo de vehículo, notas…"></textarea>
-  </label>
+      <label for="bf-coment">Comentarios (opcional)
+        <textarea id="bf-coment" name="comentarios" rows="4" placeholder="Maletas, tipo de vehículo, notas…"></textarea>
+      </label>
 
-  <!-- Metadatos de trazabilidad -->
-  <input type="hidden" name="page_url" value="" />
-  <input type="hidden" name="utm_source" value="" />
-  <input type="hidden" name="utm_medium" value="" />
-  <input type="hidden" name="utm_campaign" value="" />
+      <!-- Metadatos de trazabilidad -->
+      <input type="hidden" name="page_url" value="" />
+      <input type="hidden" name="utm_source" value="" />
+      <input type="hidden" name="utm_medium" value="" />
+      <input type="hidden" name="utm_campaign" value="" />
 
-  <!-- UX -->
-<button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Reservar ahora</button>
+      <!-- UX -->
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Reservar ahora</button>
+      <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
+    </form>
 
-  <p id="formMsg" role="status" aria-live="polite"></p>
-</form>
-
+    <noscript>
+      <p class="form-msg error">Para enviar tu reserva, por favor habilita JavaScript o escríbenos por WhatsApp.</p>
+    </noscript>
   </main>
 
   <div id="footer"></div>
 
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "Chofer privado por horas",
-  "provider": { "@type": "LocalBusiness", "name": "JCDM Technologies LLC" },
-  "areaServed": "Miami-Dade, Broward",
-  "availableChannel": "https://www.jcdmtech.com/chofer-privado/reservar.html"
-}
-</script>
-
-<script src="/js/app.js" defer></script>
-<script src="/js/supabase.config.js"></script>
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-  const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
-  const form = document.getElementById("booking-form");
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    const { data: prof } = await supabase.from("profiles")
-      .select("full_name,phone").eq("id", session.user.id).single();
-    if (prof) {
-      if (form.nombre && !form.nombre.value) form.nombre.value = prof.full_name || "";
-      if (form.telefono && !form.telefono.value) form.telefono.value = prof.phone || "";
-    }
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Chofer privado por horas",
+    "provider": { "@type": "LocalBusiness", "name": "JCDM Technologies LLC" },
+    "areaServed": ["Miami-Dade","Broward"],
+    "availableChannel": "https://www.jcdmtech.com/chofer-privado/reservar.html"
   }
-</script>
+  </script>
 
-<script src="/js/booking.js" defer></script>
+  <!-- Orden correcto: primero config, luego app -->
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
 
+  <!-- Autorrelleno de perfil para usuarios con sesión -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+
+    const form = document.getElementById("booking-form");
+    const dateEl = document.getElementById("bf-fecha");
+
+    // 1) Establecer min date = hoy (zona local)
+    const today = new Date(); today.setHours(0,0,0,0);
+    const toISODate = d => new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    if (dateEl) dateEl.min = toISODate(today);
+
+    // 2) Rellenar hidden UTM y page_url
+    const qs = new URLSearchParams(location.search);
+    form.querySelector('input[name="page_url"]').value = location.href;
+    form.querySelector('input[name="utm_source"]').value = qs.get('utm_source') || '';
+    form.querySelector('input[name="utm_medium"]').value = qs.get('utm_medium') || '';
+    form.querySelector('input[name="utm_campaign"]').value = qs.get('utm_campaign') || '';
+
+    // 3) Autorrelleno desde profiles si hay sesión
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("full_name,phone")
+        .eq("id", session.user.id)
+        .single();
+      if (prof) {
+        if (form.nombre   && !form.nombre.value)   form.nombre.value   = prof.full_name || "";
+        if (form.telefono && !form.telefono.value) form.telefono.value = prof.phone     || "";
+      }
+    }
+  </script>
+
+  <!-- Lógica de reservas (WhatsApp/Email + redirección a gracias) -->
+  <script src="/js/booking.js" defer></script>
 </body>
 </html>
