@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/qrcard",
+      "destination": "/qrcard.html",
+      "permanent": true
+    }
+  ]
+}
