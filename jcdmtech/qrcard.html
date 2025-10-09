@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>JCDM | vCard Redirect</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- 1) GA4: sustituye G-XXXXXXXXXX por tu ID de medición -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX'); // <-- tu GA4
+
+    // 2) Evento de escaneo (pageview + evento)
+    gtag('event', 'qr_scan', {
+      event_category: 'QR',
+      event_label: 'Business Card vCard',
+      value: 1
+    });
+
+    // 3) Redirección tras 500ms (ajusta la URL si cambias ubicación del .vcf)
+    setTimeout(function () {
+      window.location.href = '/files/juan-carlos-delgado.vcf';
+    }, 500);
+  </script>
+  <style>
+    body{margin:0;display:grid;place-items:center;height:100vh;background:#000;color:#d4af37;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    .box{text-align:center}
+    .box h1{font-weight:600;letter-spacing:.04em;margin:0 0 .4rem}
+    .box p{opacity:.9;margin:.25rem 0}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>JCDM Technologies LLC</h1>
+    <p>Saving contact…</p>
+    <p>If not redirected, <a style="color:#d4af37" href="/files/juan-carlos-delgado.vcf">tap here</a>.</p>
+  </div>
+</body>
+</html>
