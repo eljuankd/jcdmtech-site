@@ -14,26 +14,17 @@
 
     <nav id="siteNav" class="menu" aria-label="Navegación principal" role="navigation">
       <a href="/" data-nav="home">Inicio</a>
-
-      <div class="dropdown">
-        <button class="dropbtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu-servicios">Servicios</button>
-        <div class="dropdown-content" id="menu-servicios" role="menu">
-          <a href="/chofer-privado/" data-nav="chofer">Chofer privado</a>
-          <a href="/domotica/" data-nav="domotica">Domótica</a>
-          <a href="/software/" data-nav="software">Software</a>
-          <a href="/automatizaciones/" data-nav="automatizaciones">Automatizaciones</a>
-        </div>
-      </div>
-
+      <a href="/chofer-privado/reservar.html" data-nav="chofer">Chofer privado</a>
       <a href="/nosotros.html" data-nav="nosotros">Nosotros</a>
-      <a href="/blog/" data-nav="blog">Blog</a>
 
       <!-- Empuja acciones a la derecha -->
       <span class="spacer"></span>
 
       <a href="/contacto.html" class="btn btn-primary" data-nav="contacto">Contacto</a>
+
+      <!-- Opcionales (no visibles por defecto, se muestran según sesión/rol) -->
       <a href="/mi-cuenta.html" id="navAccount" style="display:none">Mi cuenta</a>
-      <a href="/login.html" id="navLogin">Acceder</a>
+      <a href="/login.html" id="navLogin" style="display:none">Acceder</a>
       <a href="/admin/" id="navAdmin" style="display:none">Admin</a>
       <button id="navLogout" class="btn" style="display:none" type="button">Salir</button>
 
