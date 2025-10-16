@@ -2,7 +2,7 @@
   "redirects": [
     { "source": "/qrcard", "destination": "/qrcard.html", "permanent": true },
 
-    /* Deshabilitados temporalmente → reservar chofer */
+    
     { "source": "/domotica", "destination": "/chofer-privado/reservar.html", "permanent": false },
     { "source": "/domotica/:path*", "destination": "/chofer-privado/reservar.html", "permanent": false },
 
@@ -15,7 +15,7 @@
     { "source": "/blog", "destination": "/chofer-privado/reservar.html", "permanent": false },
     { "source": "/blog/:path*", "destination": "/chofer-privado/reservar.html", "permanent": false },
 
-    /* Conveniencia: /chofer-privado (sin archivo) → reservar */
+    
     { "source": "/chofer-privado", "destination": "/chofer-privado/reservar.html", "permanent": false }
   ]
 }
