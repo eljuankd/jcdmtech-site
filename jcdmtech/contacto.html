@@ -1,7 +1,29 @@
 <!doctype html><html lang="es"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Contacto · JCDM Technologies LLC</title>
-<link rel="stylesheet" href="/styles.css"/></head><body>
+<link rel="stylesheet" href="/styles.css"/>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Activa debug solo para ti si añades ?debug=1 en la URL
+  const debug = new URLSearchParams(location.search).has('debug');
+  gtag('config', 'G-85LR7PFMVT', {
+    debug_mode: debug || false
+  });
+
+  // Ping de prueba visible en DebugView
+  if (debug) {
+    gtag('event', 'test_ping', { page_path: location.pathname });
+    console.log('[GA4] test_ping enviado');
+  }
+</script>
+
+</head><body>
 <div id="header"></div>
 <section class="section"><div class="container">
   <h1>Contacto</h1>

@@ -38,6 +38,28 @@
   <link rel="preload" as="image" href="/assets/logo.png" imagesrcset="/assets/logo.png 1x, /assets/logo@2x.png 2x" fetchpriority="high">
 
   <link rel="stylesheet" href="/styles.css">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Activa debug solo para ti si añades ?debug=1 en la URL
+  const debug = new URLSearchParams(location.search).has('debug');
+  gtag('config', 'G-85LR7PFMVT', {
+    debug_mode: debug || false
+  });
+
+  // Ping de prueba visible en DebugView
+  if (debug) {
+    gtag('event', 'test_ping', { page_path: location.pathname });
+    console.log('[GA4] test_ping enviado');
+  }
+</script>
+
+
 </head>
 <body>
   <div id="header"></div>
