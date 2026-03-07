@@ -67,16 +67,28 @@ function setupMobileNav(){
   const nav = document.getElementById('siteNav');
   if(!btn || !nav) return;
 
-  const toggle = () => {
-    const open = nav.classList.toggle('open');
+  const setState = (open) => {
+    nav.classList.toggle('open', open);
+    btn.classList.toggle('is-open', open);
     btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  };
+
+  const toggle = () => {
+    const open = !nav.classList.contains('open');
+    setState(open);
   };
 
   btn.addEventListener('click', toggle);
   // Cerrar al hacer click en un enlace
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    nav.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+    setState(false);
   }));
+
+  // Reset visual al volver a desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 880) setState(false);
+  });
 }
 
 // --- Dropdown accesible para “Servicios” (tap en móvil) ---

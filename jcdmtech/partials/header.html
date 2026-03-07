@@ -29,16 +29,22 @@
 
   <div class="container">
     <a href="/" class="brand" aria-label="JCDM Technologies LLC — Inicio">
-      <img
-        src="/assets/logo.png"
-        srcset="/assets/logo.png 1x, /assets/logo@2x.png 2x"
-        width="128" height="128"
-        alt="JCDM Technologies LLC"
-        decoding="async" fetchpriority="high">
+      <span class="brand-badge" aria-hidden="true">
+        <img
+          src="/assets/logo.png"
+          srcset="/assets/logo.png 1x, /assets/logo@2x.png 2x"
+          width="128" height="128"
+          alt="JCDM Technologies LLC"
+          decoding="async" fetchpriority="high">
+      </span>
     </a>
 
     <!-- Botón hamburguesa SOLO para móviles -->
-    <button id="navToggle" class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="siteNav" type="button">☰</button>
+    <button id="navToggle" class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="siteNav" type="button">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
 
     <nav id="siteNav" class="menu" aria-label="Navegación principal" role="navigation">
       <a href="/" data-nav="home">Inicio</a>
