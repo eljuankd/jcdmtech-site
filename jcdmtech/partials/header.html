@@ -1,11 +1,24 @@
-<!-- GA4 global (se puede cargar dentro del <body> sin problema) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
+<!-- GA4 global (idempotente para evitar doble inicialización) -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date());
-  // Transport beacon para no bloquear navegación
-  gtag('config', 'G-85LR7PFMVT', { transport_type: 'beacon' });
+  (function initGA4() {
+    const MEAS_ID = 'G-85LR7PFMVT';
+    if (window.__JCDM_GA4_INIT__ || window.gtag) {
+      window.__JCDM_GA4_INIT__ = true;
+      return;
+    }
+
+    window.__JCDM_GA4_INIT__ = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+
+    gtag('js', new Date());
+    gtag('config', MEAS_ID, { transport_type: 'beacon' });
+
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + MEAS_ID;
+    document.head.appendChild(s);
+  })();
 </script>
 
 <header class="nav" role="banner">

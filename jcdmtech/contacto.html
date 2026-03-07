@@ -3,33 +3,12 @@
 <title>Contacto · JCDM Technologies LLC</title>
 <link rel="stylesheet" href="/styles.css"/>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  // Activa debug solo para ti si añades ?debug=1 en la URL
-  const debug = new URLSearchParams(location.search).has('debug');
-  gtag('config', 'G-85LR7PFMVT', {
-    debug_mode: debug || false
-  });
-
-  // Ping de prueba visible en DebugView
-  if (debug) {
-    gtag('event', 'test_ping', { page_path: location.pathname });
-    console.log('[GA4] test_ping enviado');
-  }
-</script>
-
 </head><body>
 <div id="header"></div>
 <section class="section"><div class="container">
   <h1>Contacto</h1>
   
-<form class="form" name="contact-form" method="POST" data-netlify="true">
-  <input type="hidden" name="form-name" value="contact-form"/>
+<form class="form" name="contact-form" method="POST" action="https://formspree.io/f/xgvljywo">
   <div class="row">
     <label>Nombre <input name="name" required/></label>
     <label>Email <input name="email" type="email" required/></label>
@@ -48,4 +27,4 @@
 </div>
 
 </div></section>
-<div id="footer"></div><script src="/app.js"></script></body></html>
+<div id="footer"></div><script src="/js/app.js"></script></body></html>
