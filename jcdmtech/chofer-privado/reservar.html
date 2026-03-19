@@ -66,16 +66,16 @@
 
   <main class="container" style="max-width:960px;margin:2rem auto;padding:0 1rem">
     <h1>Reservar chofer privado</h1>
-    <p class="muted">Completa el formulario o escribe por WhatsApp. Respondemos rápido.</p>
+    <p class="muted">Completa tu solicitud y confirma por el canal que prefieras. Atendemos con rapidez y discrecion.</p>
 
     <section class="card booking-intro" aria-label="Beneficios del servicio">
       <div class="booking-points">
-        <span class="booking-pill">Respuesta rápida</span>
+        <span class="booking-pill">Respuesta agil</span>
         <span class="booking-pill">Precio final claro</span>
-        <span class="booking-pill">Atención ejecutiva</span>
+        <span class="booking-pill">Servicio ejecutivo</span>
       </div>
       <p class="muted booking-lead">
-        Ideal para aeropuerto, agenda ejecutiva, eventos y traslados por horas en Miami.
+        Ideal para aeropuerto, agenda ejecutiva, eventos y traslados privados por horas en Miami.
       </p>
     </section>
 
@@ -125,20 +125,20 @@
       </label>
 
       <fieldset class="channel-fieldset">
-        <legend>Canal preferido de confirmación</legend>
+        <legend>Canal de confirmacion</legend>
         <div class="channel-grid">
           <label class="channel-option">
             <input type="radio" name="contact_channel" value="whatsapp" checked />
             <span>
               <strong>WhatsApp</strong>
-              <small class="muted">Más rápido para confirmar detalles</small>
+              <small class="muted">Ideal para una confirmacion rapida y coordinacion inmediata</small>
             </span>
           </label>
           <label class="channel-option">
             <input type="radio" name="contact_channel" value="email" />
             <span>
               <strong>Email</strong>
-              <small class="muted">Útil si prefieres dejar todo por escrito</small>
+              <small class="muted">Recomendado si prefieres recibir la informacion por escrito</small>
             </span>
           </label>
         </div>
@@ -152,7 +152,7 @@
 
       <!-- UX -->
       <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Reservar ahora</button>
-      <p id="submitHelp" class="muted booking-submit-help">Tu reserva se enviará por WhatsApp.</p>
+      <p id="submitHelp" class="muted booking-submit-help">Te abriremos WhatsApp para confirmar tu servicio con atencion inmediata.</p>
       <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
     </form>
 
@@ -184,21 +184,8 @@
     const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
 
     const form = document.getElementById("booking-form");
-    const dateEl = document.getElementById("bf-fecha");
 
-    // 1) Establecer min date = hoy (zona local)
-    const today = new Date(); today.setHours(0,0,0,0);
-    const toISODate = d => new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
-    if (dateEl) dateEl.min = toISODate(today);
-
-    // 2) Rellenar hidden UTM y page_url
-    const qs = new URLSearchParams(location.search);
-    form.querySelector('input[name="page_url"]').value = location.href;
-    form.querySelector('input[name="utm_source"]').value = qs.get('utm_source') || '';
-    form.querySelector('input[name="utm_medium"]').value = qs.get('utm_medium') || '';
-    form.querySelector('input[name="utm_campaign"]').value = qs.get('utm_campaign') || '';
-
-    // 3) Autorrelleno desde profiles si hay sesión
+    // Autorrelleno desde profiles si hay sesión
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
       const { data: prof } = await supabase

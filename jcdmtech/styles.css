@@ -189,6 +189,7 @@ label > input, label > select, label > textarea{ margin-top:.25rem; width:100%; 
 .form-msg.error{ background:#2a0f14; color:#fecaca; border:1px solid #7f1d1d; }
 .hp{ position:absolute; left:-9999px; opacity:0; height:0; }
 
+/* ====== Booking ====== */
 .booking-intro{ margin:1.25rem 0 1.5rem; }
 .booking-points{
   display:flex; flex-wrap:wrap; gap:.6rem;
@@ -232,6 +233,11 @@ label > input, label > select, label > textarea{ margin-top:.25rem; width:100%; 
 .channel-option input{
   width:auto;
   margin:.2rem 0 0;
+  accent-color:var(--gold);
+}
+.channel-option span{
+  display:block;
+  flex:1;
 }
 .channel-option strong{
   display:block;
