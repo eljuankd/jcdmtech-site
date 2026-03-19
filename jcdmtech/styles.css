@@ -279,6 +279,21 @@ details.faq[open] summary::before{ transform:rotate(45deg) translateY(-1px); }
 
 /* ====== Footer ====== */
 .footer{ border-top:1px solid rgba(214,179,106,.10); padding:28px 0; color:#9DA7B5; }
+.site-version-wrap{
+  display:flex; align-items:center; flex-wrap:wrap; gap:.45rem;
+  margin:.5rem 0 0; color:#7F8896; font-size:.82rem;
+}
+.site-version-label{
+  text-transform:uppercase; letter-spacing:.08em;
+}
+.site-version-value{
+  display:inline-flex; align-items:center;
+  padding:.18rem .5rem; border-radius:999px;
+  border:1px solid rgba(214,179,106,.18);
+  background:rgba(214,179,106,.06);
+  color:var(--gold);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
 .footer .legal a{ color:#9DA7B5; margin-left:12px; }
 
 /* ====== Responsive — Menú móvil ====== */
