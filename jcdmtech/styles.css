@@ -251,6 +251,52 @@ label > input, label > select, label > textarea{ margin-top:.25rem; width:100%; 
   min-height:1.2rem;
 }
 
+.thanks-shell{
+  max-width:840px;
+  margin:2rem auto;
+  padding:0 1rem;
+}
+.thanks-card{
+  padding:28px 24px 24px;
+}
+.thanks-eyebrow{
+  margin:0 0 .5rem;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:.8rem;
+  font-weight:700;
+}
+.thanks-status{
+  margin:0 0 1rem;
+}
+.thanks-flow{
+  display:grid;
+  gap:.85rem;
+  margin:1.25rem 0;
+}
+.thanks-step{
+  padding:1rem 1rem .95rem;
+  border:1px solid rgba(214,179,106,.12);
+  border-radius:16px;
+  background:rgba(255,255,255,.02);
+}
+.thanks-step p{
+  margin:.35rem 0 0;
+}
+.thanks-code{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:.4rem;
+  margin:0 0 1.1rem;
+}
+.thanks-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.75rem;
+}
+
 /* ====== Grids ====== */
 .grid{ display:grid; gap:1rem; }
 .grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -258,6 +304,7 @@ label > input, label > select, label > textarea{ margin-top:.25rem; width:100%; 
 @media (max-width:800px){
   .grid-2,.grid-3{ grid-template-columns:1fr; }
   .channel-grid{ grid-template-columns:1fr; }
+  .thanks-actions .btn{ width:100%; }
 }
 
 /* ====== FAQ premium ====== */

@@ -38,13 +38,11 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  // Activa debug solo para ti si añades ?debug=1 en la URL
   const debug = new URLSearchParams(location.search).has('debug');
   gtag('config', 'G-85LR7PFMVT', {
     debug_mode: debug || false
   });
 
-  // Ping de prueba visible en DebugView
   if (debug) {
     gtag('event', 'test_ping', { page_path: location.pathname });
     console.log('[GA4] test_ping enviado');
@@ -56,48 +54,70 @@
 <body>
   <div id="header"></div>
 
-  <main class="container" style="max-width:720px;margin:2rem auto;padding:0 1rem">
-    <h1>¡Gracias!</h1>
-    <p id="thanksMsg" class="form-msg success" role="status" aria-live="polite">
-      Recibimos tu solicitud. Te contactaremos para confirmar detalles.
-    </p>
+  <main class="container thanks-shell">
+    <section class="card thanks-card" aria-labelledby="thanksTitle">
+      <p class="thanks-eyebrow">Solicitud recibida</p>
+      <h1 id="thanksTitle">Gracias por confiar en JCDM Technologies LLC</h1>
+      <p id="thanksMsg" class="form-msg success thanks-status" role="status" aria-live="polite">
+        Hemos recibido tu solicitud y la revisaremos para confirmar disponibilidad, horario y detalles del servicio.
+      </p>
 
-    <p id="codeWrap" style="display:none">
-      <span class="muted">Tu código de reserva:</span>
-      <span id="codeBox" class="kbd" style="margin-left:.5rem"></span>
-    </p>
+      <div class="thanks-flow" aria-label="Siguientes pasos">
+        <div class="thanks-step">
+          <strong>1. Revisamos tu solicitud</strong>
+          <p class="muted">Confirmamos ruta, horario y tipo de servicio solicitado.</p>
+        </div>
+        <div class="thanks-step">
+          <strong>2. Te contactamos</strong>
+          <p class="muted">Nuestro equipo te responderá para confirmar el servicio y resolver cualquier detalle final.</p>
+        </div>
+        <div class="thanks-step">
+          <strong>3. Coordinamos tu reserva</strong>
+          <p class="muted">Dejamos todo listo para una experiencia puntual, discreta y profesional.</p>
+        </div>
+      </div>
 
-    <div class="grid grid-2" style="margin-top:1rem">
-      <a href="/chofer-privado/reservar.html" class="btn">Hacer otra reserva</a>
-      <a href="/index.html" class="btn btn-primary">Volver al inicio</a>
-    </div>
+      <p id="codeWrap" class="thanks-code" style="display:none">
+        <span class="muted">Código de reserva</span>
+        <span id="codeBox" class="kbd" style="margin-left:.5rem"></span>
+      </p>
+
+      <div class="thanks-actions">
+        <a id="thanksWhatsApp" href="https://wa.me/17863487458" class="btn btn-primary">Continuar por WhatsApp</a>
+        <a href="/chofer-privado/reservar.html" class="btn">Volver a reservas</a>
+        <a href="/index.html" class="btn btn-outline">Volver al inicio</a>
+      </div>
+    </section>
   </main>
 
   <div id="footer"></div>
 
-  <!-- Carga ordenada: primero config, luego app -->
   <script src="/js/supabase.config.js"></script>
   <script src="/js/app.js" defer></script>
 
   <script>
-    // Mensaje según canal (wa/email) y código de reserva
     (function(){
       const q = new URLSearchParams(location.search);
       const via = q.get('via');
       const code = q.get('code');
 
-      const p = document.getElementById('thanksMsg');
+      const status = document.getElementById('thanksMsg');
+      const codeWrap = document.getElementById('codeWrap');
+      const codeBox = document.getElementById('codeBox');
+      const wa = document.getElementById('thanksWhatsApp');
+
       if (via === 'wa') {
-        p.textContent = '¡Gracias! Abrimos WhatsApp para terminar la reserva. Te contactaremos enseguida.';
+        status.textContent = 'Abrimos WhatsApp para continuar tu reserva. Si no se abrió correctamente, puedes retomarlo con el botón de abajo.';
       } else if (via === 'email') {
-        p.textContent = '¡Gracias! Recibimos tu solicitud por email. Te contactaremos enseguida.';
+        status.textContent = 'Tu solicitud fue enviada correctamente por email. Si deseas acelerar la confirmación, también puedes continuar por WhatsApp.';
       } else {
-        p.textContent = 'Recibimos tu solicitud. Te contactaremos para confirmar detalles.';
+        status.textContent = 'Recibimos tu solicitud y te contactaremos para confirmar los detalles de tu servicio.';
       }
 
       if (code) {
-        document.getElementById('codeBox').textContent = '#' + code;
-        document.getElementById('codeWrap').style.display = '';
+        codeBox.textContent = '#' + code;
+        codeWrap.style.display = '';
+        wa.href = `https://wa.me/17863487458?text=${encodeURIComponent(`Hola, quiero continuar con mi reserva ${'#' + code} en JCDM Technologies LLC.`)}`;
       }
     })();
   </script>
