@@ -68,6 +68,17 @@
     <h1>Reservar chofer privado</h1>
     <p class="muted">Completa el formulario o escribe por WhatsApp. Respondemos rápido.</p>
 
+    <section class="card booking-intro" aria-label="Beneficios del servicio">
+      <div class="booking-points">
+        <span class="booking-pill">Respuesta rápida</span>
+        <span class="booking-pill">Precio final claro</span>
+        <span class="booking-pill">Atención ejecutiva</span>
+      </div>
+      <p class="muted booking-lead">
+        Ideal para aeropuerto, agenda ejecutiva, eventos y traslados por horas en Miami.
+      </p>
+    </section>
+
     <!-- Formspree: usa tu endpoint real -->
     <form id="booking-form" class="form" action="https://formspree.io/f/xgvljywo" method="POST" novalidate>
       <!-- honeypot antispam -->
@@ -113,6 +124,26 @@
         <textarea id="bf-coment" name="comentarios" rows="4" placeholder="Maletas, tipo de vehículo, notas…"></textarea>
       </label>
 
+      <fieldset class="channel-fieldset">
+        <legend>Canal preferido de confirmación</legend>
+        <div class="channel-grid">
+          <label class="channel-option">
+            <input type="radio" name="contact_channel" value="whatsapp" checked />
+            <span>
+              <strong>WhatsApp</strong>
+              <small class="muted">Más rápido para confirmar detalles</small>
+            </span>
+          </label>
+          <label class="channel-option">
+            <input type="radio" name="contact_channel" value="email" />
+            <span>
+              <strong>Email</strong>
+              <small class="muted">Útil si prefieres dejar todo por escrito</small>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
       <!-- Metadatos de trazabilidad -->
       <input type="hidden" name="page_url" value="" />
       <input type="hidden" name="utm_source" value="" />
@@ -121,6 +152,7 @@
 
       <!-- UX -->
       <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Reservar ahora</button>
+      <p id="submitHelp" class="muted booking-submit-help">Tu reserva se enviará por WhatsApp.</p>
       <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
     </form>
 

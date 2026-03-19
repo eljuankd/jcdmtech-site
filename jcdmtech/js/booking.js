@@ -6,6 +6,7 @@
 
   const msg = document.getElementById('formMsg');
   const btn = document.getElementById('submitBtn');
+  const submitHelp = document.getElementById('submitHelp');
 
   // === Config ===
   const WHATSAPP_NUMBER = '17863487458'; // Número sin + ni símbolos
@@ -13,6 +14,7 @@
   // === Utilidades ===
   const generateCode = () => Math.random().toString(36).slice(2, 8).toUpperCase();
   const collect = () => Object.fromEntries(new FormData(form).entries());
+  const selectedChannel = () => form.querySelector('input[name="contact_channel"]:checked')?.value || '';
 
   // Min date seguro (idempotente y con huso horario)
   const dateEl = form.querySelector('input[name="fecha"]');
@@ -30,6 +32,22 @@
     const el = form.querySelector(`input[name="${k}"]`);
     if (el && !el.value) el.value = qs.get(k) || '';
   });
+
+  function updateSubmitCopy() {
+    const channel = selectedChannel();
+    if (channel === 'email') {
+      if (btn) btn.textContent = 'Enviar por email';
+      if (submitHelp) submitHelp.textContent = 'Tu reserva se enviara por email.';
+      return;
+    }
+    if (btn) btn.textContent = 'Enviar por WhatsApp';
+    if (submitHelp) submitHelp.textContent = 'Tu reserva se enviara por WhatsApp.';
+  }
+
+  form.querySelectorAll('input[name="contact_channel"]').forEach(el => {
+    el.addEventListener('change', updateSubmitCopy);
+  });
+  updateSubmitCopy();
 
   // Mensaje para WhatsApp (incluye booking_code si existe)
   function buildWhatsAppMessage(d) {
@@ -104,7 +122,7 @@ Enviado desde jcdmtech.com`
     data.booking_code = generateCode();
 
     try {
-      const choice = await showChoice();
+      const choice = selectedChannel() || await showChoice();
 
       if (choice === 'whatsapp') {
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
@@ -125,7 +143,8 @@ Enviado desde jcdmtech.com`
       console.error(err);
       if (msg) { msg.textContent = 'Ups, no pudimos enviar tu reserva. Inténtalo de nuevo.'; msg.classList.add('error'); }
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = 'Reservar ahora'; }
+      if (btn) btn.disabled = false;
+      updateSubmitCopy();
     }
   });
 })();
