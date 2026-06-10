@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>JCDM Music Ride · Música colaborativa para tu traslado</title>
+  <meta name="description" content="Con JCDM Music Ride, cada pasajero puede agregar y votar canciones durante el trayecto. Disponible exclusivamente con el servicio de chofer privado de JCDM.">
+
+  <link rel="canonical" href="https://www.jcdmtech.com/music-ride">
+
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JCDM Technologies LLC">
+  <meta property="og:title" content="JCDM Music Ride · Música colaborativa para tu traslado">
+  <meta property="og:description" content="Cada pasajero elige la música durante el trayecto. Colas en tiempo real, sin peleas por el aux.">
+  <meta property="og:url" content="https://www.jcdmtech.com/music-ride">
+  <meta property="og:image" content="https://www.jcdmtech.com/assets/og-image.png">
+
+  <link rel="preload" as="image" href="/assets/logo.png" imagesrcset="/assets/logo.png 1x, /assets/logo@2x.png 2x" fetchpriority="high">
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    .mr-hero {
+      padding: 64px 0 48px;
+      text-align: center;
+    }
+    .mr-hero .badge {
+      display: inline-block;
+      background: rgba(214,179,106,.12);
+      border: 1px solid rgba(214,179,106,.28);
+      color: var(--gold, #D6B36A);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+    }
+    .mr-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.15;
+      margin: 0 0 1rem;
+    }
+    .mr-hero p {
+      font-size: 1.1rem;
+      color: var(--muted, #A8B0BC);
+      max-width: 520px;
+      margin: 0 auto 2rem;
+    }
+    .mr-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .mr-step {
+      background: rgba(17,19,26,.7);
+      border: 1px solid #242A36;
+      border-radius: 14px;
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+    }
+    .mr-step .step-icon {
+      font-size: 2.2rem;
+      margin-bottom: .75rem;
+      display: block;
+    }
+    .mr-step h3 {
+      font-size: 1rem;
+      margin: 0 0 .4rem;
+    }
+    .mr-step p {
+      font-size: .88rem;
+      color: var(--muted, #A8B0BC);
+      margin: 0;
+    }
+    .mr-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .mr-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: .8rem;
+      padding: 1rem 1.1rem;
+      background: rgba(17,19,26,.5);
+      border: 1px solid #242A36;
+      border-radius: 10px;
+    }
+    .mr-feature .feat-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .mr-feature h4 {
+      font-size: .95rem;
+      margin: 0 0 .25rem;
+    }
+    .mr-feature p {
+      font-size: .82rem;
+      color: var(--muted, #A8B0BC);
+      margin: 0;
+    }
+    .mr-cta-box {
+      text-align: center;
+      padding: 48px 24px;
+      background: rgba(214,179,106,.05);
+      border: 1px solid rgba(214,179,106,.15);
+      border-radius: 18px;
+      margin-top: 2rem;
+    }
+    .mr-cta-box h2 {
+      margin: 0 0 .6rem;
+    }
+    .mr-cta-box p {
+      color: var(--muted, #A8B0BC);
+      margin: 0 0 1.6rem;
+    }
+    .actions { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85LR7PFMVT');
+  </script>
+</head>
+<body>
+  <div id="header"></div>
+
+  <!-- HERO -->
+  <section class="section mr-hero" aria-labelledby="mr-h1">
+    <div class="container">
+      <span class="badge">Exclusivo · Servicio de Chofer</span>
+      <h1 id="mr-h1">La música del trayecto,<br>elegida por todos</h1>
+      <p>
+        Cada pasajero agrega canciones desde su móvil.
+        Sin peleas por el aux — solo buena música en ruta.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary btn-lg" href="https://ride.jcdmtech.com" target="_blank" rel="noopener">
+          Abrir Music Ride →
+        </a>
+        <a class="btn" href="/chofer-privado/reservar.html">Reservar traslado</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="section alt" aria-labelledby="mr-como-h2">
+    <div class="container">
+      <h2 id="mr-como-h2">¿Cómo funciona?</h2>
+      <p class="muted" style="margin:.2rem 0 .5rem">Tres pasos. Sin apps que instalar.</p>
+
+      <div class="mr-steps">
+        <div class="mr-step">
+          <span class="step-icon">📱</span>
+          <h3>1 · El host abre la sesión</h3>
+          <p>El conductor o anfitrión crea una sala y aparece un código QR en pantalla.</p>
+        </div>
+        <div class="mr-step">
+          <span class="step-icon">🔗</span>
+          <h3>2 · Los pasajeros se unen</h3>
+          <p>Escanean el QR con el móvil. Sin registro, sin instalación. Listos en segundos.</p>
+        </div>
+        <div class="mr-step">
+          <span class="step-icon">🎵</span>
+          <h3>3 · Eligen la música juntos</h3>
+          <p>Buscan en YouTube y agregan canciones a la cola. El orden se actualiza en tiempo real para todos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNCIONALIDADES -->
+  <section class="section" aria-labelledby="mr-feat-h2">
+    <div class="container">
+      <h2 id="mr-feat-h2">Todo bajo control</h2>
+      <p class="muted" style="margin:.2rem 0 1rem">El host mantiene la autoridad. Los pasajeros, la diversión.</p>
+
+      <div class="mr-features">
+        <div class="mr-feature">
+          <span class="feat-icon">🎯</span>
+          <div>
+            <h4>Cola en tiempo real</h4>
+            <p>Las canciones agregadas aparecen al instante en todos los dispositivos conectados.</p>
+          </div>
+        </div>
+        <div class="mr-feature">
+          <span class="feat-icon">🔍</span>
+          <div>
+            <h4>Búsqueda de YouTube</h4>
+            <p>Acceso a millones de canciones, playlists y DJ sets directamente desde YouTube.</p>
+          </div>
+        </div>
+        <div class="mr-feature">
+          <span class="feat-icon">🎛️</span>
+          <div>
+            <h4>Control del host</h4>
+            <p>El anfitrión puede pausar, avanzar, reordenar y configurar permisos de los pasajeros.</p>
+          </div>
+        </div>
+        <div class="mr-feature">
+          <span class="feat-icon">⚡</span>
+          <div>
+            <h4>Sin instalación</h4>
+            <p>Los pasajeros acceden desde el navegador del móvil. Solo un QR para unirse.</p>
+          </div>
+        </div>
+        <div class="mr-feature">
+          <span class="feat-icon">🛡️</span>
+          <div>
+            <h4>Límites configurables</h4>
+            <p>El host define cuántas canciones puede agregar cada pasajero y qué acciones tiene disponibles.</p>
+          </div>
+        </div>
+        <div class="mr-feature">
+          <span class="feat-icon">🔄</span>
+          <div>
+            <h4>Modo Repeat All</h4>
+            <p>Activa reproducción continua para que la música no se detenga en trayectos largos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section alt" aria-label="Acceder a Music Ride">
+    <div class="container">
+      <div class="mr-cta-box">
+        <h2>¿Listo para el próximo trayecto?</h2>
+        <p>Abre una sesión, comparte el QR y deja que los pasajeros elijan la música.</p>
+        <div class="actions">
+          <a class="btn btn-primary btn-lg" href="https://ride.jcdmtech.com" target="_blank" rel="noopener">
+            Abrir Music Ride →
+          </a>
+          <a class="btn" href="/contacto.html">Contactar</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
