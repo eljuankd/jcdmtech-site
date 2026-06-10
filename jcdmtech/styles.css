@@ -190,6 +190,51 @@ label > input, label > select, label > textarea{ margin-top:.25rem; width:100%; 
 .hp{ position:absolute; left:-9999px; opacity:0; height:0; }
 
 /* ====== Booking ====== */
+.home-hero{
+  max-width:860px;
+  margin:0 0 1.2rem;
+}
+.home-kicker{
+  margin:0 0 .5rem;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:.8rem;
+  font-weight:700;
+}
+.home-lead{
+  max-width:760px;
+  margin:.2rem 0 1.2rem;
+  font-size:1.05rem;
+}
+.home-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.75rem;
+}
+.home-trust{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.6rem;
+  margin:1rem 0 1.4rem;
+}
+.home-trust-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:.45rem .85rem;
+  border-radius:999px;
+  border:1px solid rgba(214,179,106,.24);
+  background:rgba(214,179,106,.08);
+  color:var(--text);
+  font-size:.94rem;
+}
+.home-service-card{
+  max-width:760px;
+}
+.home-card-title{
+  margin:0 0 .75rem;
+}
+
 .booking-intro{ margin:1.25rem 0 1.5rem; }
 .booking-points{
   display:flex; flex-wrap:wrap; gap:.6rem;
@@ -305,6 +350,7 @@ label > input, label > select, label > textarea{ margin-top:.25rem; width:100%; 
   .grid-2,.grid-3{ grid-template-columns:1fr; }
   .channel-grid{ grid-template-columns:1fr; }
   .thanks-actions .btn{ width:100%; }
+  .home-actions .btn{ width:100%; }
 }
 
 /* ====== FAQ premium ====== */
@@ -343,6 +389,105 @@ details.faq[open] summary::before{ transform:rotate(45deg) translateY(-1px); }
 }
 .footer .legal a{ color:#9DA7B5; margin-left:12px; }
 
+/* ====== Hero premium ====== */
+.hero-section{
+  position:relative; overflow:hidden;
+  padding:80px 0 56px;
+}
+.hero-bg-glow{
+  position:absolute; top:-120px; right:-80px;
+  width:700px; height:700px;
+  background:radial-gradient(circle at center, rgba(214,179,106,.08) 0%, rgba(214,179,106,.025) 42%, transparent 68%);
+  pointer-events:none; user-select:none;
+}
+.hero-section::after{
+  content:""; position:absolute; bottom:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(214,179,106,.14) 35%, rgba(214,179,106,.14) 65%, transparent);
+}
+
+.hero-grid{
+  display:grid; grid-template-columns:1.1fr .9fr;
+  gap:3rem; align-items:center; margin-bottom:2.5rem;
+}
+
+.hero-kicker{
+  margin:0 0 .65rem; color:var(--gold);
+  text-transform:uppercase; letter-spacing:.12em; font-size:.78rem; font-weight:700;
+}
+.hero-h2{
+  font-size:clamp(2.1rem, 3.8vw + .8rem, 3.4rem);
+  line-height:1.08; margin:0 0 1rem;
+}
+.hero-lead{
+  color:var(--muted); font-size:1.05rem;
+  max-width:490px; margin:0 0 1.6rem; line-height:1.65;
+}
+.hero-actions{ display:flex; flex-wrap:wrap; gap:.75rem; margin-bottom:1.4rem; }
+.hero-trust{ display:flex; flex-wrap:wrap; gap:1.25rem; }
+.hero-trust-item{ font-size:.875rem; color:var(--muted); }
+
+/* Visual decorativo */
+.hero-visual{
+  position:relative; display:flex;
+  justify-content:center; padding:2rem 0;
+}
+.hero-card-deco{ position:relative; width:100%; max-width:380px; }
+.hero-deco-ring{
+  position:absolute; inset:-28px; border-radius:32px;
+  border:1px solid rgba(214,179,106,.06); pointer-events:none;
+}
+.hero-deco-inner{
+  position:relative;
+  background:rgba(14,16,22,.88);
+  backdrop-filter:blur(20px) saturate(110%);
+  border:1px solid rgba(214,179,106,.18); border-radius:24px;
+  padding:24px 22px 22px;
+  box-shadow:0 0 0 1px rgba(214,179,106,.04) inset, 0 32px 72px rgba(0,0,0,.6), 0 0 80px rgba(214,179,106,.04);
+}
+.hero-service-badge{ display:flex; align-items:center; gap:.9rem; margin-bottom:.9rem; }
+.hero-svc-icon{
+  font-size:1.75rem; display:flex; align-items:center; justify-content:center;
+  width:52px; height:52px; border-radius:14px;
+  background:rgba(214,179,106,.08); border:1px solid rgba(214,179,106,.18); flex-shrink:0;
+}
+.hero-service-badge strong{
+  display:block; font-family:"Fraunces",Georgia,serif; font-size:1rem; margin-bottom:.2rem;
+}
+.hero-status{
+  display:inline-flex; align-items:center; gap:.32rem;
+  font-size:.78rem; color:var(--muted);
+}
+.hero-status::before{
+  content:""; display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:#4ade80; box-shadow:0 0 8px rgba(74,222,128,.65); flex-shrink:0;
+}
+.hero-divider{ height:1px; background:rgba(255,255,255,.07); border:none; margin:.9rem 0; }
+.hero-feature-list{ list-style:none; padding:0; margin:0; display:grid; gap:.58rem; }
+.hero-feature-list li{
+  font-size:.88rem; color:var(--muted); padding-left:17px; position:relative;
+}
+.hero-feature-list li::before{
+  content:""; position:absolute; left:2px; top:.52em;
+  width:5px; height:5px; border-radius:50%; background:var(--gold); opacity:.6;
+}
+
+/* Stats strip */
+.hero-stats{
+  display:flex; align-items:stretch;
+  background:rgba(14,16,22,.7); backdrop-filter:blur(10px);
+  border:1px solid rgba(214,179,106,.1); border-radius:18px; overflow:hidden;
+}
+.hero-stat{
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; gap:.18rem; padding:1.1rem 1rem;
+}
+.hero-stat-value{
+  font-family:"Fraunces",Georgia,serif; font-size:1.1rem;
+  font-weight:700; color:var(--gold); white-space:nowrap;
+}
+.hero-stat-label{ font-size:.74rem; color:var(--muted); text-align:center; line-height:1.3; }
+.hero-stat-sep{ width:1px; background:rgba(255,255,255,.07); flex-shrink:0; }
+
 /* ====== Responsive — Menú móvil ====== */
 @media (max-width:880px){
   .nav-toggle{ display:inline-flex; }
@@ -356,4 +501,21 @@ details.faq[open] summary::before{ transform:rotate(45deg) translateY(-1px); }
   }
   #siteNav.menu.open{ max-height: calc(100vh - 68px); }
   #siteNav.menu a, #siteNav .dropbtn{ width:100%; padding:.75rem 0; display:block; }
+}
+
+@media (max-width:860px){
+  .hero-grid{ grid-template-columns:1fr; gap:2rem; margin-bottom:2rem; }
+  .hero-visual{ order:-1; padding:1.25rem 0 0; }
+  .hero-card-deco{ max-width:100%; }
+  .hero-deco-ring{ display:none; }
+  .hero-lead{ max-width:100%; }
+}
+@media (max-width:640px){
+  .hero-section{ padding:52px 0 36px; }
+  .hero-stats{ flex-direction:column; gap:0; }
+  .hero-stat{ flex-direction:row; justify-content:space-between; padding:.7rem 1.1rem; border-bottom:1px solid rgba(255,255,255,.04); }
+  .hero-stat:last-child{ border-bottom:none; }
+  .hero-stat-sep{ width:100%; height:1px; }
+  .hero-stat-label{ text-align:right; }
+  .hero-trust{ gap:.75rem; }
 }
