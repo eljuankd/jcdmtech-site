@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Book a Ride · QUELVO by JCDM Technologies</title>
+  <meta name="description" content="Book a private QUELVO ride in Miami — airport transfers, hourly service, events and business travel. Confirmed directly with your driver.">
+
+  <link rel="canonical" href="https://www.jcdmtech.com/quelvo/book/">
+
+  <link rel="icon" href="/assets/favicon.ico">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Book a Ride · QUELVO">
+  <meta property="og:description" content="Private chauffeur service in Miami. Book online in minutes.">
+  <meta property="og:url" content="https://www.jcdmtech.com/quelvo/book/">
+
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container" style="max-width:960px;margin:3rem auto;padding:0 clamp(16px,4vw,24px)">
+
+    <p class="hero-kicker" style="margin-bottom:.75rem;">QUELVO · Private chauffeur</p>
+    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw+.5rem,2.6rem);margin:0 0 .5rem;letter-spacing:-.02em;">
+      Book a Ride
+    </h1>
+    <p class="muted" style="margin-bottom:1.75rem;">
+      Fill in your details and confirm via WhatsApp or email.
+      We respond quickly and coordinate directly with your driver.
+    </p>
+
+    <!-- Service highlights -->
+    <section class="card" style="margin-bottom:1.75rem;" aria-label="Service highlights">
+      <div class="booking-points">
+        <span class="booking-pill">Fixed price</span>
+        <span class="booking-pill">Fast response</span>
+        <span class="booking-pill">Executive fleet</span>
+        <span class="booking-pill">Music Ride included</span>
+      </div>
+      <p class="muted booking-lead">
+        Airport transfers, hourly, events and city-to-city private rides in Miami-Dade.
+      </p>
+    </section>
+
+    <!-- Booking form — booking.js targets #booking-form -->
+    <form id="booking-form" class="form" action="https://formspree.io/f/xgvljywo" method="POST" novalidate>
+      <!-- Honeypot anti-spam -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+
+      <div class="grid grid-2">
+        <label for="bf-nombre">Full name
+          <input id="bf-nombre" type="text" name="nombre" required minlength="3" autocomplete="name" placeholder="Your full name" />
+        </label>
+
+        <label for="bf-telefono">Phone (WhatsApp)
+          <input id="bf-telefono" type="tel" name="telefono" required inputmode="tel" autocomplete="tel"
+                 placeholder="+1 786 000 0000"
+                 pattern="^[0-9+()\\-\\s]{7,}$" />
+        </label>
+      </div>
+
+      <div class="grid grid-3">
+        <label for="bf-fecha">Date
+          <input id="bf-fecha" type="date" name="fecha" required />
+        </label>
+
+        <label for="bf-hora">Time
+          <input id="bf-hora" type="time" name="hora" required step="300" />
+        </label>
+
+        <label for="bf-duracion">Service hours
+          <input id="bf-duracion" type="number" name="duracion_horas" min="1" max="24" value="2" required />
+        </label>
+      </div>
+
+      <div class="grid grid-2">
+        <label for="bf-origen">Pickup location
+          <input id="bf-origen" type="text" name="origen" required placeholder="Hotel, airport, address…" autocomplete="street-address" />
+        </label>
+
+        <label for="bf-destino">Drop-off (optional)
+          <input id="bf-destino" type="text" name="destino" placeholder="Event, address…" autocomplete="address-line2" />
+        </label>
+      </div>
+
+      <label for="bf-coment">Additional notes (optional)
+        <textarea id="bf-coment" name="comentarios" rows="4" placeholder="Luggage, vehicle preference, flight number, special requests…"></textarea>
+      </label>
+
+      <fieldset class="channel-fieldset">
+        <legend>Confirmation method</legend>
+        <div class="channel-grid">
+          <label class="channel-option">
+            <input type="radio" name="contact_channel" value="whatsapp" checked />
+            <span>
+              <strong>WhatsApp</strong>
+              <small class="muted">Fastest way to confirm and coordinate your ride</small>
+            </span>
+          </label>
+          <label class="channel-option">
+            <input type="radio" name="contact_channel" value="email" />
+            <span>
+              <strong>Email</strong>
+              <small class="muted">Receive your booking details in writing</small>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Tracking metadata -->
+      <input type="hidden" name="page_url" value="" />
+      <input type="hidden" name="utm_source" value="" />
+      <input type="hidden" name="utm_medium" value="" />
+      <input type="hidden" name="utm_campaign" value="" />
+
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Book via WhatsApp</button>
+      <p id="submitHelp" class="muted booking-submit-help">We'll open WhatsApp to confirm your ride.</p>
+      <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <noscript>
+      <p class="form-msg error">To submit a booking, please enable JavaScript or contact us via WhatsApp.</p>
+    </noscript>
+
+  </main>
+
+  <div id="footer"></div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "QUELVO Private Chauffeur",
+    "provider": { "@type": "Organization", "name": "JCDM Technologies LLC" },
+    "areaServed": "Miami-Dade, FL",
+    "availableChannel": "https://www.jcdmtech.com/quelvo/book/"
+  }
+  </script>
+
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
+
+  <!-- Auto-fill from Supabase profile if user is logged in -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+
+    const form = document.getElementById("booking-form");
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("full_name,phone")
+        .eq("id", session.user.id)
+        .single();
+      if (prof) {
+        if (form.nombre   && !form.nombre.value)   form.nombre.value   = prof.full_name || "";
+        if (form.telefono && !form.telefono.value) form.telefono.value = prof.phone     || "";
+      }
+    }
+  </script>
+
+  <script src="/js/booking.js" defer></script>
+</body>
+</html>

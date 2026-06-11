@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Projects · JCDM Technologies LLC</title>
+  <meta name="description" content="Products and platforms built by JCDM Technologies LLC — QUELVO, Music Ride, Financial Automation and Smart Home systems.">
+
+  <link rel="canonical" href="https://www.jcdmtech.com/projects/">
+
+  <link rel="icon" href="/assets/favicon.ico">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Projects · JCDM Technologies LLC">
+  <meta property="og:description" content="Products and platforms built by JCDM Technologies LLC.">
+  <meta property="og:url" content="https://www.jcdmtech.com/projects/">
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <!-- HERO -->
+  <section class="hero-section" style="padding:72px 0 60px;">
+    <div class="container">
+      <p class="hero-kicker">What we've built</p>
+      <h2 class="hero-h2" style="font-size:clamp(2.2rem,4vw+.5rem,3.8rem);">
+        Platforms &amp; products<br>we built and operate.
+      </h2>
+      <p class="hero-lead">
+        Beyond client work — these are the products we designed, built and run ourselves.
+      </p>
+    </div>
+  </section>
+
+  <!-- QUELVO -->
+  <section class="section alt" aria-labelledby="p-quelvo-h2">
+    <div class="container">
+      <p class="section-kicker">Platform · Live</p>
+      <h2 id="p-quelvo-h2">QUELVO</h2>
+      <p style="font-size:1.1rem;font-style:italic;color:var(--muted-on-light);margin:.25rem 0 1.5rem;">
+        Private chauffeur booking platform.
+      </p>
+      <p style="max-width:680px;color:var(--muted-on-light);margin-bottom:2rem;">
+        QUELVO is a full private chauffeur service and booking platform developed by JCDM Technologies.
+        Passengers book rides directly — airport transfers, hourly, events and city-to-city.
+        Every ride includes Music Ride, the shared in-car music experience.
+      </p>
+
+      <div class="grid grid-2" style="gap:1.25rem;max-width:800px;margin-bottom:2rem;">
+        <div class="card">
+          <h3>Booking system</h3>
+          <p>Custom-built HTML/JS multi-form booking with WhatsApp and email submission.</p>
+        </div>
+        <div class="card">
+          <h3>Fleet management</h3>
+          <p>Admin panel backed by Supabase — vehicles, drivers, availability tracking.</p>
+        </div>
+        <div class="card">
+          <h3>Fixed-price quoting</h3>
+          <p>Price logic per ride type and zone — transparent pricing shown before confirmation.</p>
+        </div>
+        <div class="card">
+          <h3>Music Ride integration</h3>
+          <p>Every ride links to a Music Ride session — collaborative in-car playlist via QR.</p>
+        </div>
+      </div>
+
+      <div class="service-tags" style="margin-bottom:1.5rem;">
+        <span class="service-tag">HTML / CSS / JS</span>
+        <span class="service-tag">Supabase</span>
+        <span class="service-tag">Vercel</span>
+        <span class="service-tag">WhatsApp API</span>
+        <span class="service-tag">Formspree</span>
+        <span class="service-tag">GA4</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
+        <a class="btn" href="/quelvo/">Visit QUELVO</a>
+        <a class="btn btn-primary" href="/quelvo/book/">Book a ride</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC RIDE -->
+  <section class="section" aria-labelledby="p-musicride-h2">
+    <div class="container">
+      <p class="section-kicker">Platform · Live</p>
+      <h2 id="p-musicride-h2">Music Ride</h2>
+      <p style="font-size:1.1rem;font-style:italic;color:var(--muted);margin:.25rem 0 1.5rem;">
+        Shared music experience for private rides.
+      </p>
+      <p style="max-width:680px;color:var(--muted);margin-bottom:2rem;">
+        A real-time collaborative music queue for private rides. Passengers scan a QR code,
+        join a session and add songs from YouTube — no login, no app download required.
+        Built as a full-stack React / Node.js application with Socket.IO.
+      </p>
+
+      <div class="grid grid-2" style="gap:1.25rem;max-width:800px;margin-bottom:2rem;">
+        <div class="card">
+          <h3>Real-time queue</h3>
+          <p>Socket.IO powered — song additions and changes sync instantly across all connected devices.</p>
+        </div>
+        <div class="card">
+          <h3>YouTube integration</h3>
+          <p>Search and play any YouTube video. No Spotify API needed — works without any account.</p>
+        </div>
+        <div class="card">
+          <h3>QR session entry</h3>
+          <p>Driver generates a QR at ride start. Passengers join in seconds with any phone browser.</p>
+        </div>
+        <div class="card">
+          <h3>Driver controls</h3>
+          <p>Driver account manages the session — can approve queue, skip, pause and end the session.</p>
+        </div>
+      </div>
+
+      <div class="service-tags" style="margin-bottom:1.5rem;">
+        <span class="service-tag">React</span>
+        <span class="service-tag">Node.js</span>
+        <span class="service-tag">Socket.IO</span>
+        <span class="service-tag">YouTube IFrame API</span>
+        <span class="service-tag">Railway</span>
+        <span class="service-tag">PostgreSQL</span>
+        <span class="service-tag">JWT auth</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
+        <a class="btn" href="/music-ride/">Visit Music Ride page</a>
+        <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Open app ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINANCIAL AUTOMATION -->
+  <section class="section alt" aria-labelledby="p-finance-h2">
+    <div class="container">
+      <p class="section-kicker">System · Internal use</p>
+      <h2 id="p-finance-h2">Financial Automation System</h2>
+      <p style="font-size:1.1rem;font-style:italic;color:var(--muted-on-light);margin:.25rem 0 1.5rem;">
+        Personal finance tracking with automated reporting.
+      </p>
+      <p style="max-width:680px;color:var(--muted-on-light);margin-bottom:2rem;">
+        A personal financial tracking system built with PostgreSQL, Python and n8n.
+        Transactions are logged, categorized and summarized automatically — daily and monthly
+        reports are delivered via Telegram without manual intervention.
+      </p>
+
+      <div class="service-tags" style="margin-bottom:1.5rem;">
+        <span class="service-tag">Python</span>
+        <span class="service-tag">PostgreSQL</span>
+        <span class="service-tag">n8n</span>
+        <span class="service-tag">Telegram Bot</span>
+        <span class="service-tag">Automated reports</span>
+      </div>
+
+      <p style="font-size:.875rem;color:var(--muted-on-light);">This project is for internal use. Similar systems available as a service — <a href="/contacto.html">contact us</a>.</p>
+    </div>
+  </section>
+
+  <!-- SMART HOME -->
+  <section class="section" aria-labelledby="p-smarthome-h2">
+    <div class="container">
+      <p class="section-kicker">System · Internal use</p>
+      <h2 id="p-smarthome-h2">Smart Home Dashboard</h2>
+      <p style="font-size:1.1rem;font-style:italic;color:var(--muted);margin:.25rem 0 1.5rem;">
+        Full home automation with Home Assistant.
+      </p>
+      <p style="max-width:680px;color:var(--muted);margin-bottom:2rem;">
+        A complete smart home setup using Home Assistant — temperature sensors, smart locks,
+        IP cameras, presence detection, voice commands and a custom mobile dashboard.
+        Remote access secured via Cloudflare Tunnel.
+      </p>
+
+      <div class="service-tags" style="margin-bottom:1.5rem;">
+        <span class="service-tag">Home Assistant</span>
+        <span class="service-tag">Zigbee</span>
+        <span class="service-tag">ESP32</span>
+        <span class="service-tag">MQTT</span>
+        <span class="service-tag">Cloudflare Tunnel</span>
+        <span class="service-tag">Alexa</span>
+        <span class="service-tag">IP cameras</span>
+      </div>
+
+      <p style="font-size:.875rem;color:var(--muted);">This system is for personal use. We offer smart home installation as a service — <a href="/services/#smarthome">see Smart Home services</a>.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section">
+    <div class="container">
+      <h2 class="cta-h2">Have a project in mind?</h2>
+      <p class="cta-lead">Let's build something together.</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="/contacto.html">Contact us</a>
+        <a class="btn" href="/services/">See our services</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

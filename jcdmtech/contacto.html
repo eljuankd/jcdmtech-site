@@ -1,30 +1,141 @@
-<!doctype html><html lang="es"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Contacto · JCDM Technologies LLC</title>
-<link rel="stylesheet" href="/styles.css"/>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-</head><body>
-<div id="header"></div>
-<section class="section"><div class="container">
-  <h1>Contacto</h1>
-  
-<form class="form" name="contact-form" method="POST" action="https://formspree.io/f/xgvljywo">
-  <div class="row">
-    <label>Nombre <input name="name" required/></label>
-    <label>Email <input name="email" type="email" required/></label>
-  </div>
-  <label>Mensaje <textarea name="message" rows="5" required></textarea></label>
-  <div class="row">
-    <label>Preferencia <select name="contact_pref"><option>WhatsApp</option><option>Email</option><option>Llamada</option></select></label>
-    <label>Servicio <select name="service"><option>Chofer privado</option><option>Domótica</option><option>Software</option><option>Automatizaciones</option></select></label>
-  </div>
-  <button class="btn btn-primary" type="submit">Enviar</button>
-</form>
-<div class="quick-links">
-  <a class="btn btn-outline" href="mailto:contacto@jcdmtech.com">Email</a>
-  <a class="btn btn-outline" href="tel:+13050000000">Llamar</a>
-  <a class="btn btn-outline" href="https://wa.me/13050000000">WhatsApp</a>
-</div>
+  <title>Contact · JCDM Technologies LLC</title>
+  <meta name="description" content="Contact JCDM Technologies LLC in Miami. Web development, automation, smart home, QUELVO or general inquiries.">
 
-</div></section>
-<div id="footer"></div><script src="/js/app.js"></script></body></html>
+  <link rel="canonical" href="https://www.jcdmtech.com/contacto.html">
+
+  <link rel="icon" href="/assets/favicon.ico">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact · JCDM Technologies LLC">
+  <meta property="og:description" content="Contact JCDM Technologies LLC in Miami — web, automation, smart home, QUELVO.">
+  <meta property="og:url" content="https://www.jcdmtech.com/contacto.html">
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <section class="hero-section" style="padding:72px 0 60px;">
+    <div class="container">
+      <p class="hero-kicker">Get in touch</p>
+      <h2 class="hero-h2" style="font-size:clamp(2rem,4vw+.5rem,3.4rem);">Contact us</h2>
+      <p class="hero-lead">
+        Tell us about your project and we'll get back to you quickly.
+      </p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container" style="max-width:860px;">
+
+      <!-- Quick links -->
+      <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2.5rem;">
+        <a class="btn" href="mailto:contacto@jcdmtech.com">&#x2709;&#xFE0F; contacto@jcdmtech.com</a>
+        <a class="btn" href="tel:+17863487458">&#x1F4DE; +1 (786) 348-7458</a>
+        <a class="btn btn-primary" href="https://wa.me/17863487458" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+
+      <form class="form" name="contact-form" method="POST" action="https://formspree.io/f/xgvljywo" novalidate>
+        <!-- Honeypot anti-spam -->
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+
+        <div class="row">
+          <label>Name
+            <input name="name" type="text" required minlength="2" autocomplete="name" placeholder="Your full name" />
+          </label>
+          <label>Email
+            <input name="email" type="email" required autocomplete="email" placeholder="your@email.com" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>Service / inquiry
+            <select name="service">
+              <option value="">— Select a topic —</option>
+              <optgroup label="Technology Services">
+                <option value="Web Development">Web Development &amp; Apps</option>
+                <option value="Automation">Automation &amp; Smart Systems</option>
+                <option value="Smart Home">Smart Home &amp; IoT</option>
+                <option value="Technical Support">Technical Support</option>
+              </optgroup>
+              <optgroup label="Platforms">
+                <option value="QUELVO Ride">QUELVO — Book a ride</option>
+                <option value="Music Ride">Music Ride</option>
+              </optgroup>
+              <optgroup label="Other">
+                <option value="Business Inquiry">Business inquiry</option>
+                <option value="Other">Other</option>
+              </optgroup>
+            </select>
+          </label>
+
+          <label>Preferred contact
+            <select name="contact_pref">
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Email">Email</option>
+              <option value="Phone call">Phone call</option>
+            </select>
+          </label>
+        </div>
+
+        <label>Message
+          <textarea name="message" rows="5" required minlength="10" placeholder="Describe your project, question or request…"></textarea>
+        </label>
+
+        <button class="btn btn-primary" type="submit">Send message</button>
+        <p id="contactMsg" class="form-msg" role="status" aria-live="polite"></p>
+      </form>
+
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js"></script>
+
+  <script>
+    (function () {
+      const form = document.querySelector('form[name="contact-form"]');
+      const msg = document.getElementById('contactMsg');
+      if (!form || !msg) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        msg.textContent = '';
+        msg.className = 'form-msg';
+
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: new FormData(form)
+          });
+          if (res.ok) {
+            msg.textContent = 'Message sent! We\'ll get back to you shortly.';
+            msg.classList.add('success');
+            form.reset();
+          } else {
+            throw new Error('server');
+          }
+        } catch {
+          msg.textContent = 'Something went wrong. Please try again or contact us via WhatsApp.';
+          msg.classList.add('error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Send message';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

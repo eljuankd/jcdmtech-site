@@ -1,157 +1,241 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>JCDM Technologies LLC · Chofer privado en Miami</title>
-  <meta name="description" content="Servicio de chofer privado y transporte de lujo en Miami. Precio final, sin sorpresas. Reserva por horas o traslados ejecutivos.">
+  <title>JCDM Technologies LLC · Technology, Automation & Digital Platforms in Miami</title>
+  <meta name="description" content="JCDM Technologies LLC is a Miami-based technology company offering web development, automation, smart home solutions, technical consulting, and QUELVO — our private chauffeur platform.">
 
-  <!-- Canonical -->
   <link rel="canonical" href="https://www.jcdmtech.com/">
 
-  <!-- Favicon & App Icons -->
   <link rel="icon" href="/assets/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
 
-  <!-- Theme color -->
-  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: light)">
   <meta name="color-scheme" content="dark light">
 
-  <!-- Social: Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="JCDM Technologies LLC">
-  <meta property="og:title" content="Chofer privado en Miami">
-  <meta property="og:description" content="Transporte de lujo con chofer privado. Precio final, sin sorpresas.">
+  <meta property="og:title" content="JCDM Technologies LLC · Technology & Digital Platforms">
+  <meta property="og:description" content="Web development, automation, smart home and QUELVO — private chauffeur platform. Miami-based technology company.">
   <meta property="og:url" content="https://www.jcdmtech.com/">
   <meta property="og:image" content="https://www.jcdmtech.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
-  <!-- Social: Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Chofer privado en Miami">
-  <meta name="twitter:description" content="Transporte de lujo con chofer privado. Precio final, sin sorpresas.">
+  <meta name="twitter:title" content="JCDM Technologies LLC · Technology & Digital Platforms">
+  <meta name="twitter:description" content="Web development, automation, smart home and QUELVO — private chauffeur platform.">
   <meta name="twitter:image" content="https://www.jcdmtech.com/assets/og-image.png">
 
-  <!-- Preload logo para evitar CLS en navbar -->
   <link rel="stylesheet" href="/styles.css" />
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  // Activa debug solo para ti si añades ?debug=1 en la URL
-  const debug = new URLSearchParams(location.search).has('debug');
-  gtag('config', 'G-85LR7PFMVT', {
-    debug_mode: debug || false
-  });
-
-  // Ping de prueba visible en DebugView
-  if (debug) {
-    gtag('event', 'test_ping', { page_path: location.pathname });
-    console.log('[GA4] test_ping enviado');
-  }
-</script>
-
-
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85LR7PFMVT');
+  </script>
 </head>
 <body>
   <div id="header"></div>
 
-  <!-- H1 oculto para SEO -->
-  <h1 class="sr-only">Chofer privado en Miami · JCDM Technologies LLC</h1>
+  <h1 class="sr-only">JCDM Technologies LLC — Technology, Automation & Digital Platforms in Miami</h1>
 
   <!-- HERO -->
   <section class="hero-section" aria-labelledby="hero-h2">
     <div class="container">
-      <p class="hero-kicker">Chofer privado · Miami</p>
+      <p class="hero-kicker">Miami · Technology Company</p>
       <h2 id="hero-h2" class="hero-h2">
-        Traslados de lujo<br>con atención discreta.
+        Technology, automation<br>&amp; digital platforms<br>for real-world needs.
       </h2>
       <p class="hero-lead">
-        Aeropuerto, agenda corporativa y eventos privados.<br>
-        Precio final, puntualidad garantizada en Miami-Dade.
+        We build practical technology solutions for businesses and everyday life —
+        from websites and automation systems to smart home integrations and platforms like QUELVO.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="/chofer-privado/reservar.html">Reservar servicio</a>
-        <a class="btn" href="https://wa.me/17863487458">Consultar por WhatsApp</a>
+        <a class="btn btn-primary" href="/services/">Explore Services</a>
+        <a class="btn" href="/quelvo/">Discover QUELVO</a>
       </div>
     </div>
   </section>
 
-  <!-- STATS BAR -->
-  <div class="hero-stats-bar" role="list" aria-label="Características del servicio">
-    <div class="hero-stats-inner">
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">Miami-Dade</span>
-        <span class="hero-stat-label">Cobertura</span>
-      </div>
-      <div class="hero-stat-sep" aria-hidden="true"></div>
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">Precio fijo</span>
-        <span class="hero-stat-label">Sin sorpresas</span>
-      </div>
-      <div class="hero-stat-sep" aria-hidden="true"></div>
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">Ejecutivo</span>
-        <span class="hero-stat-label">Nivel de servicio</span>
-      </div>
-      <div class="hero-stat-sep" aria-hidden="true"></div>
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">&lt; 2 h</span>
-        <span class="hero-stat-label">Respuesta promedio</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- FAQ -->
-  <section class="section alt" aria-labelledby="faq-h2">
+  <!-- SERVICES -->
+  <section class="section alt" aria-labelledby="services-h2">
     <div class="container">
-      <h2 id="faq-h2">Preguntas frecuentes</h2>
-      <div style="max-width:680px">
-        <details class="faq"><summary>¿Cómo reservo?</summary><p>Completa el formulario y elige enviar por WhatsApp o email. Te confirmaremos en minutos.</p></details>
-        <details class="faq"><summary>¿Hay cargos ocultos?</summary><p>No. Manejamos precio final. Si aplica espera adicional o cambios sobre la marcha, se acuerda antes.</p></details>
-        <details class="faq"><summary>¿Cobertura?</summary><p>Miami-Dade y alrededores. Consultar disponibilidad para rutas ciudad a ciudad.</p></details>
+      <p class="section-kicker">What we do</p>
+      <h2 id="services-h2">Our main services</h2>
+      <p class="section-lead">Practical solutions built around real business needs.</p>
+
+      <div class="services-grid">
+
+        <div class="service-card">
+          <span class="service-icon">&#x1F4BB;</span>
+          <h3>Web Development &amp; Applications</h3>
+          <p>Websites, business systems, dashboards, forms and custom applications.</p>
+          <div class="service-tags">
+            <span class="service-tag">Business websites</span>
+            <span class="service-tag">Admin systems</span>
+            <span class="service-tag">Dashboards</span>
+            <span class="service-tag">Booking systems</span>
+            <span class="service-tag">Mobile apps</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <span class="service-icon">&#x2699;&#xFE0F;</span>
+          <h3>Automation &amp; Smart Systems</h3>
+          <p>Automated workflows, bots, reports and connected systems for businesses.</p>
+          <div class="service-tags">
+            <span class="service-tag">n8n workflows</span>
+            <span class="service-tag">Telegram bots</span>
+            <span class="service-tag">API integrations</span>
+            <span class="service-tag">Auto reports</span>
+            <span class="service-tag">PostgreSQL</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <span class="service-icon">&#x1F3E0;</span>
+          <h3>Smart Home &amp; IoT</h3>
+          <p>Home Assistant, sensors, smart locks, cameras and custom home automation.</p>
+          <div class="service-tags">
+            <span class="service-tag">Home Assistant</span>
+            <span class="service-tag">Smart locks</span>
+            <span class="service-tag">Sensors</span>
+            <span class="service-tag">Alexa</span>
+            <span class="service-tag">IoT dashboards</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <span class="service-icon">&#x1F527;</span>
+          <h3>Technical Support &amp; Consulting</h3>
+          <p>Practical technical support for homes, individuals and small businesses.</p>
+          <div class="service-tags">
+            <span class="service-tag">Computer setup</span>
+            <span class="service-tag">Networks</span>
+            <span class="service-tag">Software</span>
+            <span class="service-tag">Devices</span>
+            <span class="service-tag">Consulting</span>
+          </div>
+        </div>
+
+        <div class="service-card service-card--featured">
+          <span class="service-icon">&#x1F697;</span>
+          <h3>QUELVO</h3>
+          <p>Private chauffeur booking platform developed by JCDM Technologies LLC.</p>
+          <div class="service-tags">
+            <span class="service-tag">Airport transfers</span>
+            <span class="service-tag">Hourly</span>
+            <span class="service-tag">Business travel</span>
+            <span class="service-tag">Events</span>
+          </div>
+          <a class="btn btn-primary" href="/quelvo/" style="margin-top:1.25rem;display:inline-flex">Learn about QUELVO</a>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- MUSIC RIDE -->
-  <section class="section" aria-labelledby="mr-promo-h2">
+  <!-- PLATFORMS -->
+  <section class="section" aria-labelledby="platforms-h2">
     <div class="container">
-      <p class="hero-kicker" style="margin-bottom:1rem">Exclusivo · Servicio de chofer</p>
-      <h2 id="mr-promo-h2">Music Ride.</h2>
-      <p class="muted" style="max-width:500px;margin:.2rem 0 2rem;font-size:1.05rem;line-height:1.7">
-        La música del trayecto, elegida por todos los pasajeros. Sin apps, sin peleas por el aux.
-      </p>
-      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem">
-        <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Abrir app →</a>
-        <a class="btn" href="/music-ride">Saber más</a>
+      <p class="section-kicker">Featured platforms</p>
+      <h2 id="platforms-h2">Products we built and operate</h2>
+      <p class="section-lead" style="color:var(--muted)">Not just services — we build our own platforms.</p>
+
+      <div class="platforms-grid">
+
+        <div class="platform-card">
+          <p class="platform-eyebrow">Private chauffeur</p>
+          <h3 class="platform-name">QUELVO</h3>
+          <p class="platform-tagline">Private chauffeur service, scheduled your way.</p>
+          <p class="platform-desc">
+            Premium private rides in Miami for airport transfers, hourly bookings, events,
+            business travel and city-to-city trips.
+          </p>
+          <div class="platform-actions">
+            <a class="btn btn-primary" href="/quelvo/book/">Book a Ride</a>
+            <a class="btn" href="/quelvo/">Learn more</a>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <p class="platform-eyebrow">Available on QUELVO rides</p>
+          <h3 class="platform-name">Music Ride</h3>
+          <p class="platform-tagline">Shared music experience for private rides.</p>
+          <p class="platform-desc">
+            Passengers scan a QR code, join a shared session and add songs to the ride playlist
+            without installing an app. Real-time collaborative queue powered by YouTube.
+          </p>
+          <div class="platform-actions">
+            <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Open app</a>
+            <a class="btn" href="/music-ride/">Learn more</a>
+          </div>
+        </div>
+
       </div>
-      <div class="card" style="max-width:600px">
-        <ul style="margin:.25rem 0 0 0">
-          <li>Cada pasajero agrega canciones desde su móvil — sin apps</li>
-          <li>Cola en tiempo real con búsqueda directa de YouTube</li>
-          <li>El host controla: pausar, avanzar y configurar permisos</li>
-          <li>Exclusivo para sesiones del servicio de chofer JCDM</li>
-        </ul>
+    </div>
+  </section>
+
+  <!-- WHY JCDM -->
+  <section class="section alt" aria-labelledby="why-h2">
+    <div class="container">
+      <p class="section-kicker">Why JCDM</p>
+      <h2 id="why-h2">Practical technology built around real needs</h2>
+
+      <div class="why-grid">
+
+        <div class="why-item">
+          <span class="why-num">01</span>
+          <h3>Miami-based company</h3>
+          <p>Solutions designed for local clients and small businesses in the Miami-Dade area.</p>
+        </div>
+
+        <div class="why-item">
+          <span class="why-num">02</span>
+          <h3>Custom-built solutions</h3>
+          <p>Not templates. Systems and platforms adapted to each client's actual needs.</p>
+        </div>
+
+        <div class="why-item">
+          <span class="why-num">03</span>
+          <h3>Automation-first mindset</h3>
+          <p>Save time, reduce errors and connect tools through smart automation.</p>
+        </div>
+
+        <div class="why-item">
+          <span class="why-num">04</span>
+          <h3>Real-world experience</h3>
+          <p>Technology applied to transport, smart home, finance and daily business operations.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section" aria-label="Contact JCDM Technologies">
+    <div class="container">
+      <h2 class="cta-h2">Ready to work together?</h2>
+      <p class="cta-lead">Tell us what you need. We'll build it.</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="/contacto.html">Contact us</a>
+        <a class="btn" href="https://wa.me/17863487458" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
   </section>
 
   <div id="footer"></div>
 
-  <!-- Scripts -->
   <script src="/js/supabase.config.js"></script>
   <script src="/js/app.js"></script>
 
-  <!-- JSON-LD: Organization + WebSite -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -161,7 +245,8 @@
         "name": "JCDM Technologies LLC",
         "url": "https://www.jcdmtech.com/",
         "logo": "https://www.jcdmtech.com/assets/logo.png",
-        "sameAs": [],
+        "description": "Miami-based technology company offering web development, automation, smart home solutions, technical consulting and the QUELVO private chauffeur platform.",
+        "areaServed": "Miami-Dade, FL",
         "contactPoint": [{
           "@type": "ContactPoint",
           "contactType": "customer support",
