@@ -37,8 +37,6 @@
   <meta name="twitter:image" content="https://www.jcdmtech.com/assets/og-image.png">
 
   <!-- Preload logo para evitar CLS en navbar -->
-  <link rel="preload" as="image" href="/assets/logo.png" imagesrcset="/assets/logo.png 1x, /assets/logo@2x.png 2x" fetchpriority="high">
-
   <link rel="stylesheet" href="/styles.css" />
 
 <!-- Google tag (gtag.js) -->
@@ -69,115 +67,80 @@
   <!-- H1 oculto para SEO -->
   <h1 class="sr-only">Chofer privado en Miami · JCDM Technologies LLC</h1>
 
-  <!-- HERO PREMIUM -->
+  <!-- HERO -->
   <section class="hero-section" aria-labelledby="hero-h2">
-    <div class="hero-bg-glow" aria-hidden="true"></div>
     <div class="container">
-
-      <div class="hero-grid">
-
-        <!-- Contenido principal -->
-        <div class="hero-content">
-          <p class="hero-kicker">Chofer privado · Miami</p>
-          <h2 id="hero-h2" class="hero-h2">
-            Traslados de lujo<br>con atención discreta
-          </h2>
-          <p class="hero-lead">
-            Aeropuerto, agenda corporativa y eventos privados.
-            Precio final, puntualidad y coordinación profesional en Miami-Dade.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="/chofer-privado/reservar.html">Reservar servicio</a>
-            <a class="btn btn-outline" href="https://wa.me/17863487458">Consultar por WhatsApp</a>
-          </div>
-          <div class="hero-trust">
-            <span class="hero-trust-item">✓ Precio final claro</span>
-            <span class="hero-trust-item">✓ Sin cargos ocultos</span>
-            <span class="hero-trust-item">✓ Atención ejecutiva</span>
-          </div>
-        </div>
-
-        <!-- Visual decorativo -->
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-card-deco">
-            <div class="hero-deco-ring"></div>
-            <div class="hero-deco-inner">
-              <div class="hero-service-badge">
-                <span class="hero-svc-icon">🚗</span>
-                <div>
-                  <strong>Chofer privado</strong>
-                  <small class="hero-status">Disponible · Miami-Dade</small>
-                </div>
-              </div>
-              <hr class="hero-divider">
-              <ul class="hero-feature-list">
-                <li>Seguimiento de vuelos en tiempo real</li>
-                <li>Coordinación de itinerarios ejecutivos</li>
-                <li>Reserva por horas o traslado fijo</li>
-                <li>Confirmación inmediata por WhatsApp</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
+      <p class="hero-kicker">Chofer privado · Miami</p>
+      <h2 id="hero-h2" class="hero-h2">
+        Traslados de lujo<br>con atención discreta.
+      </h2>
+      <p class="hero-lead">
+        Aeropuerto, agenda corporativa y eventos privados.<br>
+        Precio final, puntualidad garantizada en Miami-Dade.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/chofer-privado/reservar.html">Reservar servicio</a>
+        <a class="btn" href="https://wa.me/17863487458">Consultar por WhatsApp</a>
       </div>
-
-      <!-- Barra de estadísticas -->
-      <div class="hero-stats" role="list" aria-label="Características del servicio">
-        <div class="hero-stat" role="listitem">
-          <span class="hero-stat-value">Miami-Dade</span>
-          <span class="hero-stat-label">Cobertura</span>
-        </div>
-        <div class="hero-stat-sep" aria-hidden="true"></div>
-        <div class="hero-stat" role="listitem">
-          <span class="hero-stat-value">Precio fijo</span>
-          <span class="hero-stat-label">Sin sorpresas</span>
-        </div>
-        <div class="hero-stat-sep" aria-hidden="true"></div>
-        <div class="hero-stat" role="listitem">
-          <span class="hero-stat-value">Ejecutivo</span>
-          <span class="hero-stat-label">Nivel de servicio</span>
-        </div>
-        <div class="hero-stat-sep" aria-hidden="true"></div>
-        <div class="hero-stat" role="listitem">
-          <span class="hero-stat-value">&lt; 2 h</span>
-          <span class="hero-stat-label">Respuesta promedio</span>
-        </div>
-      </div>
-
     </div>
   </section>
+
+  <!-- STATS BAR -->
+  <div class="hero-stats-bar" role="list" aria-label="Características del servicio">
+    <div class="hero-stats-inner">
+      <div class="hero-stat" role="listitem">
+        <span class="hero-stat-value">Miami-Dade</span>
+        <span class="hero-stat-label">Cobertura</span>
+      </div>
+      <div class="hero-stat-sep" aria-hidden="true"></div>
+      <div class="hero-stat" role="listitem">
+        <span class="hero-stat-value">Precio fijo</span>
+        <span class="hero-stat-label">Sin sorpresas</span>
+      </div>
+      <div class="hero-stat-sep" aria-hidden="true"></div>
+      <div class="hero-stat" role="listitem">
+        <span class="hero-stat-value">Ejecutivo</span>
+        <span class="hero-stat-label">Nivel de servicio</span>
+      </div>
+      <div class="hero-stat-sep" aria-hidden="true"></div>
+      <div class="hero-stat" role="listitem">
+        <span class="hero-stat-value">&lt; 2 h</span>
+        <span class="hero-stat-label">Respuesta promedio</span>
+      </div>
+    </div>
+  </div>
 
   <!-- FAQ -->
   <section class="section alt" aria-labelledby="faq-h2">
     <div class="container">
       <h2 id="faq-h2">Preguntas frecuentes</h2>
-      <details class="faq"><summary>¿Cómo reservo?</summary><p>Completa el formulario y elige enviar por WhatsApp o email. Te confirmaremos en minutos.</p></details>
-      <details class="faq"><summary>¿Hay cargos ocultos?</summary><p>No. Manejamos precio final. Si aplica espera adicional o cambios sobre la marcha, se acuerda antes.</p></details>
-      <details class="faq"><summary>¿Cobertura?</summary><p>Miami-Dade y alrededores. Consultar disponibilidad para rutas ciudad a ciudad.</p></details>
+      <div style="max-width:680px">
+        <details class="faq"><summary>¿Cómo reservo?</summary><p>Completa el formulario y elige enviar por WhatsApp o email. Te confirmaremos en minutos.</p></details>
+        <details class="faq"><summary>¿Hay cargos ocultos?</summary><p>No. Manejamos precio final. Si aplica espera adicional o cambios sobre la marcha, se acuerda antes.</p></details>
+        <details class="faq"><summary>¿Cobertura?</summary><p>Miami-Dade y alrededores. Consultar disponibilidad para rutas ciudad a ciudad.</p></details>
+      </div>
     </div>
   </section>
 
   <!-- MUSIC RIDE -->
   <section class="section" aria-labelledby="mr-promo-h2">
     <div class="container">
-      <h2 id="mr-promo-h2">Music Ride</h2>
-      <p class="muted" style="margin:.2rem 0 1.2rem">
-        La música del trayecto, elegida por todos los pasajeros.
+      <p class="hero-kicker" style="margin-bottom:1rem">Exclusivo · Servicio de chofer</p>
+      <h2 id="mr-promo-h2">Music Ride.</h2>
+      <p class="muted" style="max-width:500px;margin:.2rem 0 2rem;font-size:1.05rem;line-height:1.7">
+        La música del trayecto, elegida por todos los pasajeros. Sin apps, sin peleas por el aux.
       </p>
-      <div class="card" style="max-width:720px">
-        <ul class="muted" style="margin:.25rem 0 1.1rem 0">
-          <li>Cada pasajero agrega canciones desde su móvil — sin apps que instalar</li>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem">
+        <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Abrir app →</a>
+        <a class="btn" href="/music-ride">Saber más</a>
+      </div>
+      <div class="card" style="max-width:600px">
+        <ul style="margin:.25rem 0 0 0">
+          <li>Cada pasajero agrega canciones desde su móvil — sin apps</li>
           <li>Cola en tiempo real con búsqueda directa de YouTube</li>
-          <li>El host mantiene el control: pausar, avanzar y configurar permisos</li>
+          <li>El host controla: pausar, avanzar y configurar permisos</li>
           <li>Exclusivo para sesiones del servicio de chofer JCDM</li>
         </ul>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">
-            Abrir app →
-          </a>
-          <a class="btn" href="/music-ride">Saber más</a>
-        </div>
       </div>
     </div>
   </section>
