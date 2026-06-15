@@ -3,42 +3,101 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Admin · JCDM Technologies LLC</title>
-  <meta name="description" content="Admin panel — manage vehicles and drivers.">
+  <meta name="description" content="Admin panel — manage bookings, vehicles and drivers.">
   <link rel="canonical" href="https://www.jcdmtech.com/admin/">
-
   <link rel="icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-  <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
-
   <meta name="theme-color" content="#09090B">
-  <meta name="color-scheme" content="dark light">
-
   <link rel="stylesheet" href="/styles.css">
   <style>
+    /* ── shared ─────────────────────────────────────────────── */
     .list .item{display:flex;gap:.75rem;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:4px;padding:.6rem .75rem;margin:.4rem 0;background:var(--card)}
     .row-main{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
     .row-actions{display:flex;gap:.5rem;flex-shrink:0}
     .inline-edit{display:grid;gap:.5rem;grid-template-columns:repeat(6,minmax(0,1fr))}
-    .inline-edit input{width:100%}
+    .inline-edit input,.inline-edit select{width:100%}
     .grid-span-full{grid-column:1/-1}
-    .muted-small{font-size:.9em;color:var(--muted)}
-    .toolbar{display:flex;gap:.5rem;align-items:center;justify-content:space-between;margin:.5rem 0}
+    .muted-small{font-size:.85em;color:var(--muted)}
+    .toolbar{display:flex;gap:.5rem;align-items:center;justify-content:space-between;margin:.5rem 0;flex-wrap:wrap}
     .toolbar .right{display:flex;gap:.5rem;align-items:center}
-    .pill{display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:999px}
+    .pill{display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:999px;font-size:.82rem}
+
+    /* ── bookings ────────────────────────────────────────────── */
+    .bk-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem}
+    .bk-tab{padding:.35rem .85rem;border:1px solid var(--border);border-radius:20px;font-size:.82rem;cursor:pointer;background:transparent;color:var(--muted);font-family:inherit}
+    .bk-tab:hover{border-color:var(--gold-line);color:var(--text)}
+    .bk-tab.active{border-color:var(--gold);color:var(--gold);font-weight:600}
+
+    .bk-item{border:1px solid var(--border);border-radius:6px;margin:.5rem 0;overflow:hidden;background:var(--card)}
+    .bk-head{display:flex;gap:.75rem;align-items:center;padding:.7rem 1rem;cursor:pointer;flex-wrap:wrap}
+    .bk-head:hover{background:rgba(255,255,255,.02)}
+    .bk-code{font-family:monospace;font-size:.88rem;font-weight:600;color:var(--gold);flex-shrink:0}
+    .bk-info{flex:1;min-width:0}
+    .bk-info-main{font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .bk-info-sub{font-size:.8rem;color:var(--muted);margin-top:.1rem}
+    .bk-price{font-weight:700;font-size:1rem;flex-shrink:0}
+    .bk-chevron{color:var(--muted);font-size:.8rem;flex-shrink:0;transition:transform .2s}
+    .bk-item.open .bk-chevron{transform:rotate(180deg)}
+
+    .bk-body{display:none;padding:1rem;border-top:1px solid var(--border);background:rgba(0,0,0,.2)}
+    .bk-item.open .bk-body{display:block}
+    .bk-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.3rem .75rem;font-size:.85rem;margin-bottom:1rem}
+    @media(max-width:480px){.bk-detail-grid{grid-template-columns:1fr}}
+    .bk-detail-grid dt{color:var(--muted);margin:0}
+    .bk-detail-grid dd{margin:0}
+    .bk-admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.65rem;margin-top:1rem}
+    .bk-admin-grid label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:.2rem}
+    .bk-admin-grid input,.bk-admin-grid select,.bk-admin-grid textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:.88rem;padding:.45rem .65rem;font-family:inherit}
+    .bk-admin-grid textarea{resize:vertical;min-height:56px;grid-column:1/-1}
+    .bk-admin-grid input:focus,.bk-admin-grid select:focus,.bk-admin-grid textarea:focus{outline:none;border-color:var(--gold)}
+    .bk-save-row{display:flex;justify-content:flex-end;margin-top:.75rem}
+
+    /* status pills */
+    .s-pending      {background:rgba(200,169,110,.15);color:#C8A96E;border-color:rgba(200,169,110,.3)}
+    .s-pending_quote{background:rgba(249,115,22,.12);color:#F97316;border-color:rgba(249,115,22,.3)}
+    .s-confirmed    {background:rgba(59,130,246,.12);color:#60A5FA;border-color:rgba(59,130,246,.3)}
+    .s-assigned     {background:rgba(34,197,94,.12);color:#4ADE80;border-color:rgba(34,197,94,.3)}
+    .s-en_route     {background:rgba(14,165,233,.12);color:#38BDF8;border-color:rgba(14,165,233,.3)}
+    .s-completed    {background:rgba(107,114,128,.12);color:#9CA3AF;border-color:rgba(107,114,128,.3)}
+    .s-cancelled    {background:rgba(239,68,68,.12);color:#F87171;border-color:rgba(239,68,68,.3)}
   </style>
 </head>
 <body>
   <div id="header"></div>
 
-  <main class="container">
-    <h1 style="font-family:'Fraunces',Georgia,serif;margin-bottom:.25rem">Admin Panel</h1>
-    <p class="muted">Manage <strong>vehicles</strong> and <strong>drivers</strong>. Requires <code>admin</code> role.</p>
+  <main class="container" style="padding-bottom:4rem">
+    <h1 style="font-family:'Fraunces',Georgia,serif;margin:1.5rem 0 .25rem">Admin Panel</h1>
+    <p class="muted" style="margin-bottom:1.5rem">QUELVO bookings, vehicles &amp; drivers. Requires <code>admin</code> role.</p>
     <div id="flash" class="form-msg" style="display:none"></div>
 
-    <!-- Vehicles -->
-    <section class="card" style="margin-top:1.5rem" aria-labelledby="vehicles-h2">
+    <!-- ══════════════════════════════════════════════════
+         BOOKINGS
+    ══════════════════════════════════════════════════ -->
+    <section class="card" style="margin-bottom:1.5rem" aria-labelledby="bk-h2">
+      <div class="toolbar">
+        <h2 id="bk-h2">Bookings</h2>
+        <div class="right">
+          <button class="btn" onclick="loadBookings()" type="button">↺ Refresh</button>
+        </div>
+      </div>
+
+      <div class="bk-tabs" id="bkTabs">
+        <button class="bk-tab active" data-filter="all"           onclick="filterBk('all',this)">All</button>
+        <button class="bk-tab"        data-filter="pending"       onclick="filterBk('pending',this)">Pending</button>
+        <button class="bk-tab"        data-filter="pending_quote" onclick="filterBk('pending_quote',this)">Quote req.</button>
+        <button class="bk-tab"        data-filter="confirmed"     onclick="filterBk('confirmed',this)">Confirmed</button>
+        <button class="bk-tab"        data-filter="assigned"      onclick="filterBk('assigned',this)">Assigned</button>
+        <button class="bk-tab"        data-filter="completed"     onclick="filterBk('completed',this)">Completed</button>
+        <button class="bk-tab"        data-filter="cancelled"     onclick="filterBk('cancelled',this)">Cancelled</button>
+      </div>
+
+      <div id="bkList" aria-live="polite"><p class="muted">Loading bookings…</p></div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         VEHICLES
+    ══════════════════════════════════════════════════ -->
+    <section class="card" style="margin-bottom:1.5rem" aria-labelledby="vehicles-h2">
       <div class="toolbar">
         <h2 id="vehicles-h2">Vehicles</h2>
         <div class="right">
@@ -60,8 +119,10 @@
       <p class="muted-small" style="margin-top:.5rem">Tip: click <strong>Edit</strong> to update a row inline.</p>
     </section>
 
-    <!-- Drivers -->
-    <section class="card" style="margin-top:1.5rem" aria-labelledby="drivers-h2">
+    <!-- ══════════════════════════════════════════════════
+         DRIVERS
+    ══════════════════════════════════════════════════ -->
+    <section class="card" aria-labelledby="drivers-h2">
       <div class="toolbar">
         <h2 id="drivers-h2">Drivers</h2>
         <div class="right">
@@ -70,10 +131,16 @@
       </div>
 
       <form id="driverForm" class="grid grid-3" autocomplete="off" style="margin-bottom:1rem">
-        <input name="full_name"  placeholder="Full name" required>
-        <input name="phone"      placeholder="Phone"     required>
-        <input name="license_no" placeholder="License (optional)">
-        <input name="notes"      placeholder="Notes" class="grid-span-full">
+        <input name="name"         placeholder="Full name" required>
+        <input name="phone"        placeholder="Phone">
+        <input name="license"      placeholder="License (optional)">
+        <select name="vehicle_class">
+          <option value="private">QUELVO Private</option>
+          <option value="suv">QUELVO Black SUV</option>
+        </select>
+        <input name="hourly_rate"        type="number" step="0.01" placeholder="Rate/hr ($)">
+        <input name="min_transfer_price" type="number" step="0.01" placeholder="Min transfer ($)">
+        <input name="notes" placeholder="Notes" class="grid-span-full">
         <button class="btn btn-primary" type="submit">Add driver</button>
       </form>
 
@@ -88,47 +155,182 @@
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const { url, anon } = window.__SUPABASE__;
-    const supabase = createClient(url, anon, { auth: { flowType: 'implicit' } });
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, { auth: { flowType: 'implicit' } });
 
-    // --- XSS-safe HTML escaping ---
-    const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
+    const esc = (s) => String(s || '').replace(/[&<>"']/g, c =>
+      ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
     const flash = document.getElementById('flash');
     const showFlash = (text, ok = true) => {
       flash.textContent = text;
       flash.style.display = 'block';
-      flash.classList.remove('error', 'success');
-      flash.classList.add(ok ? 'success' : 'error');
+      flash.className = 'form-msg ' + (ok ? 'success' : 'error');
       setTimeout(() => { flash.style.display = 'none'; }, 3000);
     };
 
-    // Guard: session required + admin role required
+    // Guard
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) location.href = "/login.html?next=/admin/";
+    if (!session) { location.href = '/login.html?next=/admin/'; }
+    const { data: prof } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+    if (prof?.role !== 'admin') { location.href = '/'; }
 
-    const { data: prof } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
-    if (prof?.role !== "admin") location.href = "/";
+    // ══════════════════════════════════════════════════
+    // BOOKINGS
+    // ══════════════════════════════════════════════════
+    const STATUS = {
+      pending:       'Pending',
+      pending_quote: 'Quote req.',
+      confirmed:     'Confirmed',
+      assigned:      'Driver assigned',
+      en_route:      'En route',
+      completed:     'Completed',
+      cancelled:     'Cancelled',
+    };
+    const CLASS_NAME = { private: 'QUELVO Private', suv: 'QUELVO Black SUV' };
+    const SVC_NAME   = { transfer: 'Transfer', hourly: 'By the hour', quote: 'Quote' };
 
-    // ============================================================
+    let bookings = [], bkFilter = 'all';
+
+    window.filterBk = (f, btn) => {
+      bkFilter = f;
+      document.querySelectorAll('.bk-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderBookings();
+    };
+
+    window.loadBookings = async () => {
+      document.getElementById('bkList').innerHTML = '<p class="muted">Loading…</p>';
+      const { data, error } = await supabase
+        .from('bookings')
+        .select('*, drivers(id, name, phone)')
+        .order('created_at', { ascending: false });
+      if (error) { document.getElementById('bkList').innerHTML = `<p class="form-msg error">${esc(error.message)}</p>`; return; }
+      bookings = data || [];
+      renderBookings();
+    };
+
+    function renderBookings() {
+      const list = document.getElementById('bkList');
+      const filtered = bkFilter === 'all' ? bookings : bookings.filter(b => b.status === bkFilter);
+
+      if (!filtered.length) {
+        list.innerHTML = `<p class="muted">${bkFilter === 'all' ? 'No bookings yet.' : 'No bookings with this status.'}</p>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map(b => {
+        const dt   = b.pickup_at ? new Date(b.pickup_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+        const route = b.service_type === 'transfer'
+          ? `${(b.pickup_address||'').split(',')[0]} → ${(b.dropoff_address||'').split(',')[0]}`
+          : (b.pickup_address||'').split(',')[0];
+        const price = b.admin_price ?? b.base_price;
+
+        return `<div class="bk-item" id="bki-${esc(b.id)}">
+          <div class="bk-head" onclick="toggleBk('${esc(b.id)}')">
+            <span class="pill s-${esc(b.status)}">${esc(STATUS[b.status] || b.status)}</span>
+            <span class="bk-code">${esc(b.booking_code)}</span>
+            <div class="bk-info">
+              <div class="bk-info-main">${esc(CLASS_NAME[b.vehicle_class])} · ${esc(SVC_NAME[b.service_type])} · ${esc(b.client_name)}</div>
+              <div class="bk-info-sub">${esc(dt)} · ${esc(route)}</div>
+            </div>
+            <span class="bk-price">${price != null ? '$'+price : '—'}</span>
+            <span class="bk-chevron">▾</span>
+          </div>
+          <div class="bk-body">
+            <dl class="bk-detail-grid">
+              <dt>Client</dt><dd>${esc(b.client_name)} · ${esc(b.client_phone)} · ${esc(b.client_email)}</dd>
+              ${b.service_type==='transfer' ? `<dt>Route</dt><dd>${esc(b.pickup_address)} → ${esc(b.dropoff_address)}</dd>` : `<dt>Pickup</dt><dd>${esc(b.pickup_address)}</dd>`}
+              ${b.estimated_miles ? `<dt>Distance</dt><dd>${b.estimated_miles} mi · ~${b.estimated_minutes} min</dd>` : ''}
+              ${b.requested_hours ? `<dt>Duration</dt><dd>${b.requested_hours}h</dd>` : ''}
+              <dt>Passengers</dt><dd>${esc(String(b.passengers))}</dd>
+              ${b.flight_number    ? `<dt>Flight</dt><dd>${esc(b.flight_number)}</dd>`     : ''}
+              ${b.special_requests ? `<dt>Requests</dt><dd>${esc(b.special_requests)}</dd>` : ''}
+              <dt>Booking date</dt><dd>${new Date(b.created_at).toLocaleString('en-US')}</dd>
+              <dt>Pricing type</dt><dd>${esc(b.pricing_type || '—')}</dd>
+              ${b.admin_notes ? `<dt>Admin notes</dt><dd>${esc(b.admin_notes)}</dd>` : ''}
+            </dl>
+
+            <hr style="border:0;border-top:1px solid var(--border);margin:.75rem 0">
+            <p style="font-size:.82rem;color:var(--muted);margin:0 0 .5rem">Admin actions</p>
+
+            <div class="bk-admin-grid">
+              <div>
+                <label>Status</label>
+                <select id="bk-status-${esc(b.id)}">
+                  ${Object.entries(STATUS).map(([v,l]) => `<option value="${v}"${b.status===v?' selected':''}>${l}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label>Assign driver</label>
+                <select id="bk-driver-${esc(b.id)}">
+                  <option value="">— Not assigned —</option>
+                  ${(window._drivers||[]).map(d => `<option value="${d.id}"${b.driver_id===d.id?' selected':''}>${esc(d.name)}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label>Final price ($)</label>
+                <input type="number" step="0.01" id="bk-price-${esc(b.id)}" value="${price != null ? price : ''}" placeholder="${b.base_price != null ? 'Base: $'+b.base_price : 'No estimate'}">
+              </div>
+              <div style="grid-column:1/-1">
+                <label>Admin notes</label>
+                <textarea id="bk-notes-${esc(b.id)}" placeholder="Internal notes…">${esc(b.admin_notes||'')}</textarea>
+              </div>
+            </div>
+            <div class="bk-save-row">
+              <button class="btn btn-primary" onclick="saveBooking('${esc(b.id)}')" type="button">Save changes</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    window.toggleBk = (id) => {
+      document.getElementById('bki-' + id)?.classList.toggle('open');
+    };
+
+    window.saveBooking = async (id) => {
+      const status    = document.getElementById('bk-status-' + id)?.value;
+      const driver_id = document.getElementById('bk-driver-' + id)?.value || null;
+      const priceVal  = document.getElementById('bk-price-'  + id)?.value;
+      const notes     = document.getElementById('bk-notes-'  + id)?.value.trim();
+
+      const { error } = await supabase.from('bookings').update({
+        status,
+        driver_id:   driver_id ? Number(driver_id) : null,
+        admin_price: priceVal ? parseFloat(priceVal) : null,
+        admin_notes: notes || null,
+      }).eq('id', id);
+
+      if (error) return showFlash(error.message, false);
+
+      const idx = bookings.findIndex(b => b.id === id || b.id === Number(id));
+      if (idx >= 0) {
+        bookings[idx].status      = status;
+        bookings[idx].driver_id   = driver_id ? Number(driver_id) : null;
+        bookings[idx].admin_price = priceVal ? parseFloat(priceVal) : null;
+        bookings[idx].admin_notes = notes || null;
+      }
+      showFlash('Booking updated.');
+      document.getElementById('bki-' + id)?.classList.remove('open');
+      renderBookings();
+    };
+
+    // ══════════════════════════════════════════════════
     // VEHICLES
-    // ============================================================
-    const carForm   = document.getElementById("carForm");
-    const carsList  = document.getElementById("carsList");
-    const carSearch = document.getElementById("carSearch");
+    // ══════════════════════════════════════════════════
+    const carForm   = document.getElementById('carForm');
+    const carsList  = document.getElementById('carsList');
+    const carSearch = document.getElementById('carSearch');
     let cars = [];
 
     function carSummary(v) {
-      return [v.year, v.make, v.model, v.color ? '· ' + v.color : '', v.plate ? '· ' + v.plate : '']
-        .filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+      return [v.year, v.make, v.model, v.color ? '· '+v.color : '', v.plate ? '· '+v.plate : '']
+        .filter(Boolean).join(' ').trim();
     }
 
-    function renderCars(filter = "") {
+    function renderCars(filter = '') {
       const term = filter.trim().toLowerCase();
       const data = !term ? cars : cars.filter(v => carSummary(v).toLowerCase().includes(term));
-
       carsList.innerHTML = data.length
         ? data.map(v => `
             <div class="item" data-id="${esc(v.id)}">
@@ -140,173 +342,161 @@
                 <button class="btn" data-edit="${esc(v.id)}" type="button">Edit</button>
                 <button class="btn" data-del="${esc(v.id)}"  type="button">Delete</button>
               </div>
-            </div>`).join("")
+            </div>`).join('')
         : "<p class='muted'>No vehicles found.</p>";
 
-      carsList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+      carsList.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
         const id = b.dataset.del;
-        if (!confirm("Delete this vehicle?")) return;
-        await supabase.from("vehicles").delete().eq("id", id);
+        if (!confirm('Delete this vehicle?')) return;
+        await supabase.from('vehicles').delete().eq('id', id);
         cars = cars.filter(x => x.id !== id);
-        renderCars(term);
-        showFlash("Vehicle deleted.");
+        renderCars(term); showFlash('Vehicle deleted.');
       });
-
-      carsList.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => startEditCar(b.dataset.edit));
+      carsList.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => startEditCar(b.dataset.edit));
     }
 
     function startEditCar(id) {
-      const v = cars.find(x => x.id === id);
-      if (!v) return;
-      const row = carsList.querySelector(`[data-id="${id}"]`);
-      if (!row) return;
+      const v = cars.find(x => x.id === id); if (!v) return;
+      const row = carsList.querySelector(`[data-id="${id}"]`); if (!row) return;
       row.innerHTML = `
         <div class="inline-edit">
-          <input name="make"     placeholder="Make"   value="${esc(v.make)}">
-          <input name="model"    placeholder="Model"  value="${esc(v.model)}">
-          <input name="year"     type="number" placeholder="Year" value="${esc(String(v.year || ''))}">
-          <input name="color"    placeholder="Color"  value="${esc(v.color)}">
-          <input name="plate"    placeholder="Plate"  value="${esc(v.plate)}">
-          <input name="capacity" type="number" placeholder="Capacity" value="${esc(String(v.capacity || ''))}">
+          <input name="make"  value="${esc(v.make)}">  <input name="model" value="${esc(v.model)}">
+          <input name="year"  type="number" value="${esc(String(v.year||''))}">
+          <input name="color" value="${esc(v.color)}">  <input name="plate" value="${esc(v.plate)}">
+          <input name="capacity" type="number" value="${esc(String(v.capacity||''))}">
           <div class="grid-span-full" style="display:flex;gap:.5rem;justify-content:flex-end">
-            <button class="btn" data-cancel="${esc(id)}" type="button">Cancel</button>
-            <button class="btn btn-primary" data-save="${esc(id)}" type="button">Save</button>
+            <button class="btn" data-cancel type="button">Cancel</button>
+            <button class="btn btn-primary" data-save type="button">Save</button>
           </div>
         </div>`;
-
-      row.querySelector('[data-cancel]')?.addEventListener('click', () => renderCars(carSearch.value));
-      row.querySelector('[data-save]')?.addEventListener('click', async () => {
-        const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i => [i.name, i.value]));
-        if (vals.year)     vals.year     = Number(vals.year);
+      row.querySelector('[data-cancel]').onclick = () => renderCars(carSearch.value);
+      row.querySelector('[data-save]').onclick = async () => {
+        const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i=>[i.name,i.value]));
+        if (vals.year) vals.year = Number(vals.year);
         if (vals.capacity) vals.capacity = Number(vals.capacity);
         await supabase.from('vehicles').update(vals).eq('id', id);
-        const { data: updated } = await supabase.from('vehicles').select('*').eq('id', id).single();
-        const idx = cars.findIndex(x => x.id === id);
-        if (idx >= 0) cars[idx] = updated;
-        renderCars(carSearch.value);
-        showFlash("Vehicle updated.");
-      });
+        const { data: u } = await supabase.from('vehicles').select('*').eq('id', id).single();
+        const idx = cars.findIndex(x=>x.id===id); if (idx>=0) cars[idx]=u;
+        renderCars(carSearch.value); showFlash('Vehicle updated.');
+      };
     }
 
     async function loadCars() {
-      carsList.setAttribute('aria-busy', 'true');
-      const { data } = await supabase.from("vehicles").select("*").order("created_at", { ascending: false });
-      cars = data || [];
-      renderCars(carSearch.value || "");
-      carsList.setAttribute('aria-busy', 'false');
+      const { data } = await supabase.from('vehicles').select('*').order('created_at',{ascending:false});
+      cars = data || []; renderCars();
     }
 
     carForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const o = Object.fromEntries(new FormData(carForm).entries());
-      if (o.year)     o.year     = Number(o.year);
+      if (o.year) o.year = Number(o.year);
       if (o.capacity) o.capacity = Number(o.capacity);
-      const { data, error } = await supabase.from("vehicles").insert(o).select("*").single();
+      const { data, error } = await supabase.from('vehicles').insert(o).select('*').single();
       if (error) return showFlash(error.message, false);
-      cars.unshift(data);
-      carForm.reset();
-      renderCars(carSearch.value);
-      showFlash("Vehicle added.");
+      cars.unshift(data); carForm.reset(); renderCars(); showFlash('Vehicle added.');
     });
-
     carSearch.addEventListener('input', () => renderCars(carSearch.value));
 
-    // ============================================================
+    // ══════════════════════════════════════════════════
     // DRIVERS
-    // ============================================================
-    const driverForm   = document.getElementById("driverForm");
-    const driversList  = document.getElementById("driversList");
-    const driverSearch = document.getElementById("driverSearch");
+    // ══════════════════════════════════════════════════
+    const driverForm   = document.getElementById('driverForm');
+    const driversList  = document.getElementById('driversList');
+    const driverSearch = document.getElementById('driverSearch');
     let drivers = [];
 
     function driverSummary(d) {
-      return [d.full_name, d.phone ? '· ' + d.phone : '', d.license_no ? '· Lic: ' + d.license_no : '']
-        .filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+      const cls = d.vehicle_class === 'suv' ? 'Black SUV' : 'Private';
+      const rate = d.hourly_rate ? `$${d.hourly_rate}/hr` : '';
+      return [d.name, d.phone ? '· '+d.phone : '', cls ? `· ${cls}` : '', rate ? `· ${rate}` : '']
+        .filter(Boolean).join(' ').trim();
     }
 
-    function renderDrivers(filter = "") {
+    function renderDrivers(filter = '') {
       const term = filter.trim().toLowerCase();
       const data = !term ? drivers : drivers.filter(d => driverSummary(d).toLowerCase().includes(term));
-
       driversList.innerHTML = data.length
         ? data.map(d => `
-            <div class="item" data-id="${esc(d.id)}">
+            <div class="item" data-id="${esc(String(d.id))}">
               <div class="row-main">
                 <span>${esc(driverSummary(d))}</span>
-                ${d.notes ? `<span class="pill muted-small">${esc(d.notes)}</span>` : ''}
+                ${d.license ? `<span class="pill muted-small">Lic: ${esc(d.license)}</span>` : ''}
               </div>
               <div class="row-actions">
-                <button class="btn" data-edit="${esc(d.id)}" type="button">Edit</button>
-                <button class="btn" data-del="${esc(d.id)}"  type="button">Delete</button>
+                <button class="btn" data-edit="${esc(String(d.id))}" type="button">Edit</button>
+                <button class="btn" data-del="${esc(String(d.id))}"  type="button">Delete</button>
               </div>
-            </div>`).join("")
+            </div>`).join('')
         : "<p class='muted'>No drivers found.</p>";
 
-      driversList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+      driversList.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
         const id = b.dataset.del;
-        if (!confirm("Delete this driver?")) return;
-        await supabase.from("drivers").delete().eq("id", id);
-        drivers = drivers.filter(x => x.id !== id);
-        renderDrivers(term);
-        showFlash("Driver deleted.");
+        if (!confirm('Delete this driver?')) return;
+        await supabase.from('drivers').delete().eq('id', id);
+        drivers = drivers.filter(x => String(x.id) !== id);
+        renderDrivers(term); showFlash('Driver deleted.');
+        window._drivers = drivers;
       });
-
-      driversList.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => startEditDriver(b.dataset.edit));
+      driversList.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => startEditDriver(b.dataset.edit));
     }
 
     function startEditDriver(id) {
-      const d = drivers.find(x => x.id === id);
-      if (!d) return;
-      const row = driversList.querySelector(`[data-id="${id}"]`);
-      if (!row) return;
+      const d = drivers.find(x => String(x.id) === id); if (!d) return;
+      const row = driversList.querySelector(`[data-id="${id}"]`); if (!row) return;
       row.innerHTML = `
         <div class="inline-edit">
-          <input name="full_name"  placeholder="Full name" value="${esc(d.full_name)}">
-          <input name="phone"      placeholder="Phone"     value="${esc(d.phone)}">
-          <input name="license_no" placeholder="License"   value="${esc(d.license_no)}">
-          <input name="notes"      placeholder="Notes" class="grid-span-full" value="${esc(d.notes)}">
+          <input name="name"              value="${esc(d.name)}">
+          <input name="phone"             value="${esc(d.phone)}">
+          <input name="license"           value="${esc(d.license)}">
+          <select name="vehicle_class">
+            <option value="private"${d.vehicle_class==='private'?' selected':''}>QUELVO Private</option>
+            <option value="suv"${d.vehicle_class==='suv'?' selected':''}>QUELVO Black SUV</option>
+          </select>
+          <input name="hourly_rate"        type="number" step="0.01" value="${esc(String(d.hourly_rate||''))}" placeholder="Rate/hr">
+          <input name="min_transfer_price" type="number" step="0.01" value="${esc(String(d.min_transfer_price||''))}" placeholder="Min transfer">
+          <input name="notes" class="grid-span-full" value="${esc(d.notes)}">
           <div class="grid-span-full" style="display:flex;gap:.5rem;justify-content:flex-end">
-            <button class="btn" data-cancel="${esc(id)}" type="button">Cancel</button>
-            <button class="btn btn-primary" data-save="${esc(id)}" type="button">Save</button>
+            <button class="btn" data-cancel type="button">Cancel</button>
+            <button class="btn btn-primary" data-save type="button">Save</button>
           </div>
         </div>`;
-
-      row.querySelector('[data-cancel]')?.addEventListener('click', () => renderDrivers(driverSearch.value));
-      row.querySelector('[data-save]')?.addEventListener('click', async () => {
-        const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i => [i.name, i.value]));
+      row.querySelector('[data-cancel]').onclick = () => renderDrivers(driverSearch.value);
+      row.querySelector('[data-save]').onclick = async () => {
+        const vals = Object.fromEntries([...row.querySelectorAll('input,select')].map(i=>[i.name,i.value]));
+        if (vals.hourly_rate)        vals.hourly_rate        = vals.hourly_rate        ? Number(vals.hourly_rate)        : null;
+        if (vals.min_transfer_price) vals.min_transfer_price = vals.min_transfer_price ? Number(vals.min_transfer_price) : null;
         const { error } = await supabase.from('drivers').update(vals).eq('id', id);
         if (error) return showFlash(error.message, false);
-        const { data: updated } = await supabase.from('drivers').select('*').eq('id', id).single();
-        const idx = drivers.findIndex(x => x.id === id);
-        if (idx >= 0) drivers[idx] = updated;
-        renderDrivers(driverSearch.value);
-        showFlash("Driver updated.");
-      });
+        const { data: u } = await supabase.from('drivers').select('*').eq('id', id).single();
+        const idx = drivers.findIndex(x=>String(x.id)===id); if (idx>=0) drivers[idx]=u;
+        window._drivers = drivers;
+        renderDrivers(driverSearch.value); showFlash('Driver updated.');
+      };
     }
 
     async function loadDrivers() {
-      driversList.setAttribute('aria-busy', 'true');
-      const { data } = await supabase.from("drivers").select("*").order("created_at", { ascending: false });
+      const { data } = await supabase.from('drivers').select('*').order('created_at',{ascending:false});
       drivers = data || [];
-      renderDrivers(driverSearch.value || "");
-      driversList.setAttribute('aria-busy', 'false');
+      window._drivers = drivers;
+      renderDrivers();
     }
 
     driverForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const o = Object.fromEntries(new FormData(driverForm).entries());
-      const { data, error } = await supabase.from("drivers").insert(o).select("*").single();
+      if (o.hourly_rate)        o.hourly_rate        = o.hourly_rate        ? Number(o.hourly_rate)        : null;
+      if (o.min_transfer_price) o.min_transfer_price = o.min_transfer_price ? Number(o.min_transfer_price) : null;
+      const { data, error } = await supabase.from('drivers').insert(o).select('*').single();
       if (error) return showFlash(error.message, false);
-      drivers.unshift(data);
-      driverForm.reset();
-      renderDrivers(driverSearch.value);
-      showFlash("Driver added.");
+      drivers.unshift(data); window._drivers = drivers;
+      driverForm.reset(); renderDrivers(); showFlash('Driver added.');
     });
-
     driverSearch.addEventListener('input', () => renderDrivers(driverSearch.value));
 
-    // Initial load
+    // ── Initial load ──────────────────────────────────
+    // Drivers must load before bookings so driver dropdown renders correctly
     await Promise.all([loadCars(), loadDrivers()]);
+    await window.loadBookings();
   </script>
 </body>
 </html>
