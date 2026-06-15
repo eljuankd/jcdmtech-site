@@ -1,83 +1,80 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Admin | JCDM Technologies LLC</title>
-  <meta name="description" content="Panel administrativo de JCDM Technologies LLC para gestionar vehículos y choferes.">
+  <title>Admin · JCDM Technologies LLC</title>
+  <meta name="description" content="Admin panel — manage vehicles and drivers.">
   <link rel="canonical" href="https://www.jcdmtech.com/admin/">
 
-  <!-- Favicon & App Icons -->
   <link rel="icon" href="/assets/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
 
-  <!-- Theme color -->
-  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#0B0C10" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090B">
   <meta name="color-scheme" content="dark light">
 
   <link rel="stylesheet" href="/styles.css">
   <style>
-    .list .item{display:flex;gap:.75rem;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:12px;padding:.6rem .75rem;margin:.4rem 0;background:var(--card)}
+    .list .item{display:flex;gap:.75rem;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:4px;padding:.6rem .75rem;margin:.4rem 0;background:var(--card)}
     .row-main{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-    .row-actions{display:flex;gap:.5rem}
+    .row-actions{display:flex;gap:.5rem;flex-shrink:0}
     .inline-edit{display:grid;gap:.5rem;grid-template-columns:repeat(6,minmax(0,1fr))}
     .inline-edit input{width:100%}
-    .grid-span-3{grid-column:1/-1}
+    .grid-span-full{grid-column:1/-1}
     .muted-small{font-size:.9em;color:var(--muted)}
     .toolbar{display:flex;gap:.5rem;align-items:center;justify-content:space-between;margin:.5rem 0}
     .toolbar .right{display:flex;gap:.5rem;align-items:center}
     .pill{display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:999px}
-    .success{background:#0f2e18;color:#a7f3d0;border:1px solid #14532d}
-    .error{background:#2a0f14;color:#fecaca;border:1px solid #7f1d1d}
   </style>
 </head>
 <body>
   <div id="header"></div>
 
   <main class="container">
-    <h1>Panel Admin</h1>
-    <p class="muted">Gestiona <strong>vehículos</strong> y <strong>choferes</strong>. Solo usuarios con rol <code>admin</code>.</p>
+    <h1 style="font-family:'Fraunces',Georgia,serif;margin-bottom:.25rem">Admin Panel</h1>
+    <p class="muted">Manage <strong>vehicles</strong> and <strong>drivers</strong>. Requires <code>admin</code> role.</p>
     <div id="flash" class="form-msg" style="display:none"></div>
 
-    <section class="card" aria-labelledby="vehiculos-h2">
+    <!-- Vehicles -->
+    <section class="card" style="margin-top:1.5rem" aria-labelledby="vehicles-h2">
       <div class="toolbar">
-        <h2 id="vehiculos-h2">Vehículos</h2>
+        <h2 id="vehicles-h2">Vehicles</h2>
         <div class="right">
-          <input id="carSearch" class="pill" placeholder="Buscar (marca, modelo, placa)" aria-label="Buscar vehículos">
+          <input id="carSearch" class="pill" placeholder="Search make, model, plate" aria-label="Search vehicles">
         </div>
       </div>
 
-      <form id="carForm" class="grid grid-3" autocomplete="off">
-        <input name="make" placeholder="Marca" required>
-        <input name="model" placeholder="Modelo" required>
-        <input name="year" type="number" placeholder="Año">
-        <input name="color" placeholder="Color">
-        <input name="plate" placeholder="Placa">
-        <input name="capacity" type="number" placeholder="Capacidad">
-        <button class="btn btn-primary" type="submit">Agregar</button>
+      <form id="carForm" class="grid grid-3" autocomplete="off" style="margin-bottom:1rem">
+        <input name="make"     placeholder="Make"     required>
+        <input name="model"    placeholder="Model"    required>
+        <input name="year"     type="number" placeholder="Year">
+        <input name="color"    placeholder="Color">
+        <input name="plate"    placeholder="Plate">
+        <input name="capacity" type="number" placeholder="Capacity">
+        <button class="btn btn-primary" type="submit">Add vehicle</button>
       </form>
 
       <div id="carsList" class="list" aria-live="polite" aria-busy="true"></div>
-      <p class="muted-small">Consejo: puedes <strong>editar en línea</strong> cada fila.</p>
+      <p class="muted-small" style="margin-top:.5rem">Tip: click <strong>Edit</strong> to update a row inline.</p>
     </section>
 
-    <section class="card" aria-labelledby="choferes-h2">
+    <!-- Drivers -->
+    <section class="card" style="margin-top:1.5rem" aria-labelledby="drivers-h2">
       <div class="toolbar">
-        <h2 id="choferes-h2">Choferes</h2>
+        <h2 id="drivers-h2">Drivers</h2>
         <div class="right">
-          <input id="driverSearch" class="pill" placeholder="Buscar (nombre, teléfono)" aria-label="Buscar choferes">
+          <input id="driverSearch" class="pill" placeholder="Search name, phone" aria-label="Search drivers">
         </div>
       </div>
 
-      <form id="driverForm" class="grid grid-3" autocomplete="off">
-        <input name="full_name" placeholder="Nombre" required>
-        <input name="phone" placeholder="Teléfono" required>
-        <input name="license_no" placeholder="Licencia (opcional)">
-        <input name="notes" placeholder="Notas" class="grid-span-3">
-        <button class="btn btn-primary" type="submit">Agregar</button>
+      <form id="driverForm" class="grid grid-3" autocomplete="off" style="margin-bottom:1rem">
+        <input name="full_name"  placeholder="Full name" required>
+        <input name="phone"      placeholder="Phone"     required>
+        <input name="license_no" placeholder="License (optional)">
+        <input name="notes"      placeholder="Notes" class="grid-span-full">
+        <button class="btn btn-primary" type="submit">Add driver</button>
       </form>
 
       <div id="driversList" class="list" aria-live="polite" aria-busy="true"></div>
@@ -86,7 +83,6 @@
 
   <div id="footer"></div>
 
-  <!-- Orden: primero config (define window.__SUPABASE__), luego app y módulo -->
   <script src="/js/supabase.config.js"></script>
   <script src="/js/app.js" defer></script>
 
@@ -95,173 +91,186 @@
     const { url, anon } = window.__SUPABASE__;
     const supabase = createClient(url, anon);
 
+    // --- XSS-safe HTML escaping ---
+    const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+
     const flash = document.getElementById('flash');
-    const showFlash = (text, ok=true) => {
+    const showFlash = (text, ok = true) => {
       flash.textContent = text;
       flash.style.display = 'block';
-      flash.classList.remove('error','success');
+      flash.classList.remove('error', 'success');
       flash.classList.add(ok ? 'success' : 'error');
-      setTimeout(() => { flash.style.display='none'; }, 3000);
+      setTimeout(() => { flash.style.display = 'none'; }, 3000);
     };
 
-    // Guard: solo admin
+    // Guard: session required + admin role required
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) location.href = "/login.html?next=/admin/";
+
     const { data: prof } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
     if (prof?.role !== "admin") location.href = "/";
 
-    // ---------- Vehículos ----------
-    const carForm  = document.getElementById("carForm");
-    const carsList = document.getElementById("carsList");
+    // ============================================================
+    // VEHICLES
+    // ============================================================
+    const carForm   = document.getElementById("carForm");
+    const carsList  = document.getElementById("carsList");
     const carSearch = document.getElementById("carSearch");
     let cars = [];
 
-    function carText(v){
-      return `${v.year || ""} ${v.make || ""} ${v.model || ""} • ${v.color || ""} • ${v.plate || ""}`.replace(/\s+/g,' ').trim();
+    function carSummary(v) {
+      return [v.year, v.make, v.model, v.color ? '· ' + v.color : '', v.plate ? '· ' + v.plate : '']
+        .filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
     }
 
-    function renderCars(filter=""){
+    function renderCars(filter = "") {
       const term = filter.trim().toLowerCase();
-      const data = !term ? cars : cars.filter(v => carText(v).toLowerCase().includes(term));
+      const data = !term ? cars : cars.filter(v => carSummary(v).toLowerCase().includes(term));
 
-      carsList.innerHTML = data.length ? data.map(v => `
-        <div class="item" data-id="${v.id}">
-          <div class="row-main">
-            <span>${carText(v)}</span>
-            ${v.capacity ? `<span class="pill muted-small" title="Capacidad">${v.capacity} pax</span>` : ''}
-          </div>
-          <div class="row-actions">
-            <button class="btn" data-edit="${v.id}" type="button">Editar</button>
-            <button class="btn" data-del="${v.id}" type="button">Eliminar</button>
-          </div>
-        </div>
-      `).join("") : "<p class='muted'>Sin vehículos</p>";
+      carsList.innerHTML = data.length
+        ? data.map(v => `
+            <div class="item" data-id="${esc(v.id)}">
+              <div class="row-main">
+                <span>${esc(carSummary(v))}</span>
+                ${v.capacity ? `<span class="pill muted-small">${esc(String(v.capacity))} pax</span>` : ''}
+              </div>
+              <div class="row-actions">
+                <button class="btn" data-edit="${esc(v.id)}" type="button">Edit</button>
+                <button class="btn" data-del="${esc(v.id)}"  type="button">Delete</button>
+              </div>
+            </div>`).join("")
+        : "<p class='muted'>No vehicles found.</p>";
 
-      // Bind actions
       carsList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
         const id = b.dataset.del;
-        if (!confirm("¿Eliminar este vehículo?")) return;
+        if (!confirm("Delete this vehicle?")) return;
         await supabase.from("vehicles").delete().eq("id", id);
         cars = cars.filter(x => x.id !== id);
         renderCars(term);
-        showFlash("Vehículo eliminado.");
+        showFlash("Vehicle deleted.");
       });
 
       carsList.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => startEditCar(b.dataset.edit));
     }
 
-    function startEditCar(id){
+    function startEditCar(id) {
       const v = cars.find(x => x.id === id);
       if (!v) return;
       const row = carsList.querySelector(`[data-id="${id}"]`);
       if (!row) return;
       row.innerHTML = `
         <div class="inline-edit">
-          <input name="make"     placeholder="Marca"   value="${(v.make||'').replace(/"/g,'&quot;')}">
-          <input name="model"    placeholder="Modelo"  value="${(v.model||'').replace(/"/g,'&quot;')}">
-          <input name="year"     type="number" placeholder="Año" value="${v.year || ''}">
-          <input name="color"    placeholder="Color"   value="${(v.color||'').replace(/"/g,'&quot;')}">
-          <input name="plate"    placeholder="Placa"   value="${(v.plate||'').replace(/"/g,'&quot;')}">
-          <input name="capacity" type="number" placeholder="Capacidad" value="${v.capacity || ''}">
-          <div class="grid-span-3" style="display:flex; gap:.5rem; justify-content:flex-end">
-            <button class="btn" data-cancel="${id}" type="button">Cancelar</button>
-            <button class="btn btn-primary" data-save="${id}" type="button">Guardar</button>
+          <input name="make"     placeholder="Make"   value="${esc(v.make)}">
+          <input name="model"    placeholder="Model"  value="${esc(v.model)}">
+          <input name="year"     type="number" placeholder="Year" value="${esc(String(v.year || ''))}">
+          <input name="color"    placeholder="Color"  value="${esc(v.color)}">
+          <input name="plate"    placeholder="Plate"  value="${esc(v.plate)}">
+          <input name="capacity" type="number" placeholder="Capacity" value="${esc(String(v.capacity || ''))}">
+          <div class="grid-span-full" style="display:flex;gap:.5rem;justify-content:flex-end">
+            <button class="btn" data-cancel="${esc(id)}" type="button">Cancel</button>
+            <button class="btn btn-primary" data-save="${esc(id)}" type="button">Save</button>
           </div>
-        </div>
-      `;
+        </div>`;
+
       row.querySelector('[data-cancel]')?.addEventListener('click', () => renderCars(carSearch.value));
       row.querySelector('[data-save]')?.addEventListener('click', async () => {
         const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i => [i.name, i.value]));
-        if (vals.year) vals.year = Number(vals.year);
+        if (vals.year)     vals.year     = Number(vals.year);
         if (vals.capacity) vals.capacity = Number(vals.capacity);
         await supabase.from('vehicles').update(vals).eq('id', id);
         const { data: updated } = await supabase.from('vehicles').select('*').eq('id', id).single();
         const idx = cars.findIndex(x => x.id === id);
         if (idx >= 0) cars[idx] = updated;
         renderCars(carSearch.value);
-        showFlash("Vehículo actualizado.");
+        showFlash("Vehicle updated.");
       });
     }
 
-    async function loadCars(){
-      carsList.setAttribute('aria-busy','true');
-      const { data } = await supabase.from("vehicles").select("*").order("created_at",{ascending:false});
+    async function loadCars() {
+      carsList.setAttribute('aria-busy', 'true');
+      const { data } = await supabase.from("vehicles").select("*").order("created_at", { ascending: false });
       cars = data || [];
       renderCars(carSearch.value || "");
-      carsList.setAttribute('aria-busy','false');
+      carsList.setAttribute('aria-busy', 'false');
     }
 
     carForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const o = Object.fromEntries(new FormData(carForm).entries());
-      if (o.year) o.year = Number(o.year);
+      if (o.year)     o.year     = Number(o.year);
       if (o.capacity) o.capacity = Number(o.capacity);
       const { data, error } = await supabase.from("vehicles").insert(o).select("*").single();
       if (error) return showFlash(error.message, false);
       cars.unshift(data);
       carForm.reset();
       renderCars(carSearch.value);
-      showFlash("Vehículo agregado.");
+      showFlash("Vehicle added.");
     });
 
     carSearch.addEventListener('input', () => renderCars(carSearch.value));
 
-    // ---------- Choferes ----------
+    // ============================================================
+    // DRIVERS
+    // ============================================================
     const driverForm   = document.getElementById("driverForm");
     const driversList  = document.getElementById("driversList");
     const driverSearch = document.getElementById("driverSearch");
     let drivers = [];
 
-    function driverText(d){
-      return `${d.full_name || ""} • ${d.phone || ""} ${d.license_no ? '• Lic: '+d.license_no : ''}`.replace(/\s+/g,' ').trim();
+    function driverSummary(d) {
+      return [d.full_name, d.phone ? '· ' + d.phone : '', d.license_no ? '· Lic: ' + d.license_no : '']
+        .filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
     }
 
-    function renderDrivers(filter=""){
+    function renderDrivers(filter = "") {
       const term = filter.trim().toLowerCase();
-      const data = !term ? drivers : drivers.filter(d => driverText(d).toLowerCase().includes(term));
+      const data = !term ? drivers : drivers.filter(d => driverSummary(d).toLowerCase().includes(term));
 
-      driversList.innerHTML = data.length ? data.map(d => `
-        <div class="item" data-id="${d.id}">
-          <div class="row-main">
-            <span>${driverText(d)}</span>
-            ${d.notes ? `<span class="pill muted-small" title="Notas">${(d.notes||'').replace(/[<>&]/g,s=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[s]))}</span>` : ''}
-          </div>
-          <div class="row-actions">
-            <button class="btn" data-edit="${d.id}" type="button">Editar</button>
-            <button class="btn" data-del="${d.id}" type="button">Eliminar</button>
-          </div>
-        </div>
-      `).join("") : "<p class='muted'>Sin choferes</p>";
+      driversList.innerHTML = data.length
+        ? data.map(d => `
+            <div class="item" data-id="${esc(d.id)}">
+              <div class="row-main">
+                <span>${esc(driverSummary(d))}</span>
+                ${d.notes ? `<span class="pill muted-small">${esc(d.notes)}</span>` : ''}
+              </div>
+              <div class="row-actions">
+                <button class="btn" data-edit="${esc(d.id)}" type="button">Edit</button>
+                <button class="btn" data-del="${esc(d.id)}"  type="button">Delete</button>
+              </div>
+            </div>`).join("")
+        : "<p class='muted'>No drivers found.</p>";
 
       driversList.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
         const id = b.dataset.del;
-        if (!confirm("¿Eliminar este chofer?")) return;
+        if (!confirm("Delete this driver?")) return;
         await supabase.from("drivers").delete().eq("id", id);
         drivers = drivers.filter(x => x.id !== id);
         renderDrivers(term);
-        showFlash("Chofer eliminado.");
+        showFlash("Driver deleted.");
       });
 
       driversList.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => startEditDriver(b.dataset.edit));
     }
 
-    function startEditDriver(id){
+    function startEditDriver(id) {
       const d = drivers.find(x => x.id === id);
       if (!d) return;
       const row = driversList.querySelector(`[data-id="${id}"]`);
       if (!row) return;
       row.innerHTML = `
         <div class="inline-edit">
-          <input name="full_name"  placeholder="Nombre"  value="${(d.full_name||'').replace(/"/g,'&quot;')}">
-          <input name="phone"      placeholder="Teléfono" value="${(d.phone||'').replace(/"/g,'&quot;')}">
-          <input name="license_no" placeholder="Licencia" value="${(d.license_no||'').replace(/"/g,'&quot;')}">
-          <input name="notes"      placeholder="Notas" class="grid-span-3" value="${(d.notes||'').replace(/"/g,'&quot;')}">
-          <div class="grid-span-3" style="display:flex; gap:.5rem; justify-content:flex-end">
-            <button class="btn" data-cancel="${id}" type="button">Cancelar</button>
-            <button class="btn btn-primary" data-save="${id}" type="button">Guardar</button>
+          <input name="full_name"  placeholder="Full name" value="${esc(d.full_name)}">
+          <input name="phone"      placeholder="Phone"     value="${esc(d.phone)}">
+          <input name="license_no" placeholder="License"   value="${esc(d.license_no)}">
+          <input name="notes"      placeholder="Notes" class="grid-span-full" value="${esc(d.notes)}">
+          <div class="grid-span-full" style="display:flex;gap:.5rem;justify-content:flex-end">
+            <button class="btn" data-cancel="${esc(id)}" type="button">Cancel</button>
+            <button class="btn btn-primary" data-save="${esc(id)}" type="button">Save</button>
           </div>
-        </div>
-      `;
+        </div>`;
+
       row.querySelector('[data-cancel]')?.addEventListener('click', () => renderDrivers(driverSearch.value));
       row.querySelector('[data-save]')?.addEventListener('click', async () => {
         const vals = Object.fromEntries([...row.querySelectorAll('input')].map(i => [i.name, i.value]));
@@ -271,16 +280,16 @@
         const idx = drivers.findIndex(x => x.id === id);
         if (idx >= 0) drivers[idx] = updated;
         renderDrivers(driverSearch.value);
-        showFlash("Chofer actualizado.");
+        showFlash("Driver updated.");
       });
     }
 
-    async function loadDrivers(){
-      driversList.setAttribute('aria-busy','true');
-      const { data } = await supabase.from("drivers").select("*").order("created_at",{ascending:false});
+    async function loadDrivers() {
+      driversList.setAttribute('aria-busy', 'true');
+      const { data } = await supabase.from("drivers").select("*").order("created_at", { ascending: false });
       drivers = data || [];
       renderDrivers(driverSearch.value || "");
-      driversList.setAttribute('aria-busy','false');
+      driversList.setAttribute('aria-busy', 'false');
     }
 
     driverForm.addEventListener('submit', async (e) => {
@@ -291,12 +300,12 @@
       drivers.unshift(data);
       driverForm.reset();
       renderDrivers(driverSearch.value);
-      showFlash("Chofer agregado.");
+      showFlash("Driver added.");
     });
 
     driverSearch.addEventListener('input', () => renderDrivers(driverSearch.value));
 
-    // Carga inicial
+    // Initial load
     await Promise.all([loadCars(), loadDrivers()]);
   </script>
 </body>

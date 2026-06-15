@@ -8,7 +8,6 @@ function ensureSiteVersion() {
         resolve(window.__SITE_VERSION__);
         return;
       }
-
       existing.addEventListener("load", () => resolve(window.__SITE_VERSION__ || "dev"), { once: true });
       existing.addEventListener("error", () => resolve("dev"), { once: true });
       return;
@@ -48,7 +47,7 @@ async function include(where, url) {
       if (versionEl) versionEl.textContent = window.__SITE_VERSION__ || "dev";
     }
   } catch (e) {
-    console.warn("No se pudo cargar", url, e);
+    console.warn("Could not load", url, e);
   }
 }
 
@@ -72,14 +71,14 @@ function bindThemeToggle() {
 function highlightNav() {
   const p = location.pathname;
   const map = [
-    { key: "home", test: (x) => x === "/" || x.endsWith("/index.html") },
-    { key: "chofer", test: (x) => x.startsWith("/chofer-privado/") },
-    { key: "domotica", test: (x) => x.startsWith("/domotica/") },
-    { key: "software", test: (x) => x.startsWith("/software/") },
-    { key: "automatizaciones", test: (x) => x.startsWith("/automatizaciones/") },
-    { key: "blog", test: (x) => x.startsWith("/blog/") },
-    { key: "nosotros", test: (x) => x.endsWith("/nosotros.html") },
-    { key: "contacto", test: (x) => x.endsWith("/contacto.html") }
+    { key: "home",      test: (x) => x === "/" || x.endsWith("/index.html") },
+    { key: "services",  test: (x) => x.startsWith("/services/") },
+    { key: "quelvo",    test: (x) => x.startsWith("/quelvo/") },
+    { key: "projects",  test: (x) => x.startsWith("/projects/") },
+    { key: "about",     test: (x) => x.endsWith("/nosotros.html") },
+    { key: "contact",   test: (x) => x.endsWith("/contacto.html") },
+    { key: "musicride", test: (x) => x.startsWith("/music-ride/") },
+    { key: "blog",      test: (x) => x.startsWith("/blog/") },
   ];
 
   const found = map.find((item) => item.test(p));
@@ -97,7 +96,7 @@ function setupMobileNav() {
     nav.classList.toggle("open", open);
     btn.classList.toggle("is-open", open);
     btn.setAttribute("aria-expanded", String(open));
-    btn.setAttribute("aria-label", open ? "Cerrar menu" : "Abrir menu");
+    btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   };
 
   const toggle = () => {
@@ -114,20 +113,13 @@ function setupMobileNav() {
 }
 
 function setupDropdowns() {
-  const dd = document.querySelector(".dropdown");
+  const dd  = document.querySelector(".dropdown");
   const btn = dd?.querySelector(".dropbtn");
   const menu = dd?.querySelector(".dropdown-content");
   if (!dd || !btn || !menu) return;
 
-  const open = () => {
-    dd.classList.add("open");
-    btn.setAttribute("aria-expanded", "true");
-  };
-
-  const close = () => {
-    dd.classList.remove("open");
-    btn.setAttribute("aria-expanded", "false");
-  };
+  const open  = () => { dd.classList.add("open");    btn.setAttribute("aria-expanded", "true");  };
+  const close = () => { dd.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); };
 
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -144,9 +136,9 @@ async function setupAuthNav() {
   const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
   const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
 
-  const $login = document.getElementById("navLogin");
-  const $logout = document.getElementById("navLogout");
-  const $admin = document.getElementById("navAdmin");
+  const $login   = document.getElementById("navLogin");
+  const $logout  = document.getElementById("navLogout");
+  const $admin   = document.getElementById("navAdmin");
   const $account = document.getElementById("navAccount");
 
   async function render() {

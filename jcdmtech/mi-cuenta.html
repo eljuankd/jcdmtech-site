@@ -1,62 +1,77 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mi cuenta | JCDM</title>
+  <title>My account · JCDM Technologies LLC</title>
+  <link rel="icon" href="/assets/favicon.ico">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <div id="header"></div>
-  <main class="container">
-    <h1>Mi cuenta</h1>
-    <form id="profileForm" class="card" style="max-width:520px">
-      <label>Nombre completo
-        <input name="full_name" placeholder="Tu nombre y apellido">
+
+  <main class="container" style="max-width:580px;margin:3rem auto;padding:0 clamp(16px,4vw,24px)">
+    <p class="hero-kicker" style="margin-bottom:.75rem">Account</p>
+    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw+.5rem,2.4rem);margin:0 0 1.5rem;letter-spacing:-.02em">
+      My account
+    </h1>
+
+    <form id="profileForm" class="card" style="display:grid;gap:1rem">
+      <label>Full name
+        <input name="full_name" placeholder="Your full name" autocomplete="name" />
       </label>
-      <label>Teléfono
-        <input name="phone" placeholder="+1 305 000 0000">
+      <label>Phone
+        <input name="phone" placeholder="+1 786 000 0000" autocomplete="tel" />
       </label>
       <div class="grid grid-2">
-        <button class="btn btn-primary" type="submit">Guardar</button>
-        <button class="btn" type="button" id="logoutBtn">Cerrar sesión</button>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+        <button class="btn" type="button" id="logoutBtn">Sign out</button>
       </div>
-      <p id="msg" class="muted"></p>
+      <p id="msg" class="muted" aria-live="polite" role="status" style="min-height:1.2rem"></p>
     </form>
   </main>
+
   <div id="footer"></div>
 
-  <script src="/js/app.js" defer></script>
   <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) location.href = "/login.html?next=/mi-cuenta.html";
 
     const form = document.getElementById('profileForm');
     const msg  = document.getElementById('msg');
 
-    // Cargar datos actuales
-    const { data: prof } = await supabase.from('profiles')
-      .select('full_name,phone').eq('id', session.user.id).single();
+    // Load current profile data
+    const { data: prof } = await supabase
+      .from('profiles')
+      .select('full_name, phone')
+      .eq('id', session.user.id)
+      .single();
+
     if (prof) {
       form.full_name.value = prof.full_name || '';
-      form.phone.value     = prof.phone || '';
+      form.phone.value     = prof.phone     || '';
     }
 
-    // Guardar cambios
-    form.addEventListener('submit', async (e)=>{
+    // Save changes
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const o = Object.fromEntries(new FormData(form).entries());
-      const { error } = await supabase.from('profiles')
-        .upsert({ id: session.user.id, full_name: o.full_name, phone: o.phone }, { onConflict: 'id' });
-      msg.textContent = error ? ('Error: '+error.message) : 'Datos guardados.';
+      const values = Object.fromEntries(new FormData(form).entries());
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({ id: session.user.id, full_name: values.full_name, phone: values.phone }, { onConflict: 'id' });
+      msg.textContent = error ? 'Error: ' + error.message : 'Changes saved.';
     });
 
-    document.getElementById('logoutBtn').onclick = async ()=>{
-      await supabase.auth.signOut(); location.href = "/";
-    };
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      location.href = '/';
+    });
   </script>
 </body>
 </html>

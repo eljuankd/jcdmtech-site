@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Booking received · QUELVO by JCDM Technologies</title>
+  <meta name="description" content="Your ride request was received. We'll confirm shortly.">
+  <link rel="canonical" href="https://www.jcdmtech.com/quelvo/book/gracias/">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="/assets/favicon.ico">
+
+  <meta name="theme-color" content="#09090B">
+  <meta name="color-scheme" content="dark light">
+
+  <link rel="stylesheet" href="/styles.css">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85LR7PFMVT');
+    gtag('event', 'booking_submitted', { page_path: location.pathname });
+  </script>
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container thanks-shell">
+    <section class="card thanks-card" aria-labelledby="thanksTitle">
+      <p class="thanks-eyebrow">Request received</p>
+      <h1 id="thanksTitle">Thank you for choosing QUELVO.</h1>
+      <p id="thanksMsg" class="form-msg success thanks-status" role="status" aria-live="polite">
+        We received your ride request and will confirm availability, time and service details shortly.
+      </p>
+
+      <div class="thanks-flow" aria-label="Next steps">
+        <div class="thanks-step">
+          <strong>1. We review your request</strong>
+          <p class="muted">We confirm the route, schedule and service type.</p>
+        </div>
+        <div class="thanks-step">
+          <strong>2. We contact you</strong>
+          <p class="muted">Your driver will reach out to confirm the booking and sort any final details.</p>
+        </div>
+        <div class="thanks-step">
+          <strong>3. Your ride is confirmed</strong>
+          <p class="muted">Punctual, professional and discreet. Your Music Ride session will be ready too.</p>
+        </div>
+      </div>
+
+      <p id="codeWrap" class="thanks-code" style="display:none">
+        <span class="muted">Booking code</span>
+        <span id="codeBox" class="kbd" style="margin-left:.5rem"></span>
+      </p>
+
+      <div class="thanks-actions">
+        <a id="thanksWhatsApp" href="https://wa.me/17863487458" class="btn btn-primary" target="_blank" rel="noopener">Continue on WhatsApp</a>
+        <a href="/quelvo/book/" class="btn">New booking</a>
+        <a href="/" class="btn">Back to home</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
+
+  <script>
+    (function () {
+      const q       = new URLSearchParams(location.search);
+      const via     = q.get('via');
+      const code    = q.get('code');
+      const status  = document.getElementById('thanksMsg');
+      const codeWrap = document.getElementById('codeWrap');
+      const codeBox  = document.getElementById('codeBox');
+      const wa       = document.getElementById('thanksWhatsApp');
+
+      if (via === 'wa') {
+        status.textContent = 'WhatsApp was opened to continue your booking. If it didn\'t open, use the button below.';
+      } else if (via === 'email') {
+        status.textContent = 'Your request was sent by email. To speed up confirmation, you can also continue on WhatsApp.';
+      }
+
+      if (code) {
+        codeBox.textContent = '#' + code;
+        codeWrap.style.display = '';
+        wa.href = `https://wa.me/17863487458?text=${encodeURIComponent(`Hi, I'd like to follow up on my QUELVO booking #${code}.`)}`;
+      }
+    })();
+  </script>
+</body>
+</html>
