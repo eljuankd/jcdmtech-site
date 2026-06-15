@@ -3,56 +3,63 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Sign in · JCDM Technologies LLC</title>
-  <meta name="description" content="Sign in or create an account to book faster.">
+  <meta name="description" content="Sign in or create an account.">
   <link rel="canonical" href="https://www.jcdmtech.com/login.html">
-
   <link rel="icon" href="/assets/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-  <link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#C8A24A">
-
-  <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: light)">
-  <meta name="color-scheme" content="dark light">
-
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="JCDM Technologies LLC">
-  <meta property="og:title" content="Sign in · JCDM Technologies LLC">
-  <meta property="og:description" content="Sign in or create an account.">
-  <meta property="og:url" content="https://www.jcdmtech.com/login.html">
-  <meta name="twitter:card" content="summary_large_image">
-
+  <meta name="theme-color" content="#09090B">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <div id="header"></div>
 
-  <main class="container" style="max-width:500px;margin:3rem auto;padding:0 clamp(16px,4vw,24px)">
+  <main class="container" style="max-width:480px;margin:3rem auto;padding:0 clamp(16px,4vw,24px)">
     <p class="hero-kicker" style="margin-bottom:.75rem">Account</p>
     <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw+.5rem,2.4rem);margin:0 0 .5rem;letter-spacing:-.02em">
       Sign in
     </h1>
-    <p class="muted" style="margin-bottom:1.75rem">Sign in or create an account to book faster.</p>
+    <p class="muted" style="margin-bottom:1.75rem">Sign in or create an account.</p>
 
-    <form id="loginForm" class="card" style="display:grid;gap:1rem" novalidate>
-      <label>Email address
-        <input type="email" name="email" required autocomplete="email" placeholder="your@email.com" />
-      </label>
-      <label>Password
-        <span class="muted" style="font-weight:400;font-size:.85rem"> (leave empty to receive a magic link)</span>
-        <input type="password" name="password" autocomplete="current-password" />
-      </label>
-      <div class="grid grid-2">
-        <button type="submit" class="btn btn-primary">Sign in</button>
-        <button type="button" id="signupBtn" class="btn">Create account</button>
-      </div>
-      <div class="grid grid-2">
-        <button type="button" id="magicLinkBtn" class="btn">Sign in with link</button>
-        <button type="button" id="resetBtn" class="btn">Forgot password</button>
-      </div>
-      <p id="loginMsg" class="muted" aria-live="polite" role="status" style="min-height:1.2rem"></p>
-    </form>
+    <!-- Tab selector -->
+    <div style="display:flex;gap:.5rem;margin-bottom:1.25rem">
+      <button id="tabSignin"  class="btn btn-primary" type="button" style="flex:1">Sign in</button>
+      <button id="tabSignup"  class="btn"             type="button" style="flex:1">Create account</button>
+    </div>
+
+    <!-- Sign in panel -->
+    <div id="panelSignin">
+      <form id="signinForm" class="card" style="display:grid;gap:1rem" novalidate>
+        <label>Email address
+          <input type="email" name="email" required autocomplete="email" placeholder="your@email.com" />
+        </label>
+        <label>Password
+          <input type="password" name="password" autocomplete="current-password" placeholder="Your password" />
+        </label>
+        <button type="submit" id="signinBtn" class="btn btn-primary">Sign in</button>
+        <div style="display:flex;gap:.5rem">
+          <button type="button" id="magicLinkBtn" class="btn" style="flex:1">Email me a link</button>
+          <button type="button" id="resetBtn"     class="btn" style="flex:1">Forgot password</button>
+        </div>
+        <p id="signinMsg" class="form-msg" role="status" aria-live="polite" style="display:none;margin:0"></p>
+      </form>
+    </div>
+
+    <!-- Create account panel -->
+    <div id="panelSignup" style="display:none">
+      <form id="signupForm" class="card" style="display:grid;gap:1rem" novalidate>
+        <label>Email address
+          <input type="email" name="email" required autocomplete="email" placeholder="your@email.com" />
+        </label>
+        <label>Password <span class="muted" style="font-weight:400;font-size:.85rem">(min. 8 characters)</span>
+          <input type="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Choose a password" />
+        </label>
+        <label>Confirm password
+          <input type="password" name="confirm" required autocomplete="new-password" placeholder="Repeat your password" />
+        </label>
+        <button type="submit" id="signupBtn" class="btn btn-primary">Create account</button>
+        <p id="signupMsg" class="form-msg" role="status" aria-live="polite" style="display:none;margin:0"></p>
+      </form>
+    </div>
   </main>
 
   <div id="footer"></div>
@@ -62,99 +69,176 @@
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, {
+      auth: { flowType: 'implicit' }
+    });
 
     const next = new URLSearchParams(location.search).get("next") || "/";
-    const form         = document.getElementById("loginForm");
-    const msg          = document.getElementById("loginMsg");
-    const signupBtn    = document.getElementById("signupBtn");
-    const magicLinkBtn = document.getElementById("magicLinkBtn");
-    const resetBtn     = document.getElementById("resetBtn");
 
-    // Redirect if already signed in
-    {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) location.href = next;
-      supabase.auth.onAuthStateChange((_e, s) => { if (s) location.href = next; });
+    // --- UI helpers ---
+    function showMsg(el, text, ok) {
+      el.textContent  = text;
+      el.style.display = text ? '' : 'none';
+      el.classList.remove('success', 'error');
+      if (ok === true)  el.classList.add('success');
+      if (ok === false) el.classList.add('error');
     }
-
-    function setMsg(text, ok = null) {
-      msg.textContent = text || "";
-      msg.classList.remove("success", "error");
-      if (ok === true)  msg.classList.add("success");
-      if (ok === false) msg.classList.add("error");
+    function setBusy(btn, text, busy) {
+      btn.disabled    = busy;
+      btn.textContent = busy ? text : btn.dataset.label;
     }
+    document.querySelectorAll('.btn').forEach(b => b.dataset.label = b.textContent);
 
-    async function signInWithPassword(email, password) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      location.href = next;
-    }
+    // --- Tab switching ---
+    const tabSignin  = document.getElementById('tabSignin');
+    const tabSignup  = document.getElementById('tabSignup');
+    const panelSignin = document.getElementById('panelSignin');
+    const panelSignup = document.getElementById('panelSignup');
 
-    async function sendMagicLink(email) {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: location.origin + next }
-      });
-      if (error) throw error;
-      setMsg("Magic link sent — check your email.", true);
-    }
+    tabSignin.addEventListener('click', () => {
+      panelSignin.style.display = '';
+      panelSignup.style.display = 'none';
+      tabSignin.classList.add('btn-primary');
+      tabSignup.classList.remove('btn-primary');
+    });
+    tabSignup.addEventListener('click', () => {
+      panelSignup.style.display = '';
+      panelSignin.style.display = 'none';
+      tabSignup.classList.add('btn-primary');
+      tabSignin.classList.remove('btn-primary');
+    });
 
-    async function sendPasswordReset(email) {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: location.origin + "/login.html?next=" + encodeURIComponent(next)
-      });
-      if (error) throw error;
-      setMsg("Password reset link sent — check your email.", true);
-    }
+    // --- Redirect if already signed in (only on SIGNED_IN, not PASSWORD_RECOVERY) ---
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) location.href = next;
 
-    form.addEventListener("submit", async (e) => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) location.href = next;
+      // PASSWORD_RECOVERY is handled by /reset-password.html — do NOT redirect here
+    });
+
+    // --- Sign in ---
+    const signinForm = document.getElementById('signinForm');
+    const signinBtn  = document.getElementById('signinBtn');
+    const signinMsg  = document.getElementById('signinMsg');
+
+    signinForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      setMsg("Processing…");
-      const fd       = new FormData(form);
-      const email    = (fd.get("email") || "").toString().trim();
-      const password = (fd.get("password") || "").toString();
+      const email    = signinForm.email.value.trim();
+      const password = signinForm.password.value;
 
-      if (!email) return setMsg("Please enter your email address.", false);
+      if (!email) return showMsg(signinMsg, 'Please enter your email address.', false);
+
+      showMsg(signinMsg, '');
+      setBusy(signinBtn, 'Signing in…', true);
 
       try {
-        if (password) await signInWithPassword(email, password);
-        else          await sendMagicLink(email);
+        if (password) {
+          const { error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          // onAuthStateChange SIGNED_IN will redirect
+        } else {
+          // No password → send magic link
+          const { error } = await supabase.auth.signInWithOtp({
+            email,
+            options: { emailRedirectTo: location.origin + next }
+          });
+          if (error) throw error;
+          showMsg(signinMsg, 'Magic link sent — check your inbox and click the link.', true);
+        }
       } catch (err) {
-        setMsg("Error: " + err.message, false);
+        showMsg(signinMsg, err.message, false);
+      } finally {
+        setBusy(signinBtn, '', false);
       }
     });
 
-    signupBtn.addEventListener("click", async () => {
-      setMsg("Creating account…");
-      const fd       = new FormData(form);
-      const email    = (fd.get("email") || "").toString().trim();
-      const password = (fd.get("password") || crypto.randomUUID()).toString();
-      if (!email) return setMsg("Enter your email to create an account.", false);
+    // --- Magic link button ---
+    document.getElementById('magicLinkBtn').addEventListener('click', async () => {
+      const email = signinForm.email.value.trim();
+      if (!email) return showMsg(signinMsg, 'Enter your email first.', false);
+      const btn = document.getElementById('magicLinkBtn');
+      setBusy(btn, 'Sending…', true);
+      try {
+        const { error } = await supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: location.origin + next }
+        });
+        if (error) throw error;
+        showMsg(signinMsg, 'Magic link sent — check your inbox.', true);
+      } catch (err) {
+        showMsg(signinMsg, err.message, false);
+      } finally {
+        setBusy(btn, '', false);
+      }
+    });
+
+    // --- Forgot password ---
+    document.getElementById('resetBtn').addEventListener('click', async () => {
+      const email = signinForm.email.value.trim();
+      if (!email) return showMsg(signinMsg, 'Enter your email first.', false);
+      const btn = document.getElementById('resetBtn');
+      setBusy(btn, 'Sending…', true);
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: location.origin + '/reset-password.html'
+        });
+        if (error) throw error;
+        showMsg(signinMsg, 'Password reset link sent — check your inbox.', true);
+      } catch (err) {
+        showMsg(signinMsg, err.message, false);
+      } finally {
+        setBusy(btn, '', false);
+      }
+    });
+
+    // --- Create account ---
+    const signupForm = document.getElementById('signupForm');
+    const signupBtn  = document.getElementById('signupBtn');
+    const signupMsg  = document.getElementById('signupMsg');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email    = signupForm.email.value.trim();
+      const password = signupForm.password.value;
+      const confirm  = signupForm.confirm.value;
+
+      if (!email)    return showMsg(signupMsg, 'Please enter your email address.', false);
+      if (!password) return showMsg(signupMsg, 'Please choose a password.', false);
+      if (password.length < 8) return showMsg(signupMsg, 'Password must be at least 8 characters.', false);
+      if (password !== confirm) return showMsg(signupMsg, 'Passwords do not match.', false);
+
+      showMsg(signupMsg, '');
+      setBusy(signupBtn, 'Creating account…', true);
 
       try {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        const userId = data.user?.id;
-        if (userId) {
-          await supabase.from("profiles").upsert({ id: userId, role: "user" }, { onConflict: "id" });
+
+        // Try to create profile row (may also be handled by DB trigger)
+        if (data.user?.id) {
+          await supabase.from('profiles').upsert(
+            { id: data.user.id, role: 'user' },
+            { onConflict: 'id', ignoreDuplicates: true }
+          );
         }
-        setMsg("Account created — check your email to confirm.", true);
+
+        if (data.session) {
+          // Email confirmation disabled — user is logged in immediately
+          // onAuthStateChange SIGNED_IN will redirect
+        } else {
+          // Email confirmation required
+          showMsg(signupMsg,
+            'Account created! Check your inbox and click the confirmation link to activate it.',
+            true
+          );
+        }
       } catch (err) {
-        setMsg("Error: " + err.message, false);
+        showMsg(signupMsg, err.message, false);
+      } finally {
+        setBusy(signupBtn, '', false);
       }
-    });
-
-    magicLinkBtn.addEventListener("click", async () => {
-      const email = (new FormData(form).get("email") || "").toString().trim();
-      if (!email) return setMsg("Enter your email to receive a magic link.", false);
-      try { await sendMagicLink(email); } catch (err) { setMsg("Error: " + err.message, false); }
-    });
-
-    resetBtn.addEventListener("click", async () => {
-      const email = (new FormData(form).get("email") || "").toString().trim();
-      if (!email) return setMsg("Enter your email to reset your password.", false);
-      try { await sendPasswordReset(email); } catch (err) { setMsg("Error: " + err.message, false); }
     });
   </script>
 </body>

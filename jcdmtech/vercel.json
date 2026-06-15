@@ -26,6 +26,8 @@
     { "source": "/contacto.html",   "destination": "/contact.html", "permanent": true },
     { "source": "/privacidad.html", "destination": "/privacy.html", "permanent": true },
     { "source": "/terminos.html",   "destination": "/terms.html",   "permanent": true },
-    { "source": "/mi-cuenta.html",  "destination": "/account.html", "permanent": true }
+    { "source": "/mi-cuenta.html",  "destination": "/account.html", "permanent": true },
+
+    { "source": "/reset-password", "destination": "/reset-password.html", "permanent": true }
   ]
 }

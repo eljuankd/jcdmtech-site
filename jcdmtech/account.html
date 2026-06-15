@@ -38,7 +38,9 @@
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, {
+      auth: { flowType: 'implicit' }
+    });
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) location.href = "/login.html?next=/account.html";
