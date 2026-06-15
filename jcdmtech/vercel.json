@@ -2,25 +2,30 @@
   "redirects": [
     { "source": "/qrcard", "destination": "/qrcard.html", "permanent": true },
 
-    { "source": "/about", "destination": "/nosotros.html", "permanent": true },
-    { "source": "/contact", "destination": "/contacto.html", "permanent": true },
+    { "source": "/about",   "destination": "/about.html",   "permanent": true },
+    { "source": "/contact", "destination": "/contact.html", "permanent": true },
 
-    { "source": "/quelvo", "destination": "/quelvo/", "permanent": true },
+    { "source": "/quelvo",   "destination": "/quelvo/",   "permanent": true },
     { "source": "/services", "destination": "/services/", "permanent": true },
     { "source": "/projects", "destination": "/projects/", "permanent": true },
 
-    { "source": "/domotica", "destination": "/services/", "permanent": true },
-    { "source": "/domotica/:path*", "destination": "/services/", "permanent": true },
-
-    { "source": "/software", "destination": "/services/", "permanent": true },
-    { "source": "/software/:path*", "destination": "/services/", "permanent": true },
-
-    { "source": "/automatizaciones", "destination": "/services/", "permanent": true },
+    { "source": "/domotica",           "destination": "/services/", "permanent": true },
+    { "source": "/domotica/:path*",    "destination": "/services/", "permanent": true },
+    { "source": "/software",           "destination": "/services/", "permanent": true },
+    { "source": "/software/:path*",    "destination": "/services/", "permanent": true },
+    { "source": "/automatizaciones",        "destination": "/services/", "permanent": true },
     { "source": "/automatizaciones/:path*", "destination": "/services/", "permanent": true },
 
     { "source": "/blog", "destination": "/blog/", "permanent": true },
 
-    { "source": "/chofer-privado", "destination": "/quelvo/", "permanent": true },
-    { "source": "/chofer-privado/reservar.html", "destination": "/quelvo/book/", "permanent": false }
+    { "source": "/chofer-privado",              "destination": "/quelvo/",            "permanent": true },
+    { "source": "/chofer-privado/reservar.html","destination": "/quelvo/book/",       "permanent": false },
+    { "source": "/chofer-privado/gracias.html", "destination": "/quelvo/book/gracias/", "permanent": true },
+
+    { "source": "/nosotros.html",   "destination": "/about.html",   "permanent": true },
+    { "source": "/contacto.html",   "destination": "/contact.html", "permanent": true },
+    { "source": "/privacidad.html", "destination": "/privacy.html", "permanent": true },
+    { "source": "/terminos.html",   "destination": "/terms.html",   "permanent": true },
+    { "source": "/mi-cuenta.html",  "destination": "/account.html", "permanent": true }
   ]
 }

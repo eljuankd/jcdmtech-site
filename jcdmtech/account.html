@@ -41,7 +41,7 @@
     const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
 
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) location.href = "/login.html?next=/mi-cuenta.html";
+    if (!session) location.href = "/login.html?next=/account.html";
 
     const form = document.getElementById('profileForm');
     const msg  = document.getElementById('msg');

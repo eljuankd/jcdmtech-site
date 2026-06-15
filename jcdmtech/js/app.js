@@ -75,8 +75,8 @@ function highlightNav() {
     { key: "services",  test: (x) => x.startsWith("/services/") },
     { key: "quelvo",    test: (x) => x.startsWith("/quelvo/") },
     { key: "projects",  test: (x) => x.startsWith("/projects/") },
-    { key: "about",     test: (x) => x.endsWith("/nosotros.html") },
-    { key: "contact",   test: (x) => x.endsWith("/contacto.html") },
+    { key: "about",     test: (x) => x.endsWith("/about.html") },
+    { key: "contact",   test: (x) => x.endsWith("/contact.html") },
     { key: "musicride", test: (x) => x.startsWith("/music-ride/") },
     { key: "blog",      test: (x) => x.startsWith("/blog/") },
   ];
