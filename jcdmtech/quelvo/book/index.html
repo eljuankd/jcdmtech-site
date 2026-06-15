@@ -1,169 +1,561 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <title>Book a Ride · QUELVO by JCDM Technologies</title>
-  <meta name="description" content="Book a private QUELVO ride in Miami — airport transfers, hourly service, events and business travel. Confirmed directly with your driver.">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a Ride · QUELVO Private Chauffeur</title>
+  <meta name="description" content="Book a premium private chauffeur with QUELVO. Fixed prices, professional drivers, no surprises.">
   <link rel="canonical" href="https://www.jcdmtech.com/quelvo/book/">
-
   <link rel="icon" href="/assets/favicon.ico">
-
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Book a Ride · QUELVO">
-  <meta property="og:description" content="Private chauffeur service in Miami. Book online in minutes.">
-  <meta property="og:url" content="https://www.jcdmtech.com/quelvo/book/">
-
+  <meta name="theme-color" content="#09090B">
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    .bk-wrap { max-width: 700px; margin: 0 auto; padding: 2rem clamp(16px,4vw,24px) 5rem; }
+
+    /* Progress */
+    .bk-progress { display: flex; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+    .bk-step { flex: 1; padding: .55rem .25rem; font-size: .75rem; color: var(--muted); text-align: center; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; letter-spacing: .03em; }
+    .bk-step.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 600; }
+    .bk-step.done   { color: var(--muted); border-bottom-color: var(--gold-line); }
+
+    /* Panels */
+    .bk-panel { display: none; }
+    .bk-panel.active { display: block; animation: fadeUp .2s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    .bk-h1  { font-family: 'Fraunces', Georgia, serif; font-size: clamp(1.5rem,2.5vw+.5rem,2.1rem); margin: 0 0 .3rem; letter-spacing: -.02em; }
+    .bk-sub { color: var(--muted); margin: 0 0 1.75rem; font-size: .95rem; }
+
+    /* Service cards */
+    .bk-services { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: .75rem; }
+    .bk-service { border: 1.5px solid var(--border); border-radius: 6px; padding: 1.25rem 1rem; cursor: pointer; background: var(--card); transition: border-color .15s, background .15s; text-align: left; }
+    .bk-service:hover  { border-color: var(--gold-line); }
+    .bk-service.active { border-color: var(--gold); background: rgba(200,169,110,.05); }
+    .bk-service-icon { font-size: 1.4rem; margin-bottom: .5rem; }
+    .bk-service-name { font-weight: 600; font-size: .95rem; margin: 0 0 .25rem; }
+    .bk-service-desc { color: var(--muted); font-size: .82rem; margin: 0; line-height: 1.4; }
+
+    /* Vehicle cards */
+    .bk-vehicles { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px,1fr)); gap: .75rem; }
+    .bk-vehicle { border: 1.5px solid var(--border); border-radius: 6px; padding: 1.5rem; cursor: pointer; background: var(--card); transition: border-color .15s; }
+    .bk-vehicle:hover  { border-color: var(--gold-line); }
+    .bk-vehicle.active { border-color: var(--gold); }
+    .bk-veh-tag  { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin: 0 0 .35rem; }
+    .bk-veh-name { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; margin: 0 0 .3rem; }
+    .bk-veh-cap  { color: var(--muted); font-size: .82rem; margin: 0 0 .15rem; }
+    .bk-veh-ex   { color: var(--muted); font-size: .78rem; font-style: italic; margin: 0 0 1rem; }
+    .bk-veh-rate { font-size: 1.05rem; font-weight: 600; margin: 0 0 .15rem; }
+    .bk-veh-min  { color: var(--muted); font-size: .8rem; margin: 0; }
+
+    /* Form */
+    .bk-label { display: block; font-size: .88rem; font-weight: 500; margin-bottom: .3rem; color: var(--text); }
+    .bk-input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: .93rem; padding: .65rem .85rem; font-family: inherit; transition: border-color .15s; box-sizing: border-box; }
+    .bk-input:focus { outline: none; border-color: var(--gold); }
+    textarea.bk-input { resize: vertical; min-height: 68px; }
+    .bk-field { margin-bottom: .9rem; }
+    .bk-row2  { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    @media (max-width: 500px) { .bk-row2 { grid-template-columns: 1fr; } }
+
+    /* Pax */
+    .bk-pax     { display: flex; align-items: center; gap: .6rem; }
+    .bk-pax-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .bk-pax-btn:hover { border-color: var(--gold); }
+    #paxCount { font-weight: 600; min-width: 20px; text-align: center; }
+    #paxMax   { font-size: .82rem; color: var(--muted); }
+
+    /* Duration chips */
+    .bk-chips { display: flex; gap: .45rem; flex-wrap: wrap; }
+    .bk-chip  { padding: .4rem .9rem; border: 1px solid var(--border); border-radius: 20px; background: var(--card); color: var(--text); font-size: .88rem; cursor: pointer; transition: all .15s; }
+    .bk-chip:hover  { border-color: var(--gold-line); }
+    .bk-chip.active { border-color: var(--gold); color: var(--gold); font-weight: 600; }
+
+    /* Summary */
+    .bk-summary { border: 1px solid var(--gold-line); border-radius: 6px; padding: 1.25rem 1.35rem; background: rgba(200,169,110,.04); margin-bottom: 1.5rem; }
+    .bk-sum-row { display: flex; justify-content: space-between; font-size: .88rem; margin-bottom: .35rem; }
+    .bk-sum-row span:first-child { color: var(--muted); }
+    .bk-sum-divider { height: 1px; background: var(--border); margin: .75rem 0; }
+    .bk-sum-price   { display: flex; justify-content: space-between; align-items: baseline; }
+    .bk-sum-plabel  { font-weight: 600; }
+    .bk-sum-amount  { font-family: 'Fraunces', Georgia, serif; font-size: 1.75rem; color: var(--gold); font-weight: 700; }
+    .bk-sum-note    { font-size: .8rem; color: var(--muted); margin-top: .4rem; }
+
+    /* Nav */
+    .bk-nav  { display: flex; gap: .6rem; margin-top: 1.5rem; align-items: center; }
+    .bk-back { background: transparent; border: 1px solid var(--border); color: var(--text); padding: .6rem 1.1rem; border-radius: 4px; cursor: pointer; font-size: .9rem; font-family: inherit; }
+    .bk-back:hover { border-color: var(--gold-line); }
+
+    /* Success */
+    .bk-ok      { text-align: center; padding: 3rem 1rem; }
+    .bk-ok-icon { font-size: 2.8rem; color: var(--gold); margin-bottom: 1rem; }
+    .bk-code    { display: inline-block; margin: .75rem 0 1.5rem; padding: .55rem 1.4rem; border: 1px solid var(--gold-line); border-radius: 4px; font-family: monospace; font-size: 1.25rem; letter-spacing: .12em; color: var(--gold); }
+
+    /* Google autocomplete dark fix */
+    .pac-container { background:#1a1c22 !important; border:1px solid rgba(255,255,255,.1) !important; border-radius:4px !important; box-shadow:0 4px 16px rgba(0,0,0,.5) !important; }
+    .pac-item { color:#b0b5bf !important; border-top:1px solid rgba(255,255,255,.06) !important; padding:.45rem .75rem !important; cursor:pointer; }
+    .pac-item:hover,.pac-item-selected { background:rgba(200,169,110,.1) !important; }
+    .pac-item-query { color:#edeff3 !important; }
+    .pac-matched { color:var(--gold) !important; }
+    .pac-icon { display:none; }
+  </style>
 </head>
 <body>
   <div id="header"></div>
 
-  <main class="container" style="max-width:960px;margin:3rem auto;padding:0 clamp(16px,4vw,24px)">
+  <main>
+    <div class="bk-wrap">
 
-    <p class="hero-kicker" style="margin-bottom:.75rem;">QUELVO · Private chauffeur</p>
-    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw+.5rem,2.6rem);margin:0 0 .5rem;letter-spacing:-.02em;">
-      Book a Ride
-    </h1>
-    <p class="muted" style="margin-bottom:1.75rem;">
-      Fill in your details and confirm via WhatsApp or email.
-      We respond quickly and coordinate directly with your driver.
-    </p>
-
-    <!-- Service highlights -->
-    <section class="card" style="margin-bottom:1.75rem;" aria-label="Service highlights">
-      <div class="booking-points">
-        <span class="booking-pill">Fixed price</span>
-        <span class="booking-pill">Fast response</span>
-        <span class="booking-pill">Executive fleet</span>
-        <span class="booking-pill">Music Ride included</span>
-      </div>
-      <p class="muted booking-lead">
-        Airport transfers, hourly, events and city-to-city private rides in Miami-Dade.
-      </p>
-    </section>
-
-    <!-- Booking form — booking.js targets #booking-form -->
-    <form id="booking-form" class="form" action="https://formspree.io/f/xgvljywo" method="POST" novalidate>
-      <!-- Honeypot anti-spam -->
-      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
-
-      <div class="grid grid-2">
-        <label for="bf-nombre">Full name
-          <input id="bf-nombre" type="text" name="nombre" required minlength="3" autocomplete="name" placeholder="Your full name" />
-        </label>
-
-        <label for="bf-telefono">Phone (WhatsApp)
-          <input id="bf-telefono" type="tel" name="telefono" required inputmode="tel" autocomplete="tel"
-                 placeholder="+1 786 000 0000"
-                 pattern="^[0-9+()\\-\\s]{7,}$" />
-        </label>
+      <!-- Progress -->
+      <div class="bk-progress">
+        <div class="bk-step active" id="ps1">Service</div>
+        <div class="bk-step"        id="ps2">Vehicle</div>
+        <div class="bk-step"        id="ps3">Details</div>
+        <div class="bk-step"        id="ps4">Confirm</div>
       </div>
 
-      <div class="grid grid-3">
-        <label for="bf-fecha">Date
-          <input id="bf-fecha" type="date" name="fecha" required />
-        </label>
-
-        <label for="bf-hora">Time
-          <input id="bf-hora" type="time" name="hora" required step="300" />
-        </label>
-
-        <label for="bf-duracion">Service hours
-          <input id="bf-duracion" type="number" name="duracion_horas" min="1" max="24" value="2" required />
-        </label>
-      </div>
-
-      <div class="grid grid-2">
-        <label for="bf-origen">Pickup location
-          <input id="bf-origen" type="text" name="origen" required placeholder="Hotel, airport, address…" autocomplete="street-address" />
-        </label>
-
-        <label for="bf-destino">Drop-off (optional)
-          <input id="bf-destino" type="text" name="destino" placeholder="Event, address…" autocomplete="address-line2" />
-        </label>
-      </div>
-
-      <label for="bf-coment">Additional notes (optional)
-        <textarea id="bf-coment" name="comentarios" rows="4" placeholder="Luggage, vehicle preference, flight number, special requests…"></textarea>
-      </label>
-
-      <fieldset class="channel-fieldset">
-        <legend>Confirmation method</legend>
-        <div class="channel-grid">
-          <label class="channel-option">
-            <input type="radio" name="contact_channel" value="whatsapp" checked />
-            <span>
-              <strong>WhatsApp</strong>
-              <small class="muted">Fastest way to confirm and coordinate your ride</small>
-            </span>
-          </label>
-          <label class="channel-option">
-            <input type="radio" name="contact_channel" value="email" />
-            <span>
-              <strong>Email</strong>
-              <small class="muted">Receive your booking details in writing</small>
-            </span>
-          </label>
+      <!-- Step 1: Service type -->
+      <div class="bk-panel active" id="p1">
+        <h1 class="bk-h1">What do you need?</h1>
+        <p class="bk-sub">Choose the type of service for your ride.</p>
+        <div class="bk-services">
+          <div class="bk-service" data-svc="transfer" onclick="pickService('transfer')">
+            <div class="bk-service-icon">→</div>
+            <div class="bk-service-name">Transfer</div>
+            <p class="bk-service-desc">Point-to-point. Fixed price shown before you book.</p>
+          </div>
+          <div class="bk-service" data-svc="hourly" onclick="pickService('hourly')">
+            <div class="bk-service-icon">⏱</div>
+            <div class="bk-service-name">By the hour</div>
+            <p class="bk-service-desc">Chauffeur at your disposal. 2-hour minimum.</p>
+          </div>
+          <div class="bk-service" data-svc="quote" onclick="pickService('quote')">
+            <div class="bk-service-icon">✉</div>
+            <div class="bk-service-name">Request a quote</div>
+            <p class="bk-service-desc">Long distance, events, or custom trips.</p>
+          </div>
         </div>
-      </fieldset>
+      </div>
 
-      <!-- Tracking metadata -->
-      <input type="hidden" name="page_url" value="" />
-      <input type="hidden" name="utm_source" value="" />
-      <input type="hidden" name="utm_medium" value="" />
-      <input type="hidden" name="utm_campaign" value="" />
+      <!-- Step 2: Vehicle class -->
+      <div class="bk-panel" id="p2">
+        <h1 class="bk-h1">Choose your vehicle</h1>
+        <p class="bk-sub" id="p2sub">Select the class that fits your needs.</p>
+        <div class="bk-vehicles">
+          <div class="bk-vehicle" data-cls="private" onclick="pickClass('private')">
+            <div class="bk-veh-tag">Private Sedan</div>
+            <div class="bk-veh-name">QUELVO Private</div>
+            <div class="bk-veh-cap">Up to 3 passengers · 2 bags</div>
+            <div class="bk-veh-ex">Mercedes E-Class, BMW 5 Series or similar</div>
+            <div class="bk-veh-rate">From $75 / hr</div>
+            <div class="bk-veh-min">$50 minimum · 2h minimum hourly</div>
+          </div>
+          <div class="bk-vehicle" data-cls="suv" onclick="pickClass('suv')">
+            <div class="bk-veh-tag">Premium SUV</div>
+            <div class="bk-veh-name">QUELVO Black SUV</div>
+            <div class="bk-veh-cap">Up to 6 passengers · 4 bags</div>
+            <div class="bk-veh-ex">Cadillac Escalade, Lincoln Navigator or similar</div>
+            <div class="bk-veh-rate">From $120 / hr</div>
+            <div class="bk-veh-min">$85 minimum · 3h minimum hourly</div>
+          </div>
+        </div>
+        <div class="bk-nav">
+          <button class="bk-back" onclick="goTo(1)">← Back</button>
+        </div>
+      </div>
 
-      <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">Book via WhatsApp</button>
-      <p id="submitHelp" class="muted booking-submit-help">We'll open WhatsApp to confirm your ride.</p>
-      <p id="formMsg" class="form-msg" role="status" aria-live="polite"></p>
-    </form>
+      <!-- Step 3: Trip details -->
+      <div class="bk-panel" id="p3">
+        <h1 class="bk-h1" id="p3h">Your trip</h1>
+        <p class="bk-sub" id="p3sub">Where and when?</p>
 
-    <noscript>
-      <p class="form-msg error">To submit a booking, please enable JavaScript or contact us via WhatsApp.</p>
-    </noscript>
+        <!-- Transfer fields -->
+        <div id="f-transfer">
+          <div class="bk-field">
+            <label class="bk-label">Pickup location</label>
+            <input class="bk-input" id="inPickupT" type="text" placeholder="Address, hotel, airport…" autocomplete="off" />
+          </div>
+          <div class="bk-field">
+            <label class="bk-label">Drop-off location</label>
+            <input class="bk-input" id="inDropoff" type="text" placeholder="Address, hotel, airport…" autocomplete="off" />
+          </div>
+        </div>
 
+        <!-- Hourly / Quote fields -->
+        <div id="f-hourly" style="display:none">
+          <div class="bk-field">
+            <label class="bk-label">Pickup location</label>
+            <input class="bk-input" id="inPickupH" type="text" placeholder="Address, hotel, airport…" autocomplete="off" />
+          </div>
+          <div id="f-duration" class="bk-field">
+            <label class="bk-label">Duration</label>
+            <div class="bk-chips" id="durationChips"></div>
+          </div>
+        </div>
+
+        <div class="bk-row2">
+          <div class="bk-field">
+            <label class="bk-label">Date</label>
+            <input class="bk-input" id="inDate" type="date" />
+          </div>
+          <div class="bk-field">
+            <label class="bk-label">Time</label>
+            <input class="bk-input" id="inTime" type="time" />
+          </div>
+        </div>
+
+        <div class="bk-field">
+          <label class="bk-label">Passengers</label>
+          <div class="bk-pax">
+            <button class="bk-pax-btn" onclick="stepPax(-1)">−</button>
+            <span id="paxCount">1</span>
+            <button class="bk-pax-btn" onclick="stepPax(+1)">+</button>
+            <span id="paxMax"></span>
+          </div>
+        </div>
+
+        <div id="err3" class="form-msg error" style="display:none"></div>
+
+        <div class="bk-nav">
+          <button class="bk-back" onclick="goTo(2)">← Back</button>
+          <button class="btn btn-primary" id="btn3" onclick="step3Next()">See price →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Confirm -->
+      <div class="bk-panel" id="p4">
+        <h1 class="bk-h1">Confirm your booking</h1>
+        <p class="bk-sub">Review your trip and enter your details.</p>
+
+        <div class="bk-summary" id="summary"></div>
+
+        <div class="bk-field">
+          <label class="bk-label">Full name</label>
+          <input class="bk-input" id="cName" type="text" placeholder="Your full name" autocomplete="name" />
+        </div>
+        <div class="bk-row2">
+          <div class="bk-field">
+            <label class="bk-label">Email</label>
+            <input class="bk-input" id="cEmail" type="email" placeholder="your@email.com" autocomplete="email" />
+          </div>
+          <div class="bk-field">
+            <label class="bk-label">Phone</label>
+            <input class="bk-input" id="cPhone" type="tel" placeholder="+1 786 000 0000" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="bk-field">
+          <label class="bk-label">Flight number <span style="font-weight:400;color:var(--muted);font-size:.8rem">(optional)</span></label>
+          <input class="bk-input" id="cFlight" type="text" placeholder="AA 1234" />
+        </div>
+        <div class="bk-field">
+          <label class="bk-label">Special requests <span style="font-weight:400;color:var(--muted);font-size:.8rem">(optional)</span></label>
+          <textarea class="bk-input" id="cNotes" placeholder="Child seat, accessibility needs, specific route…"></textarea>
+        </div>
+
+        <div id="err4" class="form-msg error" style="display:none"></div>
+
+        <div class="bk-nav">
+          <button class="bk-back" onclick="goTo(3)">← Back</button>
+          <button class="btn btn-primary" id="btn4" onclick="confirm4()">Confirm booking →</button>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="bk-panel" id="p-ok">
+        <div class="bk-ok">
+          <div class="bk-ok-icon">✓</div>
+          <h1 class="bk-h1">Booking received</h1>
+          <p class="bk-sub">Here is your booking code:</p>
+          <div class="bk-code" id="okCode">QLV-XXXXXXXX</div>
+          <p class="muted" style="font-size:.9rem;max-width:400px;margin:0 auto 2rem;line-height:1.6">
+            We'll send a confirmation to your email. Your driver will be assigned and you'll be notified before the ride.
+          </p>
+          <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+            <a href="/quelvo/" class="btn">Back to QUELVO</a>
+            <a href="/account.html" class="btn btn-primary">View my bookings</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <div id="footer"></div>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "QUELVO Private Chauffeur",
-    "provider": { "@type": "Organization", "name": "JCDM Technologies LLC" },
-    "areaServed": "Miami-Dade, FL",
-    "availableChannel": "https://www.jcdmtech.com/quelvo/book/"
-  }
-  </script>
-
   <script src="/js/supabase.config.js"></script>
   <script src="/js/app.js" defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFAhnMvF7qdL7dUYM1bejv0UFRl_TCnXU&libraries=places&callback=mapsReady" async defer></script>
 
-  <!-- Auto-fill from Supabase profile if user is logged in -->
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon);
+  <script>
+  // ── CONFIG ────────────────────────────────────────────────────────────
+  const CFG = {
+    private: { name:'QUELVO Private', rate:75,  minTransfer:50,  minHours:2, maxPax:3 },
+    suv:     { name:'QUELVO Black SUV', rate:120, minTransfer:85,  minHours:3, maxPax:6 },
+    MPH: 25, BUFFER: 0.25, MIN_TH: 0.75, QUOTE_MI: 50, ROUND: 5,
+  };
 
-    const form = document.getElementById("booking-form");
+  // ── STATE ─────────────────────────────────────────────────────────────
+  const S = {
+    svc: null, cls: null,
+    pickup:'', pickupLat:null, pickupLng:null,
+    dropoff:'', dropoffLat:null, dropoffLng:null,
+    date:'', time:'', pax:1, hours:2,
+    estMin:null, estMi:null,
+    price:null, pricingType:null, requiresQuote:false,
+  };
 
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      const { data: prof } = await supabase
-        .from("profiles")
-        .select("full_name,phone")
-        .eq("id", session.user.id)
-        .single();
-      if (prof) {
-        if (form.nombre   && !form.nombre.value)   form.nombre.value   = prof.full_name || "";
-        if (form.telefono && !form.telefono.value) form.telefono.value = prof.phone     || "";
+  // ── GOOGLE MAPS ───────────────────────────────────────────────────────
+  let acT, acD, acH;
+  function mapsReady() {
+    const opt = { fields: ['formatted_address','geometry'] };
+    acT = new google.maps.places.Autocomplete(document.getElementById('inPickupT'), opt);
+    acD = new google.maps.places.Autocomplete(document.getElementById('inDropoff'),  opt);
+    acH = new google.maps.places.Autocomplete(document.getElementById('inPickupH'),  opt);
+
+    acT.addListener('place_changed', () => { const p=acT.getPlace(); if(p.geometry){ S.pickup=p.formatted_address; S.pickupLat=p.geometry.location.lat(); S.pickupLng=p.geometry.location.lng(); } });
+    acD.addListener('place_changed', () => { const p=acD.getPlace(); if(p.geometry){ S.dropoff=p.formatted_address; S.dropoffLat=p.geometry.location.lat(); S.dropoffLng=p.geometry.location.lng(); } });
+    acH.addListener('place_changed', () => { const p=acH.getPlace(); if(p.geometry){ S.pickup=p.formatted_address; S.pickupLat=p.geometry.location.lat(); S.pickupLng=p.geometry.location.lng(); } });
+  }
+
+  function distMatrix(oLat, oLng, dLat, dLng) {
+    return new Promise((res, rej) => {
+      new google.maps.DistanceMatrixService().getDistanceMatrix({
+        origins:[{lat:oLat,lng:oLng}], destinations:[{lat:dLat,lng:dLng}],
+        travelMode:'DRIVING', unitSystem:google.maps.UnitSystem.IMPERIAL,
+      }, (r, s) => {
+        if (s !== 'OK') return rej(new Error('Route service error'));
+        const el = r.rows[0].elements[0];
+        if (el.status !== 'OK') return rej(new Error('Route not found'));
+        res({ min: el.duration.value/60, mi: el.distance.value/1609.344 });
+      });
+    });
+  }
+
+  // ── PRICING ───────────────────────────────────────────────────────────
+  function priceTransfer(cls, mi, min) {
+    if (mi > CFG.QUOTE_MI) return { q:true, type:'manual_quote', price:null };
+    const c = CFG[cls];
+    const billH = Math.max(min/60 + CFG.BUFFER, mi/CFG.MPH, CFG.MIN_TH);
+    const price  = Math.ceil(Math.max(billH*c.rate, c.minTransfer) / CFG.ROUND) * CFG.ROUND;
+    return { q:false, type:'automatic_transfer', price };
+  }
+
+  function priceHourly(cls, h) {
+    const c = CFG[cls];
+    const hours = Math.max(h, c.minHours);
+    return { q:false, type:'automatic_hourly', price:hours*c.rate, hours };
+  }
+
+  // ── NAVIGATION ────────────────────────────────────────────────────────
+  function goTo(n) {
+    ['p1','p2','p3','p4','p-ok'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+    document.getElementById(n === 'ok' ? 'p-ok' : 'p'+n)?.classList.add('active');
+    [1,2,3,4].forEach(i => {
+      const el = document.getElementById('ps'+i); if(!el) return;
+      el.classList.remove('active','done');
+      if (i===n) el.classList.add('active');
+      else if (typeof n==='number' && i<n) el.classList.add('done');
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ── STEP 1 ────────────────────────────────────────────────────────────
+  function pickService(svc) {
+    S.svc = svc;
+    document.querySelectorAll('[data-svc]').forEach(el => el.classList.remove('active'));
+    document.querySelector(`[data-svc="${svc}"]`).classList.add('active');
+    setTimeout(() => goTo(2), 180);
+  }
+
+  // ── STEP 2 ────────────────────────────────────────────────────────────
+  function pickClass(cls) {
+    S.cls = cls;
+    document.querySelectorAll('[data-cls]').forEach(el => el.classList.remove('active'));
+    document.querySelector(`[data-cls="${cls}"]`).classList.add('active');
+    setupStep3();
+    setTimeout(() => goTo(3), 180);
+  }
+
+  function setupStep3() {
+    const c = CFG[S.cls];
+    const isT = S.svc === 'transfer';
+    document.getElementById('f-transfer').style.display = isT ? '' : 'none';
+    document.getElementById('f-hourly').style.display   = isT ? 'none' : '';
+    document.getElementById('f-duration').style.display = S.svc==='hourly' ? '' : 'none';
+    document.getElementById('p3h').textContent   = isT ? 'Your transfer' : S.svc==='hourly' ? 'By the hour' : 'Request a quote';
+    document.getElementById('p3sub').textContent = isT ? 'Where do you need to go?' : 'Where and for how long?';
+    document.getElementById('paxMax').textContent = `(max ${c.maxPax})`;
+    S.pax = 1; document.getElementById('paxCount').textContent = '1';
+
+    if (S.svc === 'hourly') {
+      const opts = [2,3,4,5,6,8].filter(h => h >= c.minHours);
+      S.hours = opts[0];
+      document.getElementById('durationChips').innerHTML = opts.map(h =>
+        `<button class="bk-chip${h===S.hours?' active':''}" onclick="pickDur(${h},this)">${h}h</button>`
+      ).join('');
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('inDate').min = today;
+    document.getElementById('err3').style.display = 'none';
+  }
+
+  function pickDur(h, btn) {
+    S.hours = h;
+    document.querySelectorAll('.bk-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function stepPax(d) {
+    S.pax = Math.max(1, Math.min(CFG[S.cls].maxPax, S.pax + d));
+    document.getElementById('paxCount').textContent = S.pax;
+  }
+
+  async function step3Next() {
+    const err = document.getElementById('err3');
+    err.style.display = 'none';
+    S.date = document.getElementById('inDate').value;
+    S.time = document.getElementById('inTime').value;
+    if (!S.date) return setErr(err, 'Please select a date.');
+    if (!S.time) return setErr(err, 'Please select a time.');
+
+    if (S.svc === 'transfer') {
+      if (!document.getElementById('inPickupT').value.trim()) return setErr(err, 'Please enter a pickup address.');
+      if (!document.getElementById('inDropoff').value.trim())  return setErr(err, 'Please enter a drop-off address.');
+      if (!S.pickupLat)  return setErr(err, 'Select pickup from the suggestions list.');
+      if (!S.dropoffLat) return setErr(err, 'Select drop-off from the suggestions list.');
+
+      const btn = document.getElementById('btn3');
+      btn.disabled = true; btn.textContent = 'Calculating…';
+      try {
+        const { min, mi } = await distMatrix(S.pickupLat, S.pickupLng, S.dropoffLat, S.dropoffLng);
+        S.estMin = min; S.estMi = mi;
+        const r = priceTransfer(S.cls, mi, min);
+        S.price = r.price; S.pricingType = r.type; S.requiresQuote = r.q;
+      } catch (e) {
+        return setErr(err, 'Could not calculate the route. Check addresses and try again.');
+      } finally {
+        btn.disabled = false; btn.textContent = 'See price →';
+      }
+
+    } else {
+      if (!document.getElementById('inPickupH').value.trim()) return setErr(err, 'Please enter a pickup address.');
+      if (!S.pickupLat) S.pickup = document.getElementById('inPickupH').value.trim();
+
+      if (S.svc === 'quote') {
+        S.requiresQuote = true; S.pricingType = 'manual_quote'; S.price = null;
+      } else {
+        const r = priceHourly(S.cls, S.hours);
+        S.price = r.price; S.pricingType = r.type; S.requiresQuote = false; S.hours = r.hours;
       }
     }
-  </script>
 
-  <script src="/js/booking.js" defer></script>
+    buildSummary();
+    prefillContact();
+    goTo(4);
+  }
+
+  // ── STEP 4 ────────────────────────────────────────────────────────────
+  function buildSummary() {
+    const c = CFG[S.cls];
+    const svcLabel = {transfer:'Transfer', hourly:'By the hour', quote:'Quote request'}[S.svc];
+    const d = S.date ? new Date(S.date+'T12:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) : '';
+
+    let rows = `<div class="bk-sum-row"><span>Vehicle</span><span>${c.name}</span></div>
+                <div class="bk-sum-row"><span>Service</span><span>${svcLabel}</span></div>`;
+
+    if (S.svc === 'transfer') {
+      const p1 = (S.pickup  || document.getElementById('inPickupT').value).split(',')[0];
+      const p2 = (S.dropoff || document.getElementById('inDropoff').value).split(',')[0];
+      rows += `<div class="bk-sum-row"><span>Route</span><span>${p1} → ${p2}</span></div>`;
+      if (S.estMi) rows += `<div class="bk-sum-row"><span>Distance</span><span>${S.estMi.toFixed(1)} mi · ~${Math.round(S.estMin)} min</span></div>`;
+    } else {
+      const p = (S.pickup || document.getElementById('inPickupH').value).split(',')[0];
+      rows += `<div class="bk-sum-row"><span>Pickup</span><span>${p}</span></div>`;
+      if (S.svc === 'hourly') rows += `<div class="bk-sum-row"><span>Duration</span><span>${S.hours} hours</span></div>`;
+    }
+
+    rows += `<div class="bk-sum-row"><span>Date &amp; time</span><span>${d} · ${S.time}</span></div>
+             <div class="bk-sum-row"><span>Passengers</span><span>${S.pax}</span></div>`;
+
+    const priceBlock = S.requiresQuote
+      ? `<div class="bk-sum-price"><span class="bk-sum-plabel">Price</span><span class="bk-sum-amount" style="font-size:1.3rem">On request</span></div>
+         <div class="bk-sum-note">We'll confirm your quote within 2 hours.</div>`
+      : `<div class="bk-sum-price"><span class="bk-sum-plabel">Estimated total</span><span class="bk-sum-amount">$${S.price}</span></div>
+         <div class="bk-sum-note">Confirmed on booking. Tolls &amp; airport fees may apply.</div>`;
+
+    document.getElementById('summary').innerHTML = rows + '<div class="bk-sum-divider"></div>' + priceBlock;
+  }
+
+  async function prefillContact() {
+    try {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const sb = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, { auth:{flowType:'implicit'} });
+      const { data:{ session } } = await sb.auth.getSession();
+      if (!session) return;
+      document.getElementById('cEmail').value = session.user.email || '';
+      const { data:p } = await sb.from('profiles').select('full_name,phone').eq('id',session.user.id).single();
+      if (p?.full_name) document.getElementById('cName').value  = p.full_name;
+      if (p?.phone)     document.getElementById('cPhone').value = p.phone;
+    } catch(_) {}
+  }
+
+  async function confirm4() {
+    const err  = document.getElementById('err4');
+    err.style.display = 'none';
+    const name  = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const phone = document.getElementById('cPhone').value.trim();
+    if (!name)  return setErr(err, 'Please enter your full name.');
+    if (!email) return setErr(err, 'Please enter your email address.');
+    if (!phone) return setErr(err, 'Please enter your phone number.');
+
+    const btn = document.getElementById('btn4');
+    btn.disabled = true; btn.textContent = 'Confirming…';
+
+    try {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const sb = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, { auth:{flowType:'implicit'} });
+      const { data:{ session } } = await sb.auth.getSession();
+      const code = 'QLV-' + Math.random().toString(36).substr(2,8).toUpperCase();
+      const pAddr = S.pickup || document.getElementById('inPickupT').value || document.getElementById('inPickupH').value;
+      const dAddr = S.svc==='transfer' ? (S.dropoff || document.getElementById('inDropoff').value) : null;
+
+      const { error } = await sb.from('bookings').insert({
+        booking_code:      code,
+        user_id:           session?.user?.id || null,
+        service_type:      S.svc,
+        vehicle_class:     S.cls,
+        pickup_address:    pAddr,
+        dropoff_address:   dAddr,
+        pickup_lat:        S.pickupLat,
+        pickup_lng:        S.pickupLng,
+        dropoff_lat:       S.dropoffLat || null,
+        dropoff_lng:       S.dropoffLng || null,
+        pickup_at:         new Date(`${S.date}T${S.time}`).toISOString(),
+        requested_hours:   S.svc==='hourly' ? S.hours : null,
+        estimated_minutes: S.estMin ? Math.round(S.estMin) : null,
+        estimated_miles:   S.estMi  ? parseFloat(S.estMi.toFixed(2)) : null,
+        passengers:        S.pax,
+        client_name:       name,
+        client_email:      email,
+        client_phone:      phone,
+        flight_number:     document.getElementById('cFlight').value.trim() || null,
+        special_requests:  document.getElementById('cNotes').value.trim()  || null,
+        base_price:        S.price,
+        pricing_type:      S.pricingType,
+        requires_quote:    S.requiresQuote,
+        status:            S.requiresQuote ? 'pending_quote' : 'pending',
+      });
+
+      if (error) throw error;
+      document.getElementById('okCode').textContent = code;
+      goTo('ok');
+    } catch(e) {
+      setErr(err, 'Something went wrong: ' + e.message);
+      btn.disabled = false; btn.textContent = 'Confirm booking →';
+    }
+  }
+
+  function setErr(el, msg) { el.textContent = msg; el.style.display = ''; }
+  </script>
 </body>
 </html>
