@@ -6,29 +6,72 @@
   <title>My account · JCDM Technologies LLC</title>
   <link rel="icon" href="/assets/favicon.ico">
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    .settings-grid { display:grid; gap:.75rem; }
+    .pref-row { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .pref-label { font-size:.9rem; }
+    .pref-label small { display:block; color:var(--muted); font-size:.8rem; margin-top:.1rem; }
+    .toggle-group { display:flex; border:1px solid var(--border); border-radius:4px; overflow:hidden; flex-shrink:0; }
+    .toggle-group button { padding:.4rem .9rem; background:transparent; border:none; color:var(--muted); font-size:.82rem; font-family:inherit; cursor:pointer; font-weight:500; }
+    .toggle-group button.active { background:var(--gold); color:#09090B; font-weight:700; }
+    .toggle-group button:not(.active):hover { background:rgba(255,255,255,.06); color:var(--text); }
+  </style>
 </head>
 <body>
   <div id="header"></div>
 
   <main class="container" style="max-width:580px;margin:3rem auto;padding:0 clamp(16px,4vw,24px)">
-    <p class="hero-kicker" style="margin-bottom:.75rem">Account</p>
-    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw+.5rem,2.4rem);margin:0 0 1.5rem;letter-spacing:-.02em">
+    <p class="hero-kicker" style="margin-bottom:.75rem" data-es="Cuenta">Account</p>
+    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw+.5rem,2.4rem);margin:0 0 1.5rem;letter-spacing:-.02em" data-es="Mi cuenta">
       My account
     </h1>
 
-    <form id="profileForm" class="card" style="display:grid;gap:1rem">
-      <label>Full name
+    <!-- Profile -->
+    <h2 style="font-size:1rem;font-weight:600;margin:0 0 .75rem" data-es="Perfil">Profile</h2>
+    <form id="profileForm" class="card" style="display:grid;gap:1rem;margin-bottom:1.5rem">
+      <label data-es="Nombre completo">Full name
         <input name="full_name" placeholder="Your full name" autocomplete="name" />
       </label>
-      <label>Phone
+      <label data-es="Teléfono">Phone
         <input name="phone" placeholder="+1 786 000 0000" autocomplete="tel" />
       </label>
       <div class="grid grid-2">
-        <button class="btn btn-primary" type="submit">Save changes</button>
-        <button class="btn" type="button" id="logoutBtn">Sign out</button>
+        <button class="btn btn-primary" type="submit" data-es="Guardar cambios">Save changes</button>
+        <button class="btn" type="button" id="logoutBtn" data-es="Cerrar sesión">Sign out</button>
       </div>
-      <p id="msg" class="muted" aria-live="polite" role="status" style="min-height:1.2rem"></p>
+      <p id="profileMsg" class="muted" aria-live="polite" role="status" style="min-height:1.2rem"></p>
     </form>
+
+    <!-- Settings -->
+    <h2 style="font-size:1rem;font-weight:600;margin:0 0 .75rem" data-es="Configuración">Settings</h2>
+    <div class="card settings-grid" style="margin-bottom:1.5rem">
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <span data-es="Modo oscuro">Dark mode</span>
+          <small data-es="Apariencia de la interfaz">Interface appearance</small>
+        </div>
+        <div class="toggle-group" role="group" aria-label="Theme">
+          <button id="btnDark"  type="button" onclick="setPref('theme','dark')"  data-es="Oscuro">Dark</button>
+          <button id="btnLight" type="button" onclick="setPref('theme','light')" data-es="Claro">Light</button>
+        </div>
+      </div>
+
+      <hr style="border:0;border-top:1px solid var(--border);margin:0">
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <span data-es="Idioma">Language</span>
+          <small data-es="Idioma de la interfaz">Interface language</small>
+        </div>
+        <div class="toggle-group" role="group" aria-label="Language">
+          <button id="btnEn" type="button" onclick="setPref('lang','en')">English</button>
+          <button id="btnEs" type="button" onclick="setPref('lang','es')">Español</button>
+        </div>
+      </div>
+
+      <p id="settingsMsg" class="muted" aria-live="polite" role="status" style="min-height:1rem;font-size:.85rem"></p>
+    </div>
   </main>
 
   <div id="footer"></div>
@@ -38,36 +81,65 @@
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, {
-      auth: { flowType: 'implicit' }
-    });
+    const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, { auth: { flowType: 'implicit' } });
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) location.href = "/login.html?next=/account.html";
 
-    const form = document.getElementById('profileForm');
-    const msg  = document.getElementById('msg');
+    const form       = document.getElementById('profileForm');
+    const profileMsg = document.getElementById('profileMsg');
+    const settingsMsg = document.getElementById('settingsMsg');
 
-    // Load current profile data
-    const { data: prof } = await supabase
-      .from('profiles')
-      .select('full_name, phone')
-      .eq('id', session.user.id)
-      .single();
+    // Load profile (theme/lang may not exist yet if migration pending)
+    let prof = null;
+    const { data: d1, error: e1 } = await supabase
+      .from('profiles').select('full_name, phone, theme, lang').eq('id', session.user.id).single();
+    prof = e1
+      ? (await supabase.from('profiles').select('full_name, phone').eq('id', session.user.id).single()).data
+      : d1;
 
     if (prof) {
       form.full_name.value = prof.full_name || '';
       form.phone.value     = prof.phone     || '';
     }
 
-    // Save changes
+    // Sync preference buttons with current values
+    function refreshPrefButtons() {
+      const p = window.JCDM?.getPrefs?.() || { theme: 'dark', lang: 'en' };
+      document.getElementById('btnDark') ?.classList.toggle('active', p.theme === 'dark');
+      document.getElementById('btnLight')?.classList.toggle('active', p.theme === 'light');
+      document.getElementById('btnEn')   ?.classList.toggle('active', p.lang  === 'en');
+      document.getElementById('btnEs')   ?.classList.toggle('active', p.lang  === 'es');
+    }
+
+    // Wait for app.js to expose JCDM, then refresh buttons
+    const waitReady = setInterval(() => {
+      if (window.JCDM?.getPrefs) {
+        clearInterval(waitReady);
+        // Override with account prefs from DB
+        if (prof?.theme) window.JCDM.setTheme(prof.theme);
+        if (prof?.lang)  window.JCDM.setLang(prof.lang);
+        refreshPrefButtons();
+      }
+    }, 50);
+
+    // Global handler called by toggle buttons
+    window.setPref = async (key, value) => {
+      if (key === 'theme') await window.JCDM.setTheme(value);
+      if (key === 'lang')  await window.JCDM.setLang(value);
+      refreshPrefButtons();
+      settingsMsg.textContent = 'Saved.';
+      setTimeout(() => { settingsMsg.textContent = ''; }, 2000);
+    };
+
+    // Save profile
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const values = Object.fromEntries(new FormData(form).entries());
+      const vals = Object.fromEntries(new FormData(form).entries());
       const { error } = await supabase
         .from('profiles')
-        .upsert({ id: session.user.id, full_name: values.full_name, phone: values.phone }, { onConflict: 'id' });
-      msg.textContent = error ? 'Error: ' + error.message : 'Changes saved.';
+        .upsert({ id: session.user.id, full_name: vals.full_name, phone: vals.phone }, { onConflict: 'id' });
+      profileMsg.textContent = error ? 'Error: ' + error.message : 'Changes saved.';
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
