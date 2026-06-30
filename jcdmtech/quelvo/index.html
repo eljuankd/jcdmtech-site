@@ -1,192 +1,524 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
   <title>QUELVO · Private Chauffeur Service in Miami</title>
-  <meta name="description" content="QUELVO — premium private chauffeur service in Miami by JCDM Technologies. Airport transfers, hourly, events and business travel. Book online.">
-
+  <meta name="description" content="QUELVO — premium private chauffeur service in Miami. Airport transfers, hourly, events and business travel. Fixed price. Book online.">
   <link rel="canonical" href="https://www.jcdmtech.com/quelvo/">
-
   <link rel="icon" href="/assets/favicon.ico">
-
   <meta property="og:type" content="website">
   <meta property="og:title" content="QUELVO · Private Chauffeur Service in Miami">
-  <meta property="og:description" content="Premium private rides in Miami. Airport transfers, hourly, events and business travel. Book online.">
+  <meta property="og:description" content="Premium private rides in Miami. Fixed price, executive fleet, flight tracking. Book online.">
   <meta property="og:url" content="https://www.jcdmtech.com/quelvo/">
-
+  <meta property="og:image" content="https://www.jcdmtech.com/assets/quelvo/Hero%20QUELVO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css" />
+  <style>
+    /* ── QUELVO Design System ───────────────────────────── */
+    :root{
+      --qlv-black:   #09090B;
+      --qlv-white:   #F2F2F5;
+      --qlv-gold:    #C8A96E;
+      --qlv-muted:   rgba(242,242,245,.55);
+      --qlv-border:  rgba(255,255,255,.10);
+      --qlv-radius:  2px;
+    }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    .qlv-hero{
+      position:relative; min-height:100svh;
+      display:flex; flex-direction:column; justify-content:flex-end;
+      overflow:hidden; background:#050507;
+    }
+    .qlv-hero-bg{
+      position:absolute; inset:0;
+      background:url('/assets/quelvo/Hero%20QUELVO.png') center center/cover no-repeat;
+      opacity:.7;
+    }
+    .qlv-hero-overlay{
+      position:absolute; inset:0;
+      background:linear-gradient(
+        to bottom,
+        rgba(5,5,7,.15) 0%,
+        rgba(5,5,7,.3)  40%,
+        rgba(5,5,7,.85) 80%,
+        rgba(5,5,7,.98) 100%
+      );
+    }
+    .qlv-hero-content{
+      position:relative; z-index:2;
+      padding:0 clamp(24px,6vw,80px) 0;
+      max-width:860px;
+      padding-bottom:2.5rem;
+    }
+    .qlv-kicker{
+      font-size:.75rem; font-weight:500; letter-spacing:.2em;
+      text-transform:uppercase; color:var(--qlv-gold);
+      margin:0 0 1.5rem; display:block;
+    }
+    .qlv-headline{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:clamp(3.2rem,8vw+.5rem,7.5rem);
+      font-weight:700; letter-spacing:-.03em; line-height:1.0;
+      color:#FFFFFF; margin:0 0 1.5rem;
+    }
+    .qlv-subline{
+      font-size:clamp(1rem,1.4vw+.5rem,1.25rem);
+      font-weight:300; color:var(--qlv-muted);
+      margin:0 0 2.5rem; max-width:520px; line-height:1.6;
+    }
+    .qlv-hero-actions{ display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:4rem; }
+    .qlv-btn-primary{
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:var(--qlv-gold); color:#09090B;
+      font-weight:600; font-size:1rem; letter-spacing:.01em;
+      padding:.85rem 2rem; border:none; border-radius:var(--qlv-radius);
+      text-decoration:none; cursor:pointer; transition:background .2s,transform .15s;
+    }
+    .qlv-btn-primary:hover{ background:#D4B87A; transform:translateY(-1px); text-decoration:none; }
+    .qlv-btn-outline{
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:transparent; color:#FFFFFF;
+      font-weight:500; font-size:1rem;
+      padding:.85rem 2rem; border:1px solid rgba(255,255,255,.3); border-radius:var(--qlv-radius);
+      text-decoration:none; cursor:pointer; transition:border-color .2s,transform .15s;
+    }
+    .qlv-btn-outline:hover{ border-color:rgba(255,255,255,.7); transform:translateY(-1px); text-decoration:none; }
+
+    /* Trust bar at bottom of hero */
+    .qlv-trust-bar{
+      position:relative; z-index:2;
+      display:grid; grid-template-columns:repeat(4,1fr);
+      border-top:1px solid var(--qlv-border);
+    }
+    .qlv-trust-item{
+      padding:1.25rem clamp(16px,4vw,36px);
+      border-right:1px solid var(--qlv-border);
+    }
+    .qlv-trust-item:last-child{ border-right:none; }
+    .qlv-trust-value{
+      display:block; font-family:'Fraunces',Georgia,serif;
+      font-size:1.1rem; font-weight:600; color:#FFFFFF; margin-bottom:.2rem;
+    }
+    .qlv-trust-label{ font-size:.75rem; color:var(--qlv-muted); letter-spacing:.05em; text-transform:uppercase; }
+    @media(max-width:600px){
+      .qlv-trust-bar{ grid-template-columns:repeat(2,1fr); }
+      .qlv-trust-item:nth-child(2){ border-right:none; }
+      .qlv-trust-item:nth-child(3){ border-top:1px solid var(--qlv-border); }
+    }
+
+    /* ── Vehicle classes ────────────────────────────────── */
+    .qlv-vehicles-header{
+      padding:5rem clamp(24px,6vw,80px) 3rem;
+      background:var(--qlv-black);
+    }
+    .qlv-vehicles-header .qlv-kicker{ color:var(--qlv-gold); }
+    .qlv-vehicles-title{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:clamp(2rem,4vw,3rem); font-weight:700;
+      letter-spacing:-.02em; color:#FFFFFF; margin:0;
+    }
+
+    .qlv-vehicles{
+      display:grid; grid-template-columns:1fr 1fr;
+      background:var(--qlv-black); gap:1px;
+    }
+    @media(max-width:760px){ .qlv-vehicles{ grid-template-columns:1fr; } }
+
+    .qlv-vehicle-card{
+      background:#0E0E10; display:flex; flex-direction:column;
+      transition:background .25s;
+    }
+    .qlv-vehicle-card:hover{ background:#131315; }
+
+    .qlv-vehicle-img{
+      aspect-ratio:16/10; width:100%;
+      background-size:cover; background-position:center;
+      filter:brightness(.9);
+      transition:filter .4s;
+    }
+    .qlv-vehicle-card:hover .qlv-vehicle-img{ filter:brightness(1); }
+
+    .qlv-vehicle-body{
+      padding:clamp(1.5rem,3vw,2.5rem) clamp(1.5rem,3vw,2.5rem) clamp(2rem,3.5vw,3rem);
+      display:flex; flex-direction:column; flex:1;
+    }
+    .qlv-vehicle-brand{
+      font-size:.7rem; font-weight:600; letter-spacing:.18em;
+      text-transform:uppercase; color:var(--qlv-gold); margin:0 0 .4rem;
+    }
+    .qlv-vehicle-name{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:clamp(1.8rem,3vw,2.5rem); font-weight:700;
+      letter-spacing:-.02em; color:#FFFFFF; margin:0 0 1rem; line-height:1.1;
+    }
+    .qlv-vehicle-desc{
+      font-size:.95rem; color:var(--qlv-muted); margin:0 0 1.5rem; line-height:1.6;
+    }
+    .qlv-vehicle-specs{
+      list-style:none; padding:0; margin:0 0 1.75rem;
+      display:flex; flex-direction:column; gap:.5rem;
+    }
+    .qlv-vehicle-specs li{
+      font-size:.85rem; color:rgba(242,242,245,.7);
+      display:flex; align-items:center; gap:.6rem;
+    }
+    .qlv-vehicle-specs li::before{
+      content:''; width:16px; height:1px;
+      background:var(--qlv-gold); flex-shrink:0;
+    }
+    .qlv-vehicle-price{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:1.6rem; font-weight:600; color:#FFFFFF;
+      margin:auto 0 1.5rem;
+    }
+    .qlv-vehicle-price small{
+      font-family:'Inter',sans-serif; font-size:.8rem;
+      font-weight:400; color:var(--qlv-muted); margin-left:.25rem;
+    }
+    .qlv-vehicle-cta{
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:transparent; color:#FFFFFF;
+      font-weight:500; font-size:.9rem; letter-spacing:.02em;
+      padding:.75rem 1.5rem; border:1px solid rgba(255,255,255,.2);
+      border-radius:var(--qlv-radius); text-decoration:none;
+      transition:border-color .2s, background .2s;
+    }
+    .qlv-vehicle-cta:hover{
+      border-color:var(--qlv-gold); background:rgba(200,169,110,.06);
+      color:var(--qlv-gold); text-decoration:none;
+    }
+
+    /* ── How it works ───────────────────────────────────── */
+    .qlv-steps{
+      background:#0A0A0D; padding:5rem clamp(24px,6vw,80px);
+      border-top:1px solid var(--qlv-border);
+      border-bottom:1px solid var(--qlv-border);
+    }
+    .qlv-steps-grid{
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:3rem; margin-top:3rem;
+    }
+    @media(max-width:640px){ .qlv-steps-grid{ grid-template-columns:1fr; gap:2rem; } }
+    .qlv-step-num{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:3rem; font-weight:700; color:rgba(200,169,110,.2);
+      line-height:1; margin-bottom:.75rem; display:block;
+    }
+    .qlv-step-title{
+      font-size:1.05rem; font-weight:600; color:#FFFFFF; margin:0 0 .5rem;
+    }
+    .qlv-step-desc{ font-size:.88rem; color:var(--qlv-muted); line-height:1.6; margin:0; }
+
+    /* ── Chauffeur split ────────────────────────────────── */
+    .qlv-split{
+      display:grid; grid-template-columns:1fr 1fr;
+      min-height:580px; background:#0A0A0D;
+    }
+    @media(max-width:760px){ .qlv-split{ grid-template-columns:1fr; } }
+    .qlv-split-img{
+      background-size:cover; background-position:center top;
+      min-height:380px;
+    }
+    .qlv-split-body{
+      padding:clamp(2.5rem,6vw,5rem) clamp(2rem,5vw,4.5rem);
+      display:flex; flex-direction:column; justify-content:center;
+    }
+    .qlv-split-body .qlv-kicker{ margin-bottom:1rem; }
+    .qlv-split-title{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:700;
+      letter-spacing:-.02em; color:#FFFFFF; margin:0 0 1.25rem; line-height:1.1;
+    }
+    .qlv-split-desc{ font-size:.95rem; color:var(--qlv-muted); line-height:1.7; margin:0 0 2rem; }
+    .qlv-feature-list{
+      list-style:none; padding:0; margin:0 0 2.5rem;
+      display:flex; flex-direction:column; gap:.65rem;
+    }
+    .qlv-feature-list li{
+      font-size:.9rem; color:rgba(242,242,245,.8);
+      display:flex; align-items:center; gap:.75rem;
+    }
+    .qlv-feature-list li::before{
+      content:''; width:20px; height:1px;
+      background:var(--qlv-gold); flex-shrink:0;
+    }
+
+    /* ── Services ───────────────────────────────────────── */
+    .qlv-services{
+      background:var(--qlv-black); padding:5rem clamp(24px,6vw,80px);
+      border-top:1px solid var(--qlv-border);
+    }
+    .qlv-services-grid{
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1px; margin-top:3rem;
+      border:1px solid var(--qlv-border);
+    }
+    @media(max-width:900px){ .qlv-services-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:500px){ .qlv-services-grid{ grid-template-columns:1fr; } }
+    .qlv-service-item{
+      padding:2rem 1.75rem; background:#0E0E10;
+      border-right:1px solid var(--qlv-border);
+      transition:background .2s;
+    }
+    .qlv-service-item:last-child{ border-right:none; }
+    @media(max-width:900px){
+      .qlv-service-item:nth-child(2){ border-right:none; }
+      .qlv-service-item:nth-child(3){ border-top:1px solid var(--qlv-border); }
+    }
+    .qlv-service-item:hover{ background:#131315; }
+    .qlv-service-icon{ font-size:1.75rem; margin-bottom:1rem; display:block; }
+    .qlv-service-name{ font-size:1rem; font-weight:600; color:#FFFFFF; margin:0 0 .5rem; }
+    .qlv-service-desc{ font-size:.83rem; color:var(--qlv-muted); line-height:1.6; margin:0; }
+
+    /* ── Music Ride callout ─────────────────────────────── */
+    .qlv-musicride{
+      background:linear-gradient(135deg,#0f111a 0%,#131625 100%);
+      padding:4.5rem clamp(24px,6vw,80px);
+      border-top:1px solid rgba(255,255,255,.07);
+    }
+    .qlv-musicride-inner{
+      max-width:640px; display:flex; flex-direction:column; gap:1.25rem;
+    }
+    .qlv-musicride-tag{
+      display:inline-flex; align-items:center; gap:.5rem;
+      font-size:.72rem; font-weight:600; letter-spacing:.15em;
+      text-transform:uppercase; color:var(--qlv-gold);
+      border:1px solid rgba(200,169,110,.3); border-radius:20px;
+      padding:.3rem .85rem; width:fit-content;
+    }
+    .qlv-musicride-title{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:clamp(1.6rem,3vw,2.4rem); font-weight:700;
+      letter-spacing:-.02em; color:#FFFFFF; margin:0;
+    }
+    .qlv-musicride-desc{ font-size:.95rem; color:var(--qlv-muted); line-height:1.7; margin:0; }
+    .qlv-musicride-actions{ display:flex; gap:.75rem; flex-wrap:wrap; }
+
+    /* ── Final CTA ──────────────────────────────────────── */
+    .qlv-cta-section{
+      background:var(--qlv-black); padding:6rem clamp(24px,6vw,80px);
+      text-align:center; border-top:1px solid var(--qlv-border);
+    }
+    .qlv-cta-title{
+      font-family:'Fraunces',Georgia,serif;
+      font-size:clamp(2.2rem,5vw,4rem); font-weight:700;
+      letter-spacing:-.03em; color:#FFFFFF; margin:0 0 1rem;
+    }
+    .qlv-cta-sub{ font-size:1.05rem; color:var(--qlv-muted); margin:0 0 2.5rem; }
+    .qlv-cta-actions{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  </style>
 </head>
 <body>
   <div id="header"></div>
 
-  <!-- HERO -->
-  <section class="hero-section" aria-labelledby="quelvo-hero-h2">
-    <div class="container">
-      <p class="hero-kicker">Private chauffeur · Miami</p>
-      <h2 id="quelvo-hero-h2" class="hero-h2">
-        Your private<br>chauffeur,<br>on demand.
-      </h2>
-      <p class="hero-lead">
-        Premium private rides in Miami — airport transfers, hourly bookings,
-        business travel and events. Scheduled your way.
+  <!-- ══ HERO ══════════════════════════════════════════════ -->
+  <section class="qlv-hero" aria-labelledby="qlv-h1">
+    <div class="qlv-hero-bg" role="img" aria-label="Black luxury sedan on Miami street at night"></div>
+    <div class="qlv-hero-overlay" aria-hidden="true"></div>
+
+    <div class="qlv-hero-content">
+      <span class="qlv-kicker" data-es="QUELVO · Miami · Chofer Privado">QUELVO · Miami · Private Chauffeur</span>
+      <h1 id="qlv-h1" class="qlv-headline">
+        <span data-es="Tu chofer">Your chauffeur</span><br>
+        <span data-es="te espera.">awaits.</span>
+      </h1>
+      <p class="qlv-subline" data-es="Viajes privados premium en Miami — aeropuerto, por horas, eventos. Precio fijo, sin sorpresas.">
+        Premium private rides in Miami — airport, hourly, events.<br>Fixed price, every time.
       </p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="/quelvo/book/">Book a Ride</a>
-        <a class="btn" href="https://wa.me/17863487458" target="_blank" rel="noopener">WhatsApp us</a>
+      <div class="qlv-hero-actions">
+        <a class="qlv-btn-primary" href="/quelvo/book/" data-es="Reservar un viaje →">Book a Ride →</a>
+        <a class="qlv-btn-outline" href="https://wa.me/17863487458" target="_blank" rel="noopener" data-es="WhatsApp ↗">WhatsApp ↗</a>
+      </div>
+    </div>
+
+    <div class="qlv-trust-bar" aria-label="Key facts">
+      <div class="qlv-trust-item">
+        <span class="qlv-trust-value" data-es="Precio fijo">Fixed price</span>
+        <span class="qlv-trust-label" data-es="Sin tarifas dinámicas">No surge pricing</span>
+      </div>
+      <div class="qlv-trust-item">
+        <span class="qlv-trust-value">Miami-Dade</span>
+        <span class="qlv-trust-label" data-es="Área de servicio">Service area</span>
+      </div>
+      <div class="qlv-trust-item">
+        <span class="qlv-trust-value" data-es="Flota ejecutiva">Executive fleet</span>
+        <span class="qlv-trust-label" data-es="Sedán y SUV">Sedan &amp; SUV</span>
+      </div>
+      <div class="qlv-trust-item">
+        <span class="qlv-trust-value" data-es="Reserva el mismo día">Same-day booking</span>
+        <span class="qlv-trust-label" data-es="Con 2h de aviso">2h notice</span>
       </div>
     </div>
   </section>
 
-  <!-- TRUST STRIP -->
-  <div class="hero-stats-bar" role="list">
-    <div class="hero-stats-inner">
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">Miami-Dade</span>
-        <span class="hero-stat-label">Service area</span>
+  <!-- ══ VEHICLE CLASSES ═══════════════════════════════════ -->
+  <div class="qlv-vehicles-header">
+    <span class="qlv-kicker" data-es="Elige tu vehículo">Choose your vehicle</span>
+    <h2 class="qlv-vehicles-title" data-es="Dos clases. Un estándar.">Two classes. One standard.</h2>
+  </div>
+
+  <div class="qlv-vehicles">
+
+    <!-- QUELVO Private -->
+    <div class="qlv-vehicle-card">
+      <div class="qlv-vehicle-img"
+           style="background-image:url('/assets/quelvo/QUELVO%20Private%20exterior.png')"
+           role="img" aria-label="QUELVO Private — black executive sedan"></div>
+      <div class="qlv-vehicle-body">
+        <p class="qlv-vehicle-brand">QUELVO</p>
+        <h3 class="qlv-vehicle-name" data-es="Privado">Private</h3>
+        <p class="qlv-vehicle-desc" data-es="Sedán ejecutivo negro. Ideal para aeropuerto, negocios y viajes en la ciudad.">
+          Executive black sedan. Ideal for airport transfers, business and city rides.
+        </p>
+        <ul class="qlv-vehicle-specs">
+          <li data-es="Mercedes E-Class o similar">Mercedes E-Class or similar</li>
+          <li data-es="Hasta 3 pasajeros">Up to 3 passengers</li>
+          <li data-es="Monitoreo de vuelo incluido">Flight tracking included</li>
+          <li data-es="Music Ride incluido">Music Ride included</li>
+          <li data-es="Agua a bordo">Water on board</li>
+        </ul>
+        <p class="qlv-vehicle-price">$75 <small data-es="por hora · mín. $50 por viaje">/ hr · min. $50/transfer</small></p>
+        <a class="qlv-vehicle-cta" href="/quelvo/book/" data-es="Reservar Private →">Book Private →</a>
       </div>
-      <div class="hero-stat-sep" aria-hidden="true"></div>
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">Fixed price</span>
-        <span class="hero-stat-label">No surge pricing</span>
+    </div>
+
+    <!-- QUELVO Black SUV -->
+    <div class="qlv-vehicle-card">
+      <div class="qlv-vehicle-img"
+           style="background-image:url('/assets/quelvo/QUELVO%20Black%20SUV%20exterior.png')"
+           role="img" aria-label="QUELVO Black SUV — Cadillac Escalade at Miami airport"></div>
+      <div class="qlv-vehicle-body">
+        <p class="qlv-vehicle-brand">QUELVO</p>
+        <h3 class="qlv-vehicle-name">Black SUV</h3>
+        <p class="qlv-vehicle-desc" data-es="SUV premium. Para grupos, familias y quienes quieren más espacio y presencia.">
+          Premium luxury SUV. For groups, families and those who demand more space and presence.
+        </p>
+        <ul class="qlv-vehicle-specs">
+          <li data-es="Cadillac Escalade o similar">Cadillac Escalade or similar</li>
+          <li data-es="Hasta 6 pasajeros + equipaje">Up to 6 passengers + luggage</li>
+          <li data-es="Monitoreo de vuelo incluido">Flight tracking included</li>
+          <li data-es="Music Ride incluido">Music Ride included</li>
+          <li data-es="Clima individualizado">Individual climate control</li>
+        </ul>
+        <p class="qlv-vehicle-price">$120 <small data-es="por hora · mín. $85 por viaje">/ hr · min. $85/transfer</small></p>
+        <a class="qlv-vehicle-cta" href="/quelvo/book/" data-es="Reservar Black SUV →">Book Black SUV →</a>
       </div>
-      <div class="hero-stat-sep" aria-hidden="true"></div>
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">Executive</span>
-        <span class="hero-stat-label">Vehicles</span>
+    </div>
+
+  </div>
+
+  <!-- ══ HOW IT WORKS ══════════════════════════════════════ -->
+  <div class="qlv-steps">
+    <span class="qlv-kicker" data-es="Así funciona">How it works</span>
+    <h2 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;letter-spacing:-.02em;color:#fff;margin:0" data-es="Reserva en 3 minutos.">Book in 3 minutes.</h2>
+    <div class="qlv-steps-grid">
+      <div>
+        <span class="qlv-step-num">01</span>
+        <p class="qlv-step-title" data-es="Elige tu servicio">Choose your service</p>
+        <p class="qlv-step-desc" data-es="Transfer, por horas o cotización para viajes largos. Selecciona el vehículo que prefieres.">Transfer, hourly or quote for long trips. Select the vehicle class you prefer.</p>
       </div>
-      <div class="hero-stat-sep" aria-hidden="true"></div>
-      <div class="hero-stat" role="listitem">
-        <span class="hero-stat-value">&lt; 2h notice</span>
-        <span class="hero-stat-label">Same-day booking</span>
+      <div>
+        <span class="qlv-step-num">02</span>
+        <p class="qlv-step-title" data-es="Ingresa los detalles">Enter your details</p>
+        <p class="qlv-step-desc" data-es="Dirección de pickup, destino, fecha, hora y número de pasajeros. Precio calculado al instante.">Pickup address, destination, date, time and passengers. Price calculated instantly.</p>
+      </div>
+      <div>
+        <span class="qlv-step-num">03</span>
+        <p class="qlv-step-title" data-es="Tu chofer llega">Your driver arrives</p>
+        <p class="qlv-step-desc" data-es="Confirmación inmediata. Tu chofer llega puntual, vestido de negro, listo para recibirte.">Instant confirmation. Your chauffeur arrives on time, dressed in black, ready to greet you.</p>
       </div>
     </div>
   </div>
 
-  <!-- SERVICE TYPES -->
-  <section class="section alt" aria-labelledby="rides-h2">
-    <div class="container">
-      <p class="section-kicker">What we offer</p>
-      <h2 id="rides-h2">Choose your ride type</h2>
-      <p class="section-lead">Every booking confirmed directly with your driver.</p>
+  <!-- ══ CHAUFFEUR SPLIT ════════════════════════════════════ -->
+  <div class="qlv-split">
+    <div class="qlv-split-img"
+         style="background-image:url('/assets/quelvo/Chofer%20profesional.png')"
+         role="img" aria-label="QUELVO professional chauffeur in Miami"></div>
+    <div class="qlv-split-body">
+      <span class="qlv-kicker" data-es="Tu conductor">Your driver</span>
+      <h2 class="qlv-split-title">
+        <span data-es="Profesional,">Professional,</span><br>
+        <span data-es="puntual, discreto.">punctual, discreet.</span>
+      </h2>
+      <p class="qlv-split-desc" data-es="Cada viaje QUELVO es operado por un conductor verificado, con vehículo inspeccionado y presentación impecable. Sin algoritmos, sin dispatch anónimo.">
+        Every QUELVO ride is operated by a verified driver, with an inspected vehicle
+        and impeccable presentation. No algorithms, no anonymous dispatch.
+      </p>
+      <ul class="qlv-feature-list">
+        <li data-es="Vestimenta formal negra">Formal black attire</li>
+        <li data-es="Inspección de vehículo antes de cada viaje">Vehicle inspection before every ride</li>
+        <li data-es="Monitoreo de vuelo en tiempo real">Real-time flight monitoring</li>
+        <li data-es="Servicio meet &amp; greet en aeropuerto">Airport meet &amp; greet service</li>
+        <li data-es="Confirmación directa con tu conductor">Direct confirmation with your driver</li>
+      </ul>
+      <a class="qlv-btn-primary" href="/quelvo/book/" data-es="Reservar ahora →">Book now →</a>
+    </div>
+  </div>
 
-      <div class="services-grid">
+  <!-- Interior photos strip -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#050507">
+    <div style="aspect-ratio:16/9;background:url('/assets/quelvo/QUELVO%20Private%20interior.png') center/cover" role="img" aria-label="QUELVO Black SUV interior at night"></div>
+    <div style="aspect-ratio:16/9;background:url('/assets/quelvo/QUELVO%20Black%20SUV%20interior.png') center/cover" role="img" aria-label="QUELVO Black SUV interior at dusk"></div>
+  </div>
 
-        <div class="service-card">
-          <span class="service-icon">&#x2708;&#xFE0F;</span>
-          <h3>Airport Transfer</h3>
-          <p>Arrivals, departures and connections at MIA and FLL. Flight monitoring included.</p>
-          <div class="service-tags">
-            <span class="service-tag">MIA</span>
-            <span class="service-tag">FLL</span>
-            <span class="service-tag">Meet &amp; greet</span>
-            <span class="service-tag">Flight tracking</span>
-          </div>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#x23F1;&#xFE0F;</span>
-          <h3>By the Hour</h3>
-          <p>Your driver stays with you — multiple stops, meetings or events in one booking.</p>
-          <div class="service-tags">
-            <span class="service-tag">2h minimum</span>
-            <span class="service-tag">Multiple stops</span>
-            <span class="service-tag">Events</span>
-          </div>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#x1F4BC;</span>
-          <h3>Business Travel</h3>
-          <p>Reliable ground transport for corporate clients. Invoiced, punctual, discreet.</p>
-          <div class="service-tags">
-            <span class="service-tag">Corporate billing</span>
-            <span class="service-tag">Recurring</span>
-            <span class="service-tag">Executive</span>
-          </div>
-        </div>
-
-        <div class="service-card">
-          <span class="service-icon">&#x1F5FA;&#xFE0F;</span>
-          <h3>City-to-City</h3>
-          <p>Long-distance private rides across Florida — Miami to Orlando, Naples, Key West and more.</p>
-          <div class="service-tags">
-            <span class="service-tag">Miami ↔ Orlando</span>
-            <span class="service-tag">Miami ↔ Key West</span>
-            <span class="service-tag">Florida-wide</span>
-          </div>
-        </div>
-
+  <!-- ══ SERVICES ══════════════════════════════════════════ -->
+  <div class="qlv-services">
+    <span class="qlv-kicker" data-es="Tipos de servicio">Service types</span>
+    <h2 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;letter-spacing:-.02em;color:#fff;margin:0" data-es="Adaptado a tu viaje.">Built around your journey.</h2>
+    <div class="qlv-services-grid">
+      <div class="qlv-service-item">
+        <span class="qlv-service-icon">✈</span>
+        <p class="qlv-service-name" data-es="Transfer al aeropuerto">Airport Transfer</p>
+        <p class="qlv-service-desc" data-es="Llegadas, salidas y conexiones en MIA y FLL. Monitoreo de vuelo incluido.">Arrivals, departures and connections at MIA and FLL. Flight monitoring included.</p>
+      </div>
+      <div class="qlv-service-item">
+        <span class="qlv-service-icon">⏱</span>
+        <p class="qlv-service-name" data-es="Por horas">By the Hour</p>
+        <p class="qlv-service-desc" data-es="Tu conductor te espera — múltiples paradas, reuniones o eventos en una sola reserva.">Your driver stays with you — multiple stops, meetings or events in one booking.</p>
+      </div>
+      <div class="qlv-service-item">
+        <span class="qlv-service-icon">💼</span>
+        <p class="qlv-service-name" data-es="Viajes de negocios">Business Travel</p>
+        <p class="qlv-service-desc" data-es="Transporte corporativo confiable. Facturado, puntual, discreto.">Reliable ground transport for corporate clients. Invoiced, punctual, discreet.</p>
+      </div>
+      <div class="qlv-service-item">
+        <span class="qlv-service-icon">🗺</span>
+        <p class="qlv-service-name" data-es="Ciudad a ciudad">City-to-City</p>
+        <p class="qlv-service-desc" data-es="Viajes largos por Florida — Miami a Orlando, Naples, Key West y más.">Long-distance rides across Florida — Miami to Orlando, Naples, Key West and more.</p>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- WHY QUELVO -->
-  <section class="section" aria-labelledby="why-quelvo-h2">
-    <div class="container">
-      <p class="section-kicker">Why QUELVO</p>
-      <h2 id="why-quelvo-h2">A different kind of ride</h2>
-
-      <div class="why-grid" style="margin-top:2.5rem;">
-
-        <div class="why-item" style="color:var(--text);">
-          <span class="why-num">01</span>
-          <h3 style="color:var(--text)">Fixed pricing</h3>
-          <p style="color:var(--muted)">Quotes upfront — no meters, no surge pricing, no surprises at the end of the ride.</p>
-        </div>
-
-        <div class="why-item">
-          <span class="why-num">02</span>
-          <h3 style="color:var(--text)">Direct with your driver</h3>
-          <p style="color:var(--muted)">Confirmed by a real person. No algorithms, no anonymous dispatch.</p>
-        </div>
-
-        <div class="why-item">
-          <span class="why-num">03</span>
-          <h3 style="color:var(--text)">Music Ride included</h3>
-          <p style="color:var(--muted)">Every QUELVO ride includes access to Music Ride — shared music session with your group.</p>
-        </div>
-
-        <div class="why-item">
-          <span class="why-num">04</span>
-          <h3 style="color:var(--text)">Executive fleet</h3>
-          <p style="color:var(--muted)">Black sedans and luxury SUVs. Clean, professional, always on time.</p>
-        </div>
-
+  <!-- ══ MUSIC RIDE ═════════════════════════════════════════ -->
+  <div class="qlv-musicride">
+    <div class="qlv-musicride-inner">
+      <span class="qlv-musicride-tag" data-es="♫ Incluido en todo viaje QUELVO">♫ Included with every QUELVO ride</span>
+      <h2 class="qlv-musicride-title" data-es="Music Ride — la música es de todos">Music Ride — everyone controls the music</h2>
+      <p class="qlv-musicride-desc" data-es="Escanea un QR al subir, únete a una sesión compartida y agrega canciones a la playlist sin descargar ninguna app. Música colaborativa en tiempo real.">
+        Scan a QR code when you get in, join a shared session and add songs to the
+        playlist without installing an app. Real-time collaborative music for everyone in the car.
+      </p>
+      <div class="qlv-musicride-actions">
+        <a class="qlv-btn-outline" href="/music-ride/" data-es="Conocer Music Ride">Learn about Music Ride</a>
+        <a class="qlv-btn-outline" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Open app ↗</a>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- MUSIC RIDE FEATURE -->
-  <section class="section alt" aria-labelledby="musicride-feature-h2">
-    <div class="container">
-      <div style="max-width:680px;">
-        <p class="section-kicker">Included with every QUELVO ride</p>
-        <h2 id="musicride-feature-h2">Music Ride</h2>
-        <p style="font-size:1.05rem;margin:.5rem 0 1.5rem;color:var(--muted-on-light)">
-          Scan a QR code when you get in, join a shared session and add songs to the playlist
-          with your phone — no app download needed. Everyone in the car controls the music.
-        </p>
-        <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
-          <a class="btn" href="/music-ride/">Learn about Music Ride</a>
-          <a class="btn" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Open app ↗</a>
-        </div>
-      </div>
+  <!-- ══ FINAL CTA ══════════════════════════════════════════ -->
+  <div class="qlv-cta-section">
+    <h2 class="qlv-cta-title" data-es="¿Listo para reservar?">Ready to book?</h2>
+    <p class="qlv-cta-sub" data-es="Precio fijo. Sin sorpresas. Confirmado al instante.">Fixed price. No surprises. Confirmed instantly.</p>
+    <div class="qlv-cta-actions">
+      <a class="qlv-btn-primary" href="/quelvo/book/" data-es="Reservar un viaje →">Book a Ride →</a>
+      <a class="qlv-btn-outline" href="https://wa.me/17863487458" target="_blank" rel="noopener">WhatsApp ↗</a>
     </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="section cta-section">
-    <div class="container">
-      <h2 class="cta-h2">Ready to book?</h2>
-      <p class="cta-lead">Get a fixed-price quote in minutes.</p>
-      <div class="cta-actions">
-        <a class="btn btn-primary" href="/quelvo/book/">Book a Ride</a>
-        <a class="btn" href="https://wa.me/17863487458" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <div id="footer"></div>
 
@@ -198,12 +530,8 @@
     "@context": "https://schema.org",
     "@type": "TaxiService",
     "name": "QUELVO",
-    "description": "Premium private chauffeur service in Miami by JCDM Technologies LLC.",
-    "provider": {
-      "@type": "Organization",
-      "name": "JCDM Technologies LLC",
-      "url": "https://www.jcdmtech.com/"
-    },
+    "description": "Premium private chauffeur service in Miami. Fixed price airport transfers, hourly bookings, business and event rides.",
+    "provider": { "@type": "Organization", "name": "JCDM Technologies LLC", "url": "https://www.jcdmtech.com/" },
     "areaServed": "Miami-Dade, FL",
     "url": "https://www.jcdmtech.com/quelvo/"
   }
