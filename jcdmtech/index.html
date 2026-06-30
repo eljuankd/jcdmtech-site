@@ -22,16 +22,106 @@
   <meta property="og:title" content="JCDM Technologies LLC · Technology & Digital Platforms">
   <meta property="og:description" content="Web development, automation, smart home and QUELVO — private chauffeur platform. Miami-based technology company.">
   <meta property="og:url" content="https://www.jcdmtech.com/">
-  <meta property="og:image" content="https://www.jcdmtech.com/assets/og-image.png">
+  <meta property="og:image" content="https://www.jcdmtech.com/assets/home/hero-miami-skyline.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="JCDM Technologies LLC · Technology & Digital Platforms">
   <meta name="twitter:description" content="Web development, automation, smart home and QUELVO — private chauffeur platform.">
-  <meta name="twitter:image" content="https://www.jcdmtech.com/assets/og-image.png">
+  <meta name="twitter:image" content="https://www.jcdmtech.com/assets/home/hero-miami-skyline.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* ── Homepage-only overrides: QUELVO-style visual system ───── */
+    :root{
+      --jh-black:  #05050A;
+      --jh-gold:   #C8A96E;
+      --jh-muted:  rgba(237,239,243,.55);
+      --jh-border: rgba(255,255,255,.08);
+    }
+
+    .hero-h2, .section h2, .cta-h2, .platform-name{
+      font-family:'Fraunces',Georgia,serif;
+      letter-spacing:-.03em;
+    }
+
+    /* ═══ HERO — full-bleed photo, Ken Burns, dark gradient ═══ */
+    .hero-section{
+      position:relative; min-height:100svh;
+      display:flex; flex-direction:column; justify-content:center;
+      overflow:hidden; padding:0; border-bottom:none;
+      background:var(--jh-black);
+    }
+    .hero-bg{
+      position:absolute; inset:0;
+      background:url('/assets/home/hero-miami-skyline.png') center center/cover no-repeat;
+      animation:jhHeroZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes jhHeroZoom{ from{ transform:scale(1) } to{ transform:scale(1.06) } }
+    .hero-grad{
+      position:absolute; inset:0;
+      background:linear-gradient(
+        to bottom,
+        rgba(5,5,10,.35)  0%,
+        rgba(5,5,10,.55) 45%,
+        rgba(5,5,10,.95) 100%
+      );
+    }
+    .hero-section .container{ position:relative; z-index:2; padding-top:7rem; padding-bottom:5rem; }
+    .hero-kicker{ color:var(--jh-gold); }
+    .hero-h2{
+      color:#FFF; font-weight:700; line-height:.98;
+      font-size:clamp(2.6rem,6.5vw,5.5rem);
+    }
+    .hero-lead{ color:rgba(237,239,243,.72); max-width:580px; }
+
+    /* ═══ SERVICES — Blacklane-style image cards ═══ */
+    .jh-fleet-section{ background:var(--jh-black); padding:5.5rem 0; }
+    .jh-fleet{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+      background:var(--jh-black); margin-top:2.5rem;
+    }
+    @media(max-width:900px){ .jh-fleet{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:600px){ .jh-fleet{ grid-template-columns:1fr; } }
+
+    .jh-card{
+      position:relative; min-height:380px; overflow:hidden;
+      text-decoration:none; display:block;
+    }
+    .jh-card-photo{
+      position:absolute; inset:0;
+      background-size:cover; background-position:center;
+      filter:brightness(.78);
+      transition:transform .8s cubic-bezier(.25,.46,.45,.94), filter .5s;
+    }
+    .jh-card:hover .jh-card-photo{ transform:scale(1.06); filter:brightness(.68); }
+    .jh-card-grad{
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(5,5,10,.96) 0%, rgba(5,5,10,.6) 35%, transparent 100%);
+    }
+    .jh-card::after{
+      content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+      background:var(--jh-gold); transform:scaleY(0); transform-origin:bottom;
+      transition:transform .4s cubic-bezier(.25,.46,.45,.94);
+    }
+    .jh-card:hover::after{ transform:scaleY(1); }
+    .jh-card-body{ position:absolute; bottom:0; left:0; right:0; padding:1.75rem; z-index:2; }
+    .jh-card-tag{
+      font-size:.65rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--jh-gold); display:block; margin-bottom:.4rem;
+    }
+    .jh-card-name{
+      font-family:'Fraunces',Georgia,serif; font-size:1.5rem; font-weight:700;
+      color:#FFF; margin:0 0 .5rem; letter-spacing:-.02em; line-height:1.05;
+    }
+    .jh-card-desc{ font-size:.83rem; color:rgba(237,239,243,.65); line-height:1.55; margin:0; }
+  </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-85LR7PFMVT"></script>
   <script>
@@ -48,6 +138,8 @@
 
   <!-- HERO -->
   <section class="hero-section" aria-labelledby="hero-h2">
+    <div class="hero-bg" role="img" aria-label="Miami tech skyline at night"></div>
+    <div class="hero-grad" aria-hidden="true"></div>
     <div class="container">
       <p class="hero-kicker" data-es="Miami · Empresa de Tecnología">Miami · Technology Company</p>
       <h2 id="hero-h2" class="hero-h2">
@@ -66,79 +158,64 @@
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section class="section alt" aria-labelledby="services-h2">
+  <!-- SERVICES — image-forward cards -->
+  <section class="jh-fleet-section" aria-labelledby="services-h2">
     <div class="container">
       <p class="section-kicker" data-es="Lo que hacemos">What we do</p>
       <h2 id="services-h2" data-es="Nuestros servicios principales">Our main services</h2>
       <p class="section-lead" data-es="Soluciones prácticas construidas alrededor de necesidades reales.">Practical solutions built around real business needs.</p>
 
-      <div class="services-grid">
+      <div class="jh-fleet">
 
-        <div class="service-card">
-          <span class="service-icon">&#x1F4BB;</span>
-          <h3 data-es="Desarrollo Web y Aplicaciones">Web Development &amp; Applications</h3>
-          <p data-es="Sitios web, sistemas de negocio, dashboards, formularios y aplicaciones personalizadas.">Websites, business systems, dashboards, forms and custom applications.</p>
-          <div class="service-tags">
-            <span class="service-tag" data-es="Sitios corporativos">Business websites</span>
-            <span class="service-tag" data-es="Sistemas admin">Admin systems</span>
-            <span class="service-tag">Dashboards</span>
-            <span class="service-tag" data-es="Sistemas de reserva">Booking systems</span>
-            <span class="service-tag" data-es="Apps móviles">Mobile apps</span>
+        <a class="jh-card" href="/services/#web">
+          <div class="jh-card-photo" style="background-image:url('/assets/home/service-web-dev.png')" role="img" aria-label="Web development workspace"></div>
+          <div class="jh-card-grad" aria-hidden="true"></div>
+          <div class="jh-card-body">
+            <span class="jh-card-tag" data-es="Servicio">Service</span>
+            <h3 class="jh-card-name" data-es="Desarrollo Web">Web Development</h3>
+            <p class="jh-card-desc" data-es="Sitios, dashboards y aplicaciones a medida.">Websites, dashboards and custom applications.</p>
           </div>
-        </div>
+        </a>
 
-        <div class="service-card">
-          <span class="service-icon">&#x2699;&#xFE0F;</span>
-          <h3 data-es="Automatización y Sistemas Inteligentes">Automation &amp; Smart Systems</h3>
-          <p data-es="Flujos automatizados, bots, reportes y sistemas conectados para empresas.">Automated workflows, bots, reports and connected systems for businesses.</p>
-          <div class="service-tags">
-            <span class="service-tag">n8n workflows</span>
-            <span class="service-tag">Telegram bots</span>
-            <span class="service-tag">API integrations</span>
-            <span class="service-tag" data-es="Reportes automáticos">Auto reports</span>
-            <span class="service-tag">PostgreSQL</span>
+        <a class="jh-card" href="/services/#automation">
+          <div class="jh-card-photo" style="background-image:url('/assets/home/service-automation.png')" role="img" aria-label="Server room automation"></div>
+          <div class="jh-card-grad" aria-hidden="true"></div>
+          <div class="jh-card-body">
+            <span class="jh-card-tag" data-es="Servicio">Service</span>
+            <h3 class="jh-card-name" data-es="Automatización">Automation</h3>
+            <p class="jh-card-desc" data-es="Flujos, bots y sistemas conectados.">Workflows, bots and connected systems.</p>
           </div>
-        </div>
+        </a>
 
-        <div class="service-card">
-          <span class="service-icon">&#x1F3E0;</span>
-          <h3 data-es="Hogar Inteligente e IoT">Smart Home &amp; IoT</h3>
-          <p data-es="Home Assistant, sensores, cerraduras inteligentes, cámaras y automatización del hogar.">Home Assistant, sensors, smart locks, cameras and custom home automation.</p>
-          <div class="service-tags">
-            <span class="service-tag">Home Assistant</span>
-            <span class="service-tag" data-es="Cerraduras inteligentes">Smart locks</span>
-            <span class="service-tag" data-es="Sensores">Sensors</span>
-            <span class="service-tag">Alexa</span>
-            <span class="service-tag">IoT dashboards</span>
+        <a class="jh-card" href="/services/#smarthome">
+          <div class="jh-card-photo" style="background-image:url('/assets/home/service-smart-home.png')" role="img" aria-label="Smart home interior"></div>
+          <div class="jh-card-grad" aria-hidden="true"></div>
+          <div class="jh-card-body">
+            <span class="jh-card-tag" data-es="Servicio">Service</span>
+            <h3 class="jh-card-name" data-es="Hogar Inteligente">Smart Home &amp; IoT</h3>
+            <p class="jh-card-desc" data-es="Home Assistant, sensores y automatización.">Home Assistant, sensors and automation.</p>
           </div>
-        </div>
+        </a>
 
-        <div class="service-card">
-          <span class="service-icon">&#x1F527;</span>
-          <h3 data-es="Soporte Técnico y Consultoría">Technical Support &amp; Consulting</h3>
-          <p data-es="Soporte técnico práctico para hogares, personas y pequeñas empresas.">Practical technical support for homes, individuals and small businesses.</p>
-          <div class="service-tags">
-            <span class="service-tag" data-es="Configuración de equipos">Computer setup</span>
-            <span class="service-tag" data-es="Redes">Networks</span>
-            <span class="service-tag" data-es="Software">Software</span>
-            <span class="service-tag" data-es="Dispositivos">Devices</span>
-            <span class="service-tag" data-es="Consultoría">Consulting</span>
+        <a class="jh-card" href="/services/#support">
+          <div class="jh-card-photo" style="background-image:url('/assets/home/service-support.png')" role="img" aria-label="Technical consulting"></div>
+          <div class="jh-card-grad" aria-hidden="true"></div>
+          <div class="jh-card-body">
+            <span class="jh-card-tag" data-es="Servicio">Service</span>
+            <h3 class="jh-card-name" data-es="Soporte y Consultoría">Support &amp; Consulting</h3>
+            <p class="jh-card-desc" data-es="Soporte práctico para hogares y empresas.">Practical support for homes and businesses.</p>
           </div>
-        </div>
+        </a>
 
-        <div class="service-card service-card--featured">
-          <span class="service-icon">&#x1F697;</span>
-          <h3>QUELVO</h3>
-          <p data-es="Plataforma de reserva de chofer privado desarrollada por JCDM Technologies LLC.">Private chauffeur booking platform developed by JCDM Technologies LLC.</p>
-          <div class="service-tags">
-            <span class="service-tag" data-es="Traslados al aeropuerto">Airport transfers</span>
-            <span class="service-tag" data-es="Por horas">Hourly</span>
-            <span class="service-tag" data-es="Viajes de negocios">Business travel</span>
-            <span class="service-tag" data-es="Eventos">Events</span>
+        <a class="jh-card" href="/quelvo/">
+          <div class="jh-card-photo" style="background-image:url('/assets/quelvo/sedan-hero-night.png')" role="img" aria-label="QUELVO private chauffeur"></div>
+          <div class="jh-card-grad" aria-hidden="true"></div>
+          <div class="jh-card-body">
+            <span class="jh-card-tag" data-es="Plataforma">Platform</span>
+            <h3 class="jh-card-name">QUELVO</h3>
+            <p class="jh-card-desc" data-es="Chofer privado en Miami, reserva en minutos.">Private chauffeur in Miami, booked in minutes.</p>
           </div>
-          <a class="btn btn-primary" href="/quelvo/" style="margin-top:1.25rem;display:inline-flex" data-es="Conocer QUELVO">Learn about QUELVO</a>
-        </div>
+        </a>
 
       </div>
     </div>
