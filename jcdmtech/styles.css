@@ -30,6 +30,16 @@ html { scroll-behavior:smooth; }
   --card:#111318; --card-solid:#111318; --border:rgba(255,255,255,.09);
   --gold:#C8A96E; --gold-line:rgba(200,169,110,.28);
 }
+.light-mode{
+  --bg:#F8F7F5; --text:#09090B; --muted:#52525B;
+  --card:#FFFFFF; --card-solid:#FFFFFF; --border:rgba(0,0,0,.10);
+  --shadow:0 2px 12px rgba(0,0,0,.08); --gold-line:rgba(200,169,110,.38);
+}
+.light-mode body{ background:var(--bg); color:var(--text); }
+.light-mode input,.light-mode select,.light-mode textarea{
+  background:#FFFFFF; border-color:rgba(0,0,0,.15); color:#09090B;
+}
+.light-mode .nav{ background:rgba(248,247,245,.92); border-bottom-color:rgba(0,0,0,.10); }
 
 /* ====== Base ====== */
 body{

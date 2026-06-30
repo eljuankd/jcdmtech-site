@@ -41,10 +41,12 @@ function _saveLocalPrefs(p) {
 
 function applyTheme(theme) {
   theme = theme === 'light' ? 'light' : 'dark';
-  document.documentElement.classList.toggle('dark-mode', theme === 'dark');
+  // :root is already dark — only .light-mode needs to be toggled
+  document.documentElement.classList.toggle('light-mode', theme === 'light');
+  document.documentElement.classList.remove('dark-mode'); // cleanup legacy class
   window.JCDM._prefs = window.JCDM._prefs || {};
   window.JCDM._prefs.theme = theme;
-  // icon: show what you'll switch TO
+  // icon shows what you'll switch TO
   const btn = document.getElementById('themeToggle');
   if (btn) { btn.textContent = theme === 'dark' ? '☀️' : '🌙'; }
 }
@@ -83,9 +85,11 @@ window.JCDM.getPrefs = () => ({ ...PREF_DEFAULTS, ...window.JCDM._prefs });
 
 // Apply local prefs immediately (before header fetch resolves) to minimize flash
 ;(function () {
-  const p = _loadLocalPrefs();
-  applyTheme(p.theme);
-  // lang applied after header loads (elements need to be in DOM)
+  const theme = localStorage.getItem('jcdm_theme') || 'dark';
+  const lang  = localStorage.getItem('jcdm_lang')  || 'en';
+  window.JCDM._prefs = { theme, lang };
+  if (theme === 'light') document.documentElement.classList.add('light-mode');
+  // lang applied after header/content loads
 })();
 
 // ── Partials loader ───────────────────────────────────────────────
