@@ -1,4 +1,9 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "errors": [
+    { "statusCode": 404, "path": "/404.html" }
+  ],
   "redirects": [
     { "source": "/qrcard", "destination": "/qrcard.html", "permanent": true },
 
