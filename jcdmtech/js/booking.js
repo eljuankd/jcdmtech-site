@@ -89,6 +89,12 @@ Submitted via jcdmtech.com`
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Temporary suspension (docs/MAINTENANCE_MODE.md): legacy flow must not send new requests.
+    if (globalThis.__MAINTENANCE__?.quelvo?.maintenance === true) {
+      setMessage('QUELVO is temporarily unavailable while we improve our platform. Thank you for your patience.', 'error');
+      return;
+    }
+
     if (!form.checkValidity?.() && form.reportValidity) {
       form.reportValidity();
       return;

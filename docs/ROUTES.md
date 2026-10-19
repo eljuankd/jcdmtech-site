@@ -27,6 +27,21 @@
 | `/404.html` | `404.html` | 404 en rutas inexistentes | Página de error | `noindex,follow` |
 | `/sitemap.xml`, `/robots.txt` | | 200 | | |
 
+### 1.1 Modo mantenimiento (D-013) — comportamiento esperado al activarlo [PREPARADO, no desplegado]
+
+| Ruta | Hoy en producción | Con `quelvo.maintenance = true` desplegado |
+|---|---|---|
+| `/quelvo/`, `/quelvo/book/`, `/quelvo/book/gracias/` | 200 | **503** + `Retry-After: 86400`, cuerpo = página de mantenimiento (misma URL, sin redirect) |
+| `/chofer-privado/`, `/chofer-privado/*` | 200 / 307 / 308 | **503** (o redirect existente → destino en 503) |
+| `/maintenance/quelvo/` | 404 (no existe aún) | 200, `noindex` |
+| `/admin/`, `/login.html`, `/account.html`, resto del sitio | 200 | 200 (no afectados) |
+| `https://music-ride.jcdmtech.com` | 200 | 200 — **sin cambios** hasta aplicar el mantenimiento en el repo de OneSound |
+
+Procedimiento: `docs/MAINTENANCE_MODE.md`. Comprobación automática: `scripts/verify-maintenance.sh <url>`.
+
+> ⚠ R-M1 (2026-10-19): `vercel build` con la CLI actual genera reglas `cleanUrls` que redirigirían `/about.html` → `/about/`,
+> distinto de producción (`/about.html` 200, `/about/` 404). Verificar en el primer Preview cualquier despliegue nuevo.
+
 ## 2. Rutas de cuenta / protegidas [VERIFICADO]
 
 | Ruta | Archivo | HTTP | Protección |

@@ -3,6 +3,35 @@
 Historial de cambios del sitio y de la documentación (más reciente primero).
 Desde 2026-10-19 cada entrada indica la fase del plan de 8 fases.
 
+## 2026-10-19 — Revisión técnica de la suspensión (rev. 2, no desplegado)
+
+### Corregido
+- `middleware.js`: runtime `nodejs` explícito (el builder usaba `edge`, obsoleto); flag estricto; timeout y reenvío de cookie en la subpetición.
+- Flag `enabled` → `maintenance` (true = suspendido) en `maintenance.config.js`, wizard y `booking.js`.
+- SQL: tabla `jcdm_maintenance_flags` (boolean), sin `if not exists`, bloqueo por claims JWT; preflight de dependencias.
+
+### Añadido
+- `docs/sql/quelvo-maintenance.test.sql` (prueba en seco auto-revertida), `scripts/verify-maintenance.sh` (comprobaciones HTTP).
+
+### Documentado
+- Supabase `jcdmtech-prod` y `quelvo-prod` pausados; app QUELVO local no pública; riesgo R-M1 de `cleanUrls` en despliegues nuevos.
+
+## 2026-10-19 — Suspensión temporal de QUELVO y OneSound (preparado, no desplegado)
+
+### Añadido
+- Modo mantenimiento reversible por flags: `jcdmtech/js/maintenance.config.js`, `jcdmtech/middleware.js` (503 + `Retry-After`), `jcdmtech/maintenance/quelvo/` (EN/ES).
+- `docs/MAINTENANCE_MODE.md` — activar, desactivar, comprobaciones, dependencias; mapa de plataformas (OneSound en Vercel + Render, Survivor en servidor propio).
+- `docs/sql/quelvo-maintenance.sql` — bloqueo de nuevas reservas en Supabase (pendiente de aplicar con autorización).
+- `docs/maintenance-templates/onesound-maintenance.html` — pantalla para el repo de OneSound (pendiente).
+- Decisión D-013.
+
+### Cambiado
+- Botones "Book a Ride" y enlaces "Open app" de OneSound ocultos con avisos de indisponibilidad (Home, Projects, footer, landing Music Ride); opción de reserva QUELVO deshabilitada en Contact.
+- Guardas de envío en `quelvo/book/` (`confirm4`) y `js/booking.js`.
+
+### Sin cambios
+- Ningún archivo eliminado; servicios tecnológicos, Home, Services, Projects, About y Contact operativos. Datos de Supabase, `vercel.json`, DNS, OneSound y Survivor intactos.
+
 ## 2026-10-19 — Fase 1: Auditoría y documentación
 
 ### Añadido

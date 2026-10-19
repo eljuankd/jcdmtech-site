@@ -56,6 +56,26 @@ Excepciones: stubs legado sin `supabase.config.js` (auth nav no se muestra); `ch
 
 `jcdmtech/supabase-setup.sql` sólo cubre parte de `profiles`, `vehicles`, `drivers` (ver R-01).
 
+### Modo mantenimiento (2026-10-19, D-013) — preparado, no desplegado
+
+```
+Petición /quelvo* o /chofer-privado*
+  └── (redirects de vercel.json primero)
+  └── jcdmtech/middleware.js (Routing Middleware, runtime nodejs) ── lee js/maintenance.config.js
+        ├── quelvo.maintenance === true → 503 + Retry-After + HTML de /maintenance/quelvo/
+        └── cualquier otro valor        → continúa (x-middleware-next: 1, equivalente a next())
+Resto de páginas
+  └── maintenance.config.js (en <head> o cargado por app.js) → html.maint-quelvo / html.maint-onesound
+        └── styles.css oculta [data-maint-hide] y muestra [data-maint-show]
+Supabase bookings
+  └── trigger quelvo_bookings_maintenance (BEFORE INSERT) ── jcdm_maintenance_flags(key='quelvo').maintenance  [SQL pendiente; proyecto PAUSADO]
+OneSound (otro repo): MAINTENANCE_MODE en backend Render → 503 en /api/*, rechazo de Socket.IO  [pendiente de acceso]
+```
+
+Plataformas externas relacionadas: OneSound (Vercel + Render, repo `jcdm-music-ride`) y Survivor Sports
+(servidor propio vía DuckDNS). Ninguna comparte código ni backend con este sitio; sólo la zona DNS `jcdmtech.com`.
+Detalle: `docs/MAINTENANCE_MODE.md`.
+
 ---
 
 ## 2. Arquitectura propuesta [PLANIFICADO]

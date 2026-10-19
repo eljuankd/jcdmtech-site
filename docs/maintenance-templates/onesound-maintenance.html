@@ -1,0 +1,42 @@
+<!doctype html>
+<!-- OneSound maintenance screen — TEMPLATE, not deployed.
+     Intended for the OneSound repo (github.com/eljuankd/jcdm-music-ride), e.g. apps/web/public/maintenance.html,
+     served with HTTP 503 + Retry-After. Self-contained: no external requests. See docs/MAINTENANCE_MODE.md §3. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#080b10">
+  <title>OneSound · Temporarily unavailable</title>
+  <style>
+    :root { --bg:#080b10; --card:#10151d; --text:#eef1f6; --muted:#8b95a5; --accent:#7c5cff; --line:rgba(255,255,255,.08); }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px 16px;
+           background: radial-gradient(60% 50% at 50% 0%, rgba(124,92,255,.18), transparent 70%), var(--bg);
+           color:var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align:center; }
+    main { max-width:520px; width:100%; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:40px 28px; }
+    .bars { display:flex; gap:5px; justify-content:center; align-items:flex-end; height:34px; margin-bottom:22px; }
+    .bars span { width:6px; border-radius:3px; background:var(--accent); opacity:.85; }
+    .bars span:nth-child(1){height:40%} .bars span:nth-child(2){height:75%} .bars span:nth-child(3){height:100%}
+    .bars span:nth-child(4){height:60%} .bars span:nth-child(5){height:30%}
+    h1 { font-size:1.9rem; margin:0 0 6px; letter-spacing:-.02em; }
+    .by { color:var(--muted); font-size:.8rem; margin:0 0 24px; letter-spacing:.08em; text-transform:uppercase; }
+    p { line-height:1.6; margin:0 0 14px; }
+    .es { color:var(--muted); font-size:.95rem; }
+    hr { border:0; border-top:1px solid var(--line); margin:22px 0; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+    <h1>OneSound</h1>
+    <p class="by">by JCDM Technologies</p>
+    <p>OneSound is temporarily unavailable while we improve our platform. Thank you for your patience.</p>
+    <p class="es" lang="es">OneSound no está disponible temporalmente mientras mejoramos nuestra plataforma. Gracias por tu paciencia.</p>
+    <hr>
+    <p class="es"><a href="https://www.jcdmtech.com/">jcdmtech.com</a> · <a href="https://www.jcdmtech.com/contact.html">Contact</a></p>
+  </main>
+</body>
+</html>

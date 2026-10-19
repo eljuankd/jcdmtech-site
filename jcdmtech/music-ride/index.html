@@ -8,6 +8,7 @@
   <meta name="description" content="Con JCDM Music Ride, cada pasajero puede agregar y votar canciones durante el trayecto. Disponible exclusivamente con el servicio de chofer privado de JCDM.">
 
   <link rel="canonical" href="https://www.jcdmtech.com/music-ride">
+  <script src="/js/maintenance.config.js"></script>
 
   <link rel="icon" href="/assets/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -150,10 +151,11 @@
         Sin peleas por el aux — solo buena música en ruta.
       </p>
       <div class="actions">
-        <a class="btn btn-primary btn-lg" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">
+        <a data-maint-hide="onesound" class="btn btn-primary btn-lg" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">
           Abrir Music Ride →
         </a>
-        <a class="btn" href="/chofer-privado/reservar.html">Reservar traslado</a>
+        <a class="btn" href="/chofer-privado/reservar.html" data-maint-hide="quelvo">Reservar traslado</a>
+        <span class="maint-note" data-maint-show="onesound">OneSound / Music Ride no está disponible temporalmente mientras mejoramos la plataforma.</span>
       </div>
     </div>
   </section>
@@ -244,7 +246,7 @@
         <h2>¿Listo para el próximo trayecto?</h2>
         <p>Abre una sesión, comparte el QR y deja que los pasajeros elijan la música.</p>
         <div class="actions">
-          <a class="btn btn-primary btn-lg" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">
+          <a data-maint-hide="onesound" class="btn btn-primary btn-lg" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">
             Abrir Music Ride →
           </a>
           <a class="btn" href="/contact.html">Contact</a>

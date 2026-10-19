@@ -230,9 +230,22 @@ async function setupAuthNav() {
   supabase.auth.onAuthStateChange(() => render());
 }
 
+// ── Maintenance flags ─────────────────────────────────────────────
+// Pages that hide content before first paint include /js/maintenance.config.js in <head>;
+// for the rest it is loaded here, before the partials are injected.
+function ensureMaintenanceConfig() {
+  if (window.__MAINTENANCE__) return Promise.resolve();
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "/js/maintenance.config.js";
+    script.onload = script.onerror = () => resolve();
+    document.head.appendChild(script);
+  });
+}
+
 // ── Boot ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
-  await ensureSiteVersion();
+  await Promise.all([ensureSiteVersion(), ensureMaintenanceConfig()]);
   include("#header", "/partials/header.html");
   include("#footer", "/partials/footer.html");
 });

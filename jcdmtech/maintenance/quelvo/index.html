@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Served with HTTP 503 by /middleware.js on every QUELVO route while maintenance is on.
+     data-maintenance-page stops /js/maintenance.config.js from redirecting this page. -->
+<html lang="en" data-maintenance-page>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QUELVO · Temporarily unavailable</title>
+  <meta name="description" content="QUELVO is temporarily unavailable while we improve our platform.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" href="/assets/favicon.ico">
+  <meta name="theme-color" content="#09090B">
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/js/maintenance.config.js"></script>
+  <style>
+    .mt-wrap { min-height: 62vh; display: grid; place-items: center; padding: 4rem clamp(16px,4vw,24px); text-align: center; }
+    .mt-box { max-width: 620px; }
+    .mt-kicker { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin: 0 0 .9rem; }
+    .mt-brand { font-family: 'Fraunces', Georgia, serif; font-size: clamp(2.2rem,4vw+1rem,3.4rem); letter-spacing: .04em; margin: 0 0 1rem; }
+    .mt-line { width: 56px; height: 1px; background: var(--gold); margin: 0 auto 1.5rem; }
+    .mt-msg { font-size: 1.1rem; line-height: 1.6; margin: 0 0 .9rem; }
+    .mt-note { color: var(--muted); font-size: .92rem; line-height: 1.6; margin: 0 0 2rem; }
+    .mt-actions { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="mt-wrap">
+    <div class="mt-box">
+      <p class="mt-kicker" data-es="Mantenimiento temporal">Temporary maintenance</p>
+      <h1 class="mt-brand">QUELVO</h1>
+      <div class="mt-line" aria-hidden="true"></div>
+      <p class="mt-msg" data-es="QUELVO no está disponible temporalmente mientras mejoramos nuestra plataforma. Gracias por tu paciencia.">QUELVO is temporarily unavailable while we improve our platform. Thank you for your patience.</p>
+      <p class="mt-note" data-es="No estamos aceptando nuevas reservas por ahora. Si ya tienes una reserva, contáctanos y te atenderemos.">We are not accepting new bookings for now. If you already have a booking, please contact us and we will assist you.</p>
+      <div class="mt-actions">
+        <a class="btn btn-primary" href="/contact.html" data-es="Contactar">Contact us</a>
+        <a class="btn" href="/services/" data-es="Ver servicios">Our services</a>
+        <a class="btn" href="/" data-es="Inicio">Home</a>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="/js/supabase.config.js"></script>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>

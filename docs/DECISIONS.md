@@ -57,6 +57,12 @@ Las decisiones D-001…D-008 se reconstruyen de la documentación de junio 2026 
 ### D-012 · 2026-10-19 · Vigente — `docs/` + `CLAUDE.md` como fuente de verdad
 - **Decisión:** `AI_PROJECT_CONTEXT.md` queda como histórico; no se borra.
 
+### D-013 · 2026-10-19 · Vigente — Suspensión temporal de plataformas por flags, sin borrar nada
+- **Decisión:** QUELVO y OneSound se suspenden con un modo mantenimiento reversible: flags en `jcdmtech/js/maintenance.config.js`, 503 + `Retry-After` vía `jcdmtech/middleware.js` (sin redirecciones), bloqueo real de nuevas reservas con un trigger en `bookings` (`docs/sql/quelvo-maintenance.sql`), y para OneSound un flag `MAINTENANCE_MODE` en su propio backend (otro repo).
+- **Motivo:** el propietario se concentra en Survivor Sports; las plataformas deben poder reactivarse sin reconstruir ni perder datos. Ocultar enlaces no basta: la anon key permite insertar en `bookings` y la API de OneSound es pública.
+- **Consecuencias:** introduce el primer middleware de Vercel del sitio (validar en Preview). No modifica D-010: las URLs no cambian, sólo responden 503 mientras dure la pausa. Procedimiento: `docs/MAINTENANCE_MODE.md`.
+- **Rev. 2 (2026-10-19):** flag único `maintenance` (true = suspendido) en JS y SQL; middleware con `runtime: "nodejs"` y sin `package.json` (el builder compila ESM→CJS); tabla SQL `jcdm_maintenance_flags`. Se descarta añadir `package.json` o `@vercel/functions` sólo para `next()`.
+
 ---
 
 ## Decisiones propuestas (pendientes de aprobación)

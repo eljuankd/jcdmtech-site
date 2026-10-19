@@ -70,8 +70,18 @@ se ofrece realmente antes de reutilizar ese texto en Fase 3.
 
 ## 4. Plataformas y productos propios
 
+> **Estado operativo (2026-10-19):** QUELVO y OneSound/Music Ride están en proceso de **suspensión temporal**
+> mientras el propietario se concentra en **Survivor Sports** (`https://survivor.jcdmtech.com`, proyecto independiente,
+> alojado en servidor propio, fuera de este repo). Siguen siendo productos propios; no se elimina nada.
+> Mecanismo preparado en local, **aún no activo en producción**. Ver `docs/MAINTENANCE_MODE.md`.
+>
+> **[VERIFICADO 2026-10-19] Supabase `jcdmtech-prod` está PAUSADO** (INACTIVE): login, cuenta, admin y reservas fallan hoy en producción.
+> Existe además una **app QUELVO de ride-hailing** (Expo + Fastify, `D:\quelvo`, repos `quelvo-app` / `quelvo-backend`,
+> Supabase `quelvo-prod` también pausado) que sólo se ejecuta en desarrollo local; no es pública.
+
 ### QUELVO — Private Chauffeur Platform
 Marca propia de transporte privado en Miami; antes "Chofer privado" en `/chofer-privado/`.
+**Temporalmente no disponible** (nuevas reservas suspendidas al activar el modo mantenimiento; datos e histórico conservados; admin operativo).
 Experiencia de reserva premium **inspirada funcionalmente** en Blacklane (flujo por pasos, clases de vehículo,
 precio previo) pero con **diseño, contenido e identidad originales**. No copiar textos, logos, imágenes ni marcas de Blacklane.
 
@@ -87,8 +97,10 @@ precio previo) pero con **diseño, contenido e identidad originales**. No copiar
 
 [PLANIFICADO] Servicios mencionados como objetivo: aeropuertos MIA/FLL/PBI, eventos, viajes de negocio, city-to-city.
 
-### Music Ride
+### Music Ride / OneSound
 Producto propio de JCDM Technologies: experiencia de música colaborativa para trayectos QUELVO y eventos privados.
+**Temporalmente no disponible** (en preparación: enlaces ocultos en este sitio; la suspensión real requiere cambios en su propio repo/backend — ver `docs/MAINTENANCE_MODE.md` §3).
+- [VERIFICADO 2026-10-19] La app se llama ahora **OneSound** (`<title>OneSound</title>`, "by JCDM Technologies"). Frontend en un proyecto Vercel propio; backend en Render (`jcdm-music-ride.onrender.com`, Express + Socket.IO); repo `github.com/eljuankd/jcdm-music-ride`. Sesiones en memoria; sin cuentas de usuario según el backup del 2026-09-07 [POR VALIDAR en la versión desplegada].
 - [VERIFICADO] Aplicación desplegada en `https://music-ride.jcdmtech.com` (responde 200). **Su código no está en este repositorio.**
 - [VERIFICADO] Landing en `/music-ride/` (español) y bloques promocionales en Home, QUELVO, Projects, About y footer.
 - Funcionamiento descrito en la landing: el host abre sesión y muestra un QR; los pasajeros se unen desde el navegador sin instalar nada; buscan en YouTube y añaden a una cola en tiempo real; el host controla pausa/salto/permisos/límites; modo Repeat All.

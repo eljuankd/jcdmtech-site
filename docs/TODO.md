@@ -87,6 +87,24 @@
 
 ---
 
+## Suspensión temporal de QUELVO y OneSound (D-013, 2026-10-19)
+
+Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pausa** mientras dure la suspensión.
+
+- [x] Auditoría de plataformas, hosting y dependencias con Survivor
+- [x] Mecanismo de flags + middleware 503 + página de mantenimiento + marcado del sitio (local)
+- [x] SQL de bloqueo de reservas preparado (`docs/sql/quelvo-maintenance.sql`)
+- [x] Plantilla de pantalla OneSound y diseño del flag de backend (`docs/MAINTENANCE_MODE.md` §3)
+- [x] Pruebas locales (Node + Chrome headless, activado y desactivado)
+- [x] Revisión técnica rev. 2: runtime del middleware, flag inequívoco, SQL con preflight + prueba en seco (PGlite 19/19), `vercel build` local, otros canales QUELVO, script de verificación
+- [ ] **Autorización:** commit + push a rama `maintenance/quelvo-onesound` → Vercel Preview; `scripts/verify-maintenance.sh <preview>` con 0 fallos; revisar R-M1 (URLs `.html`)
+- [ ] **Autorización:** merge/push a `main` → producción; script contra producción
+- [ ] **Autorización:** restaurar Supabase `jcdmtech-prod` (después del despliegue web) y confirmar plazo de restauración
+- [ ] **Autorización:** preflight + `quelvo-maintenance.test.sql` + instalación de `docs/sql/quelvo-maintenance.sql`
+- [ ] **Autorización + acceso:** OneSound — repo `jcdm-music-ride`, Render y Vercel (§3.1)
+- [ ] Confirmar que no hay backend de OneSound activo en Railway
+- [ ] Al reactivar: seguir §6 de `docs/MAINTENANCE_MODE.md`
+
 ## 9. Pendientes transversales / bloqueos
 
 - [ ] **Seguridad (recomendado antes de Fase 2, como hotfix aislado):** validar `next` en `login.html` (sólo rutas relativas que empiecen por `/` y no por `//`) — R-03.

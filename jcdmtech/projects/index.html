@@ -8,6 +8,7 @@
   <meta name="description" content="Products and platforms built by JCDM Technologies LLC — QUELVO, Music Ride, Financial Automation and Smart Home systems.">
 
   <link rel="canonical" href="https://www.jcdmtech.com/projects/">
+  <script src="/js/maintenance.config.js"></script>
 
   <link rel="icon" href="/assets/favicon.ico">
 
@@ -37,7 +38,8 @@
   <!-- QUELVO -->
   <section class="section alt" aria-labelledby="p-quelvo-h2">
     <div class="container">
-      <p class="section-kicker">Platform · Live</p>
+      <p class="section-kicker" data-maint-hide="quelvo">Platform · Live</p>
+      <p class="section-kicker" data-maint-show="quelvo">Platform · Temporarily unavailable</p>
       <h2 id="p-quelvo-h2">QUELVO</h2>
       <p style="font-size:1.1rem;font-style:italic;color:var(--muted-on-light);margin:.25rem 0 1.5rem;">
         Private chauffeur booking platform.
@@ -78,7 +80,8 @@
 
       <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
         <a class="btn" href="/quelvo/">Visit QUELVO</a>
-        <a class="btn btn-primary" href="/quelvo/book/">Book a ride</a>
+        <a class="btn btn-primary" href="/quelvo/book/" data-maint-hide="quelvo">Book a ride</a>
+        <span class="maint-note" data-maint-show="quelvo">Bookings temporarily paused</span>
       </div>
     </div>
   </section>
@@ -86,7 +89,8 @@
   <!-- MUSIC RIDE -->
   <section class="section" aria-labelledby="p-musicride-h2">
     <div class="container">
-      <p class="section-kicker">Platform · Live</p>
+      <p class="section-kicker" data-maint-hide="onesound">Platform · Live</p>
+      <p class="section-kicker" data-maint-show="onesound">Platform · Temporarily unavailable</p>
       <h2 id="p-musicride-h2">Music Ride</h2>
       <p style="font-size:1.1rem;font-style:italic;color:var(--muted);margin:.25rem 0 1.5rem;">
         Shared music experience for private rides.
@@ -128,7 +132,8 @@
 
       <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
         <a class="btn" href="/music-ride/">Visit Music Ride page</a>
-        <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener">Open app ↗</a>
+        <a class="btn btn-primary" href="https://music-ride.jcdmtech.com" target="_blank" rel="noopener" data-maint-hide="onesound">Open app ↗</a>
+        <span class="maint-note" data-maint-show="onesound">App temporarily unavailable</span>
       </div>
     </div>
   </section>
