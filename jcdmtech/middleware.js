@@ -48,6 +48,10 @@ export default async function middleware(request) {
       "Retry-After": String(q.retryAfter),
       "Cache-Control": "no-store",
       "X-Robots-Tag": "noindex",
+      // Same baseline as vercel.json "headers" (responses built here may not receive them).
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
     },
   });
 }
