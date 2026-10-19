@@ -69,12 +69,14 @@
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { safeNext } from "/js/safe-next.js";
 
     const supabase = createClient(window.__SUPABASE__.url, window.__SUPABASE__.anon, {
       auth: { flowType: 'implicit' }
     });
 
-    const next = new URLSearchParams(location.search).get("next") || "/";
+    // Validated same-origin path only (J-03): used for redirects and email link targets.
+    const next = safeNext(new URLSearchParams(location.search).get("next"), location.origin);
 
     // --- UI helpers ---
     function showMsg(el, text, ok) {
