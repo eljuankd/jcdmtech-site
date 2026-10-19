@@ -103,7 +103,7 @@ Verificado con la documentación de Vercel (Routing Middleware, 2026-08) y con `
 Archivos: `docs/sql/quelvo-maintenance.sql` (preflight, instalación, conmutación, comprobaciones, desinstalación) y `docs/sql/quelvo-maintenance.test.sql` (prueba en seco).
 
 Dependencias (evidencia del repo; confirmar con el preflight §0 del SQL antes de instalar):
-- `public.bookings` (insertada por `quelvo/book/`), `public.profiles.role` (`'user'|'admin'`, `supabase-setup.sql`), `auth.uid()` (Supabase).
+- `public.bookings` (insertada por `quelvo/book/`), `public.profiles.role` (`'user'|'admin'`, `supabase/legacy/supabase-setup.sql`; ver también la migración de seguridad en `docs/SECURITY_REMEDIATION.md` §4, compatible con este trigger), `auth.uid()` (Supabase).
 - Nombre nuevo `public.jcdm_maintenance_flags`: `create table` **sin** `if not exists`, para fallar en voz alta si el nombre ya existe.
 - Quién queda bloqueado: claims JWT con `role` `anon` o `authenticated` y no admin. No bloqueados: `service_role`, sesiones SQL directas, admins.
 
@@ -227,7 +227,7 @@ Los Previews de este proyecto responden `302` hacia el login de Vercel. Opciones
 - Corrección (opción B): `jcdmtech/vercel.json` idéntico al de `29c4b6f` (`git diff 29c4b6f` vacío); 22 redirects intactos; build local OK, middleware compilado (`nodejs24.x`), 0 reglas `cleanUrls`/`trailingSlash`, ruta 404 → `/404.html`, artefacto ejecutado: 503 + `Retry-After` en las rutas QUELVO.
 
 **Hipótesis** (sin logs de Vercel, que requieren acceso a la cuenta):
-- Que la causa del fallo sea la validación del esquema de `vercel.json` por la propiedad `errors`. La confirmará (o refutará) el resultado del Preview tras la corrección.
+- ~~Que la causa del fallo sea `vercel.json`~~ → **confirmado por resultado** (2026-10-19): con `fd31034` el Preview compila (`success`). Sigue sin confirmar con logs cuál de las tres propiedades era la culpable (lo más probable, `errors`).
 - Que la 404 personalizada se sirva en Vercel sin configuración (el build local genera la ruta `→ /404.html`; falta comprobarlo en el Preview).
 - Que el middleware se ejecute en la infraestructura de Vercel igual que el artefacto en Node local.
 

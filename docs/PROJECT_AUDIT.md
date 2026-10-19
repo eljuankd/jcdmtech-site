@@ -241,3 +241,19 @@ elif [ ! -f "$t" ]; then echo "MISSING: $p"; fi; done
 **Hipótesis:** el fallo de despliegue se debe a la propiedad no válida `errors` (sin logs; se verifica con el Preview de la rama `maintenance/quelvo-onesound`, que retira `errors`, `cleanUrls` y `trailingSlash`).
 
 Nuevo riesgo **R-22 🔴 Despliegues bloqueados desde 2026-08-02** — cualquier cambio en `main` no llega a producción hasta corregir `vercel.json` (detalle: `docs/MAINTENANCE_MODE.md` §8.1).
+
+---
+
+## 11. Seguridad — auditoría y remediación (2026-10-19)
+
+Auditoría de seguridad entregada al propietario en la conversación (el repositorio es público; aquí sólo el estado).
+Remediación local, sin commit ni despliegue: `docs/SECURITY_REMEDIATION.md`.
+
+| Riesgo | Estado |
+|---|---|
+| R-03 (`next` del login) = J-03 | **Corregido en la rama (sin desplegar)** — `js/safe-next.js`; pruebas unitarias y de navegador; control con la versión anterior confirma el fallo |
+| R-07 (archivos internos publicados) = J-04 | **Corregido en la rama (sin desplegar)** — movidos a `archive/` y `supabase/legacy/`; `.vercelignore` |
+| R-08 (política recursiva) | **Confirmado en PGlite:** el SQL histórico literal hace fallar toda lectura autenticada de `profiles` ⇒ la base real difiere del archivo. La migración lo sustituye por `public.is_admin()` |
+| R-01 / R-02 (esquema y RLS) = J-01, J-02, J-06 | **Migración preparada, no aplicada** (Supabase pausado). Procedimiento en `SECURITY_REMEDIATION.md` §4.4 |
+| Cabeceras HTTP = J-05 | **Preparadas** en `vercel.json` (CSP en Report-Only) |
+| R-13 (supabase-js sin versión fija), R-14 (clave de Maps), R-15 (resumen de reserva sin escapar) | Pendientes |

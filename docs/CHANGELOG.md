@@ -3,6 +3,18 @@
 Historial de cambios del sitio y de la documentación (más reciente primero).
 Desde 2026-10-19 cada entrada indica la fase del plan de 8 fases.
 
+## 2026-10-19 — Seguridad: Fase 1 de remediación (local, sin commit)
+
+### Corregido
+- Login: el destino `next` sólo admite rutas internas (`js/safe-next.js`); también en los enlaces mágicos (J-03).
+- `/copy.zip` y `/supabase-setup.sql` dejan de publicarse: movidos a `archive/` y `supabase/legacy/`; nuevo `jcdmtech/.vercelignore` (J-04).
+
+### Añadido
+- Cabeceras de seguridad en `vercel.json` (nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy, CSP en Report-Only) y en el 503 del middleware (J-05).
+- Migración de roles/RLS para Supabase, **no aplicada**, con preflight, verificación auto-revertida y reversión (`supabase/migrations/`).
+- Pruebas: `scripts/tests/safe-next.test.mjs`, `scripts/tests/security-rls.pglite.mjs`.
+- `docs/SECURITY_REMEDIATION.md` (OneSound: sólo resumen público; detalle en documento local no versionado; sin cambios en OneSound).
+
 ## 2026-10-19 — fix(vercel): `vercel.json` restaurado (opción B), rama `maintenance/quelvo-onesound`
 
 ### Corregido

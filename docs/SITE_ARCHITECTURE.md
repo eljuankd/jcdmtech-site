@@ -54,7 +54,7 @@ Excepciones: stubs legado sin `supabase.config.js` (auth nav no se muestra); `ch
 | `drivers` | `id`, `name`, `phone`, `email`, `license`, `notes`, `hourly_rate`, `min_transfer_price`, `created_at` (+ otros en el formulario) | admin, join en bookings |
 | `bookings` | `id`, `booking_code`, `user_id`, `service_type`, `vehicle_class`, `pickup_address`, `dropoff_address`, `pickup_lat/lng`, `dropoff_lat/lng`, `pickup_at`, `requested_hours`, `estimated_minutes`, `estimated_miles`, `passengers`, `client_name/email/phone`, `flight_number`, `special_requests`, `base_price`, `pricing_type`, `requires_quote`, `status`, `driver_id`, `admin_price`, `admin_notes`, `created_at` | quelvo/book (insert), admin (select/update) |
 
-`jcdmtech/supabase-setup.sql` sólo cubre parte de `profiles`, `vehicles`, `drivers` (ver R-01).
+`supabase/legacy/supabase-setup.sql` (antes `jcdmtech/supabase-setup.sql`, público) sólo cubre parte de `profiles`, `vehicles`, `drivers` (ver R-01). Migración de seguridad preparada, no aplicada: `supabase/migrations/2026-10-19-security-rls.sql` (`docs/SECURITY_REMEDIATION.md`).
 
 ### Modo mantenimiento (2026-10-19, D-013) — preparado, no desplegado
 

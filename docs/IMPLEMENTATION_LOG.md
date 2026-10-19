@@ -268,3 +268,62 @@ Autorización: un commit y push sólo a `maintenance/quelvo-onesound`. Prohibido
 
 ### Confirmado vs. hipótesis
 Ver `docs/MAINTENANCE_MODE.md` §8.1 y `docs/PROJECT_AUDIT.md` §10.
+
+### Resultado tras el push (`fd31034`)
+- Push sólo a `maintenance/quelvo-onesound` (`abc90c8..fd31034`). Remoto: `main` = `4d0350a` (sin cambios).
+- **Vercel Preview: `success`** — deployment GitHub `7179335782`, URL `https://jcdmtech-site-d12mqr6yd-juanks-projects-50846d74.vercel.app`.
+  ⇒ **Hipótesis confirmada** (por resultado, sin logs): el bloqueo de despliegues desde `569df74` lo causaba `vercel.json`.
+- Preview protegido por Vercel Authentication: `/`, `/quelvo/`, `/about.html` → 302 a `vercel.com/sso-api`. **Pruebas funcionales contra el Preview no ejecutadas** (no hay token de bypass configurado; el propietario indicó detenerse en ese caso).
+- Producción sin cambios: `privacy.html` MD5 = versión `29c4b6f`; `/quelvo/` 200; `/maintenance/quelvo/` 404.
+- Survivor: 200 `text/html` 539 B (igual que la línea base). OneSound: 200 (sin cambios).
+- Esta entrada y las de estado posteriores quedan **sin commit** (sólo se autorizó un commit en esta fase).
+
+---
+
+## 2026-10-19 — Auditoría de seguridad + Fase 1 de remediación (local, sin commit)
+
+Autorización del propietario: preparación **local** de las correcciones de JCDM. Prohibido: commit, push, merge,
+despliegue, bases de datos reales, OneSound, Survivor, DNS, credenciales.
+
+### Auditoría (sólo lectura, antes de la remediación)
+- Informe entregado en la conversación (no publicado: el repo `eljuankd/jcdmtech-site` es **público**).
+- Comprobaciones: estado Git; MD5 de producción (= `29c4b6f`); 18 rutas sensibles (`/copy.zip`, `/supabase-setup.sql` → 200;
+  `.git`, `.env`, docs → 404); cabeceras HTTP de www, apex y OneSound; historial Git (sólo claves `anon`); Supabase MCP
+  `list_projects` (ambos INACTIVE); repo OneSound clonado en lectura + `npm audit --package-lock-only`. Survivor: ninguna petición.
+
+### Cambios (archivos)
+| Archivo | Cambio | Hallazgo |
+|---|---|---|
+| `jcdmtech/js/safe-next.js` (nuevo) | Validación de destino interno tras login | J-03 |
+| `jcdmtech/login.html` | Importa `safeNext`; el valor validado se usa en redirecciones y `emailRedirectTo` | J-03 |
+| `jcdmtech/supabase-setup.sql` → `supabase/legacy/supabase-setup.sql` | Movido (MD5 idéntico) | J-04 |
+| `jcdmtech/copy.zip` → `archive/copy.zip` | Movido (MD5 idéntico) | J-04 |
+| `jcdmtech/.vercelignore` (nuevo) | Bloquea `*.zip`, `*.sql`, `*.bak`, `.env*`… en la raíz publicada | J-04 |
+| `jcdmtech/vercel.json` | `headers`: nosniff, XFO DENY, Referrer-Policy, Permissions-Policy, CSP **Report-Only**. Redirects intactos (22) | J-05 |
+| `jcdmtech/middleware.js` | Respuesta 503 con nosniff, XFO, Referrer-Policy | J-05 |
+| `supabase/migrations/2026-10-19-security-rls{,.preflight,.verify,.rollback}.sql` (nuevos) | Migración de roles/RLS **no aplicada** + inventario + verificación auto-revertida + reversión | J-01, J-02, J-06, R-08 |
+| `scripts/tests/safe-next.test.mjs`, `security-rls.pglite.mjs`, `e2e-security.mjs`, `serve-vercel-output.mjs` (nuevos) | Pruebas | — |
+| `supabase/README.md`, `archive/README.md`, `docs/SECURITY_REMEDIATION.md` (nuevos) | Documentación | — |
+| Docs actualizados | `CHANGELOG`, `PROJECT_STATUS`, `TODO`, `ROUTES`, `PROJECT_AUDIT`, `DECISIONS`, `SITE_ARCHITECTURE`, `MAINTENANCE_MODE`, `CLAUDE.md` | — |
+
+### Pruebas y resultados (detalle: `docs/SECURITY_REMEDIATION.md` §7)
+| Prueba | Resultado |
+|---|---|
+| `node --test scripts/tests/safe-next.test.mjs` | 4/4 (48 casos) |
+| PGlite 0.5.8 — `scripts/tests/security-rls.pglite.mjs` | 83/83 |
+| `npx vercel@64.5.0 build` (copia en scratchpad) | OK; sin `.zip`/`.sql` en la salida; cabeceras antes del middleware |
+| `.vercelignore` con señuelos / control sin él | excluidos / publicados |
+| Chrome headless contra la salida compilada (rutas + middleware reales, sin tráfico externo) | 88/88 |
+| Control: `login.html` de `HEAD` | sale a otro dominio y ejecuta `javascript:` (confirma J-03) |
+| `node --check`; enlaces internos | OK; sólo `safari-pinned-tab.svg` (conocido) |
+
+Incidencia durante el trabajo: la primera versión de `safe-next.js` llevaba escapes `\uXXXX` en una expresión regular que
+quedaron escritos como caracteres literales y la rompían (habría dejado el login sin funcionar). La detectó la prueba
+unitaria; se sustituyó por una comprobación por códigos de carácter, sin escapes.
+
+Hallazgo nuevo: el SQL histórico literal produce recursión infinita en toda lectura autenticada de `profiles` ⇒ la base real
+difiere de él; si la recursión se resolvió quitando la política de admin, J-01 es explotable (reproducido en PGlite).
+
+### Resultado
+Preparado y probado en local. Sin commit. Sin cambios en producción, Supabase, OneSound, Survivor ni DNS.
+Pendiente: autorización de commit → Preview → producción → procedimiento de Supabase (`SECURITY_REMEDIATION.md` §4.4, §6).

@@ -46,6 +46,7 @@ Reglas adicionales derivadas de la auditoría:
 
 - **Hechos vs. planes:** en la documentación, separar siempre lo verificado en el código/producción de lo planificado.
 - **Secretos:** no imprimir en la salida ni copiar a documentos la anon key de Supabase ni la API key de Google Maps. Referirse a ellas por archivo.
+- **Repositorio público** (`github.com/eljuankd/jcdmtech-site`): no versionar secretos ni detalles de explotación de vulnerabilidades abiertas. SQL fuera de `jcdmtech/` (en `supabase/`); nada interno en la raíz publicada (D-015).
 - **Commits:** sólo cuando el usuario lo pida. Formato convencional `tipo(ámbito): descripción` (ver `git log`).
 
 ---
@@ -73,9 +74,9 @@ Reglas adicionales derivadas de la auditoría:
 | Reserva QUELVO (actual) | `jcdmtech/quelvo/book/index.html` | Wizard de 4 pasos, cálculo de precio con Google Maps, `insert` en tabla Supabase `bookings`. |
 | Gestión de reservas | `jcdmtech/admin/index.html` | Listado/edición de `bookings`, `vehicles`, `drivers`. Requiere `profiles.role = 'admin'`. |
 | Reserva legado | `jcdmtech/js/booking.js`, `jcdmtech/chofer-privado/reservar.html`, `jcdmtech/quelvo/book/gracias/index.html` | Flujo WhatsApp/Formspree. En producción `reservar.html` redirige (307) a `/quelvo/book/`, pero el código sigue en el repo. |
-| Auth | `jcdmtech/login.html`, `jcdmtech/reset-password.html`, `jcdmtech/account.html`, `setupAuthNav()` en `js/app.js` | Sesión Supabase, perfil, preferencias tema/idioma. |
+| Auth | `jcdmtech/login.html`, `jcdmtech/js/safe-next.js`, `jcdmtech/reset-password.html`, `jcdmtech/account.html`, `setupAuthNav()` en `js/app.js` | Sesión Supabase, perfil, preferencias tema/idioma. `safe-next.js` valida el destino tras el login (J-03): no relajarlo sin pruebas. |
 | Music Ride | `jcdmtech/music-ride/index.html` + enlaces a `https://music-ride.jcdmtech.com` | La **aplicación** Music Ride NO está en este repositorio; aquí sólo hay la landing y enlaces. No cambiar la URL del subdominio ni romper los enlaces. |
-| Redirects | `jcdmtech/vercel.json` | URLs heredadas (`/chofer-privado/*`, `*.html` en español). Cambiar con cuidado: afecta SEO y enlaces externos/QR. |
+| Redirects y cabeceras | `jcdmtech/vercel.json`, `jcdmtech/.vercelignore` | URLs heredadas (`/chofer-privado/*`, `*.html` en español) y cabeceras de seguridad (CSP en Report-Only, D-014). Cambiar con cuidado: afecta SEO, enlaces externos/QR y lo que se publica. |
 | Contacto QR | `jcdmtech/qrcard.html`, `jcdmtech/files/juan-carlos-delgado.vcf` | Tarjetas físicas con QR apuntan aquí. |
 
 Antes de tocar una zona protegida: leer el archivo completo, buscar todas sus referencias y describir en la bitácora cómo se probó.
@@ -84,7 +85,7 @@ Antes de tocar una zona protegida: leer el archivo completo, buscar todas sus re
 
 ## 4. Cómo probar cambios (no hay suite automatizada)
 
-1. `node --check jcdmtech/js/*.js` para sintaxis de JS externo.
+1. `node --check jcdmtech/js/*.js` para sintaxis de JS externo; `node --test scripts/tests/safe-next.test.mjs`; SQL de seguridad: `JCDM_TOOLS=<carpeta con @electric-sql/pglite> node scripts/tests/security-rls.pglite.mjs` (ver `docs/SECURITY_REMEDIATION.md`).
 2. Servir `jcdmtech/` con Live Server (o `npx serve jcdmtech`) y revisar en navegador:
    - Header/footer cargan, menú móvil (<880px), toggle tema y toggle ES/EN.
    - Consola sin errores.

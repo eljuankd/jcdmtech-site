@@ -100,7 +100,7 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 - [x] Commits `70479ca` + `abc90c8` y push a `maintenance/quelvo-onesound` (autorizado)
 - [x] Pruebas de navegador locales del commit (Puppeteer, 39/39: productos visibles con avisos, 4 servicios, menú móvil, EN/ES)
 - [x] **R-M9:** `vercel.json` corregido en la rama con la opción B (autorizado): sin `errors`, `cleanUrls`, `trailingSlash`; idéntico a `29c4b6f`; `vercel build` local OK
-- [ ] Confirmar en el Preview que el despliegue compila (valida la hipótesis de la causa)
+- [x] Preview de `fd31034` compila (`success`) — causa en `vercel.json` confirmada por resultado
 - [ ] Token de bypass del Preview fuera del repo (`MAINTENANCE_MODE.md` §6.1)
 - [ ] Repetir Preview: `scripts/verify-maintenance.sh <preview>` con 0 fallos + pruebas de navegador contra el Preview
 - [ ] **Autorización:** merge/push a `main` → producción; script contra producción
@@ -109,6 +109,19 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 - [ ] **Autorización + acceso:** OneSound — repo `jcdm-music-ride`, Render y Vercel (§3.1)
 - [ ] Confirmar que no hay backend de OneSound activo en Railway
 - [ ] Al reactivar: seguir §6 de `docs/MAINTENANCE_MODE.md`
+
+## Seguridad — remediación (2026-10-19, `docs/SECURITY_REMEDIATION.md`)
+
+- [x] J-03 validación de `next` en el login (local, probado)
+- [x] J-04 `copy.zip` y `supabase-setup.sql` fuera de la raíz publicada + `.vercelignore` (local, probado)
+- [x] J-05 cabeceras de seguridad, CSP en Report-Only (local, probado)
+- [x] J-01/J-02/J-06 migración de roles/RLS preparada y probada en PGlite (**no aplicada**)
+- [ ] Autorizar commit(s) → Vercel Preview con bypass: cabeceras, 404 de archivos internos, `next`, CSP sin violaciones (Maps/GA reales)
+- [ ] Producción (merge a `main`) — publica también `569df74`, `4d0350a` y la suspensión
+- [ ] Supabase: restaurar → preflight → migración → verify → pruebas de login/cuenta/admin (§4.4)
+- [ ] CSP bloqueante (tras revisar violaciones; sacar JS inline para quitar `unsafe-inline`)
+- [ ] Pendientes de auditoría: fijar versión de supabase-js (R-13), restricción de claves de Maps/YouTube en Google Cloud, escape en `buildSummary()` (R-15), anti-spam en reservas y contacto, PKCE, monitorización y alertas
+- [ ] OneSound O-01…O-05 (fase independiente; requiere ventana de bajo uso porque el redeploy cierra sesiones)
 
 ## 9. Pendientes transversales / bloqueos
 

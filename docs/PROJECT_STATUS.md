@@ -3,11 +3,25 @@
 - **Última actualización:** 2026-10-19
 - **Fase actual:** Fase 1 completada → **siguiente: Fase 2 (Rediseño de Home)**, pendiente de aprobación
 - **Trabajo intercalado:** suspensión temporal de QUELVO y OneSound (D-013) — **preparada en local, NO activa en producción**
+- **Seguridad (2026-10-19):** auditoría entregada + **Fase 1 de remediación preparada y probada en local, sin commit** (`docs/SECURITY_REMEDIATION.md`). Repo **público**: no documentar detalles de explotación.
 - **Rama de trabajo:** `maintenance/quelvo-onesound` (push hecho) = `4d0350a` + `70479ca` (docs Fase 1) + `abc90c8` (suspensión). `main` local y remota = `4d0350a`, sin cambios. Documentación de resultados posterior **sin commit**.
 - **Producción:** `https://www.jcdmtech.com` sirve **`29c4b6f` (2026-06-30)**, no `main`: los despliegues fallan desde `569df74` (R-M9). QUELVO y OneSound siguen respondiendo 200.
-- **Vercel Preview de `abc90c8`:** **fallido** (misma causa R-M9) y protegido con Vercel Authentication.
+- **Vercel Preview de `fd31034`:** **compila (`success`)** — `https://jcdmtech-site-d12mqr6yd-juanks-projects-50846d74.vercel.app` — protegido con Vercel Authentication; pruebas funcionales pendientes de acceso (§6.1 de MAINTENANCE_MODE). Commits en la rama: `70479ca`, `abc90c8`, `fd31034`.
 
 ---
+
+## 0a. Seguridad — Fase 1 de remediación (2026-10-19, sin commit)
+
+| Tema | Estado | Siguiente paso |
+|---|---|---|
+| J-03 login `next` | Corregido en local (`js/safe-next.js`), pruebas 4/4 + navegador | Commit → Preview |
+| J-04 `copy.zip`, `supabase-setup.sql` | Movidos a `archive/`, `supabase/legacy/`; `.vercelignore` | Commit → Preview (404) |
+| J-05 cabeceras | En `vercel.json`; CSP Report-Only; 0 violaciones en local | Preview con Maps/GA reales |
+| J-01/J-02/J-06 Supabase | Migración + preflight + verify + rollback; PGlite 83/83; **no aplicada** | Tras desplegar la web: restaurar Supabase y §4.4 |
+| OneSound O-01…O-05 | Documentado en `docs/private/` (no versionado; repo público) | Fase independiente |
+
+Pruebas: `node --test scripts/tests/safe-next.test.mjs`; `JCDM_TOOLS=… node scripts/tests/security-rls.pglite.mjs`; navegador 88/88 con `scripts/tests/e2e-security.mjs` contra la salida de `vercel build` servida por `scripts/tests/serve-vercel-output.mjs` (SECURITY_REMEDIATION §7).
+Bloqueo: B-6 (hotfix de R-03) queda **resuelto en la rama**, pendiente de autorización de commit/despliegue.
 
 ## 0. Suspensión temporal de QUELVO y OneSound (2026-10-19)
 
@@ -56,7 +70,7 @@ Fases 4 y 5 en pausa mientras dure la suspensión.
 | B-3 | Validar afirmaciones [POR VALIDAR] (confirmación instantánea, email de confirmación, flight tracking, Music Ride en cada viaje, Stripe/pagos, React Native, precios) | Fases 2–7 |
 | B-4 | Información de la app Music Ride (repositorio, sesiones, parámetros) | Fase 5 |
 | B-5 | Email oficial (`contacto@` vs `info@`) | Fase 7 |
-| B-6 | ¿Autoriza un hotfix aislado de R-03 (validación de `next` en login) antes de Fase 2? | Seguridad |
+| B-6 | ~~Hotfix de R-03~~ → **preparado en la rama** (2026-10-19). Falta autorizar commit, Preview y producción | Seguridad |
 | B-7 | ¿Autoriza commit de la documentación de Fase 1? | Cierre de Fase 1 |
 
 ## 4. Plan detallado para la Fase 2 — Rediseño de Home
@@ -104,6 +118,8 @@ Fases 4 y 5 en pausa mientras dure la suspensión.
 **Criterios de aceptación:** ver `docs/TODO.md` → Fase 2.
 
 ## 5. Próximo paso inmediato
+
+0. **Seguridad:** el propietario revisa el diff y autoriza commit(s) en la rama → Preview (con bypass) → producción → procedimiento de Supabase (`SECURITY_REMEDIATION.md` §6 y §4.4). **No restaurar Supabase antes de desplegar la web corregida.**
 
 1. **Suspensión:** el propietario decide (a) cómo corregir `vercel.json` (R-M9: opción A o B) y autoriza ese commit + push a la rama, (b) configura el token de bypass del Preview según `MAINTENANCE_MODE.md` §6.1, (c) autoriza el commit de la documentación de resultados. Después: repetir Preview y pruebas. Producción, SQL/Supabase y OneSound siguen requiriendo autorizaciones posteriores (orden en §5).
 2. Después: revisar B-2, B-3, B-6 y B-7 e iniciar el Paso 0 de la Fase 2 (el rediseño de Home debe respetar el marcado `data-maint-*`).

@@ -72,8 +72,8 @@ Procedimiento: `docs/MAINTENANCE_MODE.md`. Comprobación automática: `scripts/v
 
 | Ruta | HTTP | Acción propuesta |
 |---|---|---|
-| `/copy.zip` | 200 | Eliminar del directorio publicado (tras confirmar con el propietario) |
-| `/supabase-setup.sql` | 200 | Mover fuera de `jcdmtech/` (p. ej. `supabase/` en la raíz del repo) |
+| `/copy.zip` | 200 en producción | **Movido a `archive/copy.zip`** (rama, sin desplegar). Tras el despliegue: 404 |
+| `/supabase-setup.sql` | 200 en producción | **Movido a `supabase/legacy/`** (rama, sin desplegar). Tras el despliegue: 404 |
 | `/js/supabase.client.js` | 200 | Sin uso; candidato a eliminar |
 
 ## 5. Rutas planificadas [PLANIFICADO — no existen]

@@ -65,6 +65,21 @@ Las decisiones D-001…D-008 se reconstruyen de la documentación de junio 2026 
 
 ---
 
+### D-014 · 2026-10-19 · Vigente (en rama, sin desplegar) — Cabeceras de seguridad y CSP progresiva
+- **Decisión:** cabeceras globales en `vercel.json` (`nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`) y CSP primero en **Report-Only** con los orígenes del inventario. El 503 del middleware repite las básicas.
+- **Motivo:** J-05 de la auditoría; la CSP en modo informe no puede romper Maps, Supabase, Formspree ni GA.
+- **Consecuencias:** se mantiene `'unsafe-inline'` (JS inline y `onclick`); pasar a CSP bloqueante requiere revisar violaciones en Preview/producción y, para que proteja frente a XSS, sacar el JS inline (fase posterior).
+
+### D-015 · 2026-10-19 · Vigente (en rama, sin desplegar) — SQL y archivos internos fuera de la raíz publicada
+- **Decisión:** SQL en `supabase/` (`legacy/` histórico, `migrations/` nuevas) y archivos sueltos en `archive/`; `jcdmtech/.vercelignore` como segunda barrera.
+- **Motivo:** J-04 (`/copy.zip`, `/supabase-setup.sql` públicos).
+- **Consecuencias:** el repositorio es público: lo que esté en `supabase/` y `docs/` sigue visible en GitHub; no versionar secretos ni detalles de explotación.
+
+### D-016 · 2026-10-19 · Propuesta (preparada, no aplicada) — Conjunto cerrado de políticas RLS
+- **Decisión:** la migración de seguridad sustituye **todas** las políticas de `profiles`, `bookings`, `vehicles`, `drivers` (tras guardarlas) por un conjunto conocido; permisos por columna; `role` nunca editable desde la API; `public.is_admin()` `SECURITY DEFINER` en lugar de la política recursiva.
+- **Motivo:** las políticas permisivas se suman (OR): una antigua desconocida reabriría el acceso. Esquema remoto no versionado (R-01).
+- **Requiere:** restaurar Supabase y ejecutar el procedimiento de `docs/SECURITY_REMEDIATION.md` §4.4 con autorización.
+
 ## Decisiones propuestas (pendientes de aprobación)
 
 ### P-001 · Lenguaje visual principal
@@ -74,7 +89,7 @@ Las decisiones D-001…D-008 se reconstruyen de la documentación de junio 2026 
 ### P-002 · Estrategia de URL
 - **Propuesta:** opciones A/B en `ROUTES.md` §6. **Decidir en:** Fase 8.
 
-### P-003 · Esquema Supabase versionado
+### P-003 · Esquema Supabase versionado — **parcialmente aplicada (2026-10-19, D-015)**
 - **Propuesta:** carpeta `supabase/` en la raíz del repo con el esquema real exportado; retirar `jcdmtech/supabase-setup.sql` del directorio público.
 - **Requiere:** acceso al proyecto Supabase (la conexión MCP falló en Fase 1). **Decidir en:** antes de Fase 4.
 
