@@ -4,9 +4,16 @@
 > Objetivo: suspender **temporalmente** QUELVO y OneSound (Music Ride) sin borrar código, datos ni configuración,
 > y sin afectar a Survivor Sports. Todo es reversible cambiando flags.
 >
-> **Estado (2026-10-19, tarde):** commits `70479ca` + `abc90c8` en la rama `maintenance/quelvo-onesound` (push hecho;
-> `main` intacta). **El Vercel Preview falló al compilar** por un problema previo de `vercel.json` (R-M9, §8), no por
-> la suspensión. Producción sigue en `29c4b6f` sirviendo `/quelvo/` (200) y OneSound (200). Ver §5, §6.1 y §8.
+> **Estado actual (2026-10-19, noche):**
+> - Producción: **`4ef6506`** (hotfix de seguridad R1, **sin** mantenimiento). Punto de recuperación anterior: `29c4b6f`.
+> - Publicado: J-03, J-04, J-05 (CSP en Report-Only). Pendiente de aplicar: J-01/J-02/J-06 (migración RLS de Supabase).
+> - QUELVO y OneSound: **abiertos** en producción (200). Survivor, sin cambios.
+> - Mantenimiento: **preparado, no activado en producción** (rama `maintenance/quelvo-onesound`; Preview de `c10ce02`
+>   revisado por el propietario: QUELVO 503 + `Retry-After`). La suspensión de OneSound en su propio backend **no está implementada**.
+> - Antes de activar, la rama debe contener `origin/main` (`PROJECT_STATUS.md` §0b).
+>
+> *Histórico (2026-10-19, tarde):* commits `70479ca` + `abc90c8` en la rama (push hecho; `main` intacta); el Vercel Preview
+> falló al compilar por R-M9 (§8), no por la suspensión; en ese momento producción seguía en `29c4b6f`.
 
 ---
 
@@ -154,6 +161,7 @@ Render → **Suspend** (conserva configuración; "Resume" restaura) + pantalla e
 | 1 | Commit en una rama (p. ej. `maintenance/quelvo-onesound`) + push ⇒ **Vercel Preview** — *hecho (`abc90c8`); el Preview falló por R-M9: falta corregir `vercel.json` con autorización* | Validar el middleware en infraestructura real |
 | 2 | `scripts/verify-maintenance.sh <URL-del-Preview>` (con `VERCEL_BYPASS=<token>` si hay Deployment Protection) + revisión visual (§6) | 0 fallos esperados |
 | 3 | Merge/push a `main` ⇒ producción; repetir el script contra `https://www.jcdmtech.com` | La web deja de ofrecer reservas **antes** de que la BD vuelva a aceptar escrituras |
+| 3′ | *(2026-10-19)* Antes del paso 3: la rama ya debe contener `origin/main` (`4ef6506`) — `PROJECT_STATUS.md` §0b. El paso 3 activa la suspensión **en el acto** (flags en `true`); no usar esa fusión para otros fines. Tras la fusión, comprobar que `privacy.html`, `terms.html` y `404.html` siguen como en producción (§0c) | Evita publicar la suspensión o los textos legales por accidente |
 | 4 | Restaurar `jcdmtech-prod` en Supabase | Necesario para admin y para instalar el trigger. Desde aquí hasta el paso 6, la API acepta `insert` con la anon key (ventana corta; la web ya está en 503) |
 | 5 | SQL §0 (preflight) → anotar resultados; ejecutar `quelvo-maintenance.test.sql` → `0 failure(s)` | Detener si algo difiere |
 | 6 | SQL §1 (instalar; queda `maintenance = true`) → §3 (comprobaciones) | Bloqueo real activo |
@@ -205,7 +213,7 @@ Los Previews de este proyecto responden `302` hacia el login de Vercel. Opciones
 
 | ID | Riesgo | Mitigación |
 |---|---|---|
-| R-M9 | **[CORRECCIÓN APLICADA EN LA RAMA, opción B elegida por el propietario]** — ver §8.1. **Producción congelada desde el 2026-08-02 y Preview fallido.** El estado de GitHub de cada commit muestra que Vercel falla en todos los despliegues desde `569df74` (y en `4d0350a` y en el Preview `abc90c8`); el último correcto es `29c4b6f` (2026-06-30), que es lo que sirve producción (comprobado: `privacy.html` en producción = versión de `29c4b6f`; la 404 personalizada no está publicada). `569df74` añadió a `vercel.json` `cleanUrls`, `trailingSlash` y `errors`; **`errors` no es una propiedad documentada de `vercel.json`** y el estado enlaza a la documentación de configuración ⇒ causa casi segura (logs no consultados: requieren acceso a Vercel). | Requiere un commit en `vercel.json` (zona protegida) **autorizado**. Opciones validadas con `vercel build` local: **A** quitar sólo `errors` (cambia URLs `.html`, ver R-M1); **B (recomendada)** quitar `errors`, `cleanUrls` y `trailingSlash` = mismo comportamiento que producción hoy; la 404 personalizada funciona sin configuración. Cualquier merge futuro a `main` publicará también `569df74` y `4d0350a`. |
+| R-M9 | **[RESUELTO EN PRODUCCIÓN 2026-10-19: `vercel.json` opción B publicado con el hotfix `4ef6506` (deployment `7185173081`, `success`)]** — *Texto original:* **[CORRECCIÓN APLICADA EN LA RAMA, opción B elegida por el propietario]** — ver §8.1. **Producción congelada desde el 2026-08-02 y Preview fallido.** El estado de GitHub de cada commit muestra que Vercel falla en todos los despliegues desde `569df74` (y en `4d0350a` y en el Preview `abc90c8`); el último correcto es `29c4b6f` (2026-06-30), que es lo que sirve producción (comprobado: `privacy.html` en producción = versión de `29c4b6f`; la 404 personalizada no está publicada). `569df74` añadió a `vercel.json` `cleanUrls`, `trailingSlash` y `errors`; **`errors` no es una propiedad documentada de `vercel.json`** y el estado enlaza a la documentación de configuración ⇒ causa casi segura (logs no consultados: requieren acceso a Vercel). | Requiere un commit en `vercel.json` (zona protegida) **autorizado**. Opciones validadas con `vercel build` local: **A** quitar sólo `errors` (cambia URLs `.html`, ver R-M1); **B (recomendada)** quitar `errors`, `cleanUrls` y `trailingSlash` = mismo comportamiento que producción hoy; la 404 personalizada funciona sin configuración. Cualquier merge futuro a `main` publicará también `569df74` y `4d0350a`. |
 | R-M1 | **Cambio de URLs `.html`** si se despliega `vercel.json` con `cleanUrls`/`trailingSlash` (añadidos en `569df74`, nunca publicados). **Resuelto en la rama** con la opción B (se retiran; URLs como en producción). Retomar `cleanUrls` sólo dentro de P-002 (Fase 8). | — |
 | R-M2 | Middleware sin probar en la infraestructura real de Vercel | Preview obligatorio. Respaldo: redirección en cliente + trigger SQL. |
 | R-M3 | Supabase pausado: admin sin acceso; restaurarlo reabre la API de `bookings` hasta instalar el trigger; posible re-pausa por inactividad; plazo de restauración | Orden de §5; confirmar plazo en el panel; considerar plan de pago o tráfico periódico si el admin debe seguir accesible. |
@@ -228,7 +236,10 @@ Los Previews de este proyecto responden `302` hacia el login de Vercel. Opciones
 
 **Hipótesis** (sin logs de Vercel, que requieren acceso a la cuenta):
 - ~~Que la causa del fallo sea `vercel.json`~~ → **confirmado por resultado** (2026-10-19): con `fd31034` el Preview compila (`success`). Sigue sin confirmar con logs cuál de las tres propiedades era la culpable (lo más probable, `errors`).
-- Que la 404 personalizada se sirva en Vercel sin configuración (el build local genera la ruta `→ /404.html`; falta comprobarlo en el Preview).
+- Que la 404 personalizada se sirva en Vercel sin configuración (el build local genera la ruta `→ /404.html`; falta comprobarlo en el Preview). *(2026-10-19: sigue sin comprobar en producción: `4ef6506` retiró `404.html` temporalmente.)*
+
+**Confirmado después (2026-10-19, noche):** producción despliega de nuevo (`4ef6506`, `success`) con este `vercel.json` y con `headers`.
+Sigue sin confirmar el middleware en **producción** (sólo probado en Preview).
 - Que el middleware se ejecute en la infraestructura de Vercel igual que el artefacto en Node local.
 
 ## 9. Archivos que intervienen

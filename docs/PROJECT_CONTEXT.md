@@ -17,7 +17,7 @@ plataforma de transporte privado.
 - **Lema actual en el sitio [VERIFICADO]:** "Technology, automation & digital platforms for real-world needs."
 - **Misión:** crear tecnología práctica que ayude a personas y negocios a simplificar operaciones, mejorar su comodidad y conectar servicios mediante herramientas digitales modernas.
 - **Ubicación:** Miami, FL. Mercado objetivo: Miami-Dade y alrededores; servicios técnicos también en remoto.
-- **Contacto publicado [VERIFICADO]:** teléfono/WhatsApp +1 (786) 348-7458. Email: `contacto@jcdmtech.com` en `contact.html`, pero `info@jcdmtech.com` en `privacy.html`/`terms.html` → **inconsistencia por resolver**.
+- **Contacto publicado [VERIFICADO]:** teléfono/WhatsApp +1 (786) 348-7458. Email: `contacto@jcdmtech.com` en `contact.html`, pero `info@jcdmtech.com` en `privacy.html`/`terms.html` → **inconsistencia por resolver**. *(2026-10-19: afecta a las versiones nuevas de `4d0350a`, hoy no publicadas; las publicadas — `29c4b6f` — no incluyen email. Resolver antes de reincorporarlas.)*
 - **Tono:** moderno, fiable, práctico, profesional. Ni corporativo rígido ni informal.
 - **Idioma:** inglés por defecto con conmutador a español (`data-es`) **parcialmente implementado**. Algunas páginas (Music Ride, stubs legado) están sólo en español.
 
@@ -74,6 +74,9 @@ se ofrece realmente antes de reutilizar ese texto en Fase 3.
 > mientras el propietario se concentra en **Survivor Sports** (`https://survivor.jcdmtech.com`, proyecto independiente,
 > alojado en servidor propio, fuera de este repo). Siguen siendo productos propios; no se elimina nada.
 > Mecanismo preparado en local, **aún no activo en producción**. Ver `docs/MAINTENANCE_MODE.md`.
+> *Actualización 2026-10-19:* el mecanismo está commiteado en la rama `maintenance/quelvo-onesound` y probado en Preview,
+> pero **no publicado**: en producción (`4ef6506`) QUELVO y OneSound siguen abiertos. La suspensión real de OneSound
+> (su backend/app, otro repositorio) **no está implementada**. Survivor Sports sigue completamente independiente.
 >
 > **[VERIFICADO 2026-10-19] Supabase `jcdmtech-prod` está PAUSADO** (INACTIVE): login, cuenta, admin y reservas fallan hoy en producción.
 > Existe además una **app QUELVO de ride-hailing** (Expo + Fastify, `D:\quelvo`, repos `quelvo-app` / `quelvo-backend`,
@@ -138,8 +141,8 @@ Home Assistant + sensores IoT + automatizaciones; acceso remoto vía Cloudflare 
 | Problema (junio 2026) | Estado 2026-10-19 |
 |---|---|
 | Teléfono distinto entre booking.js y contacto | Resuelto: todo usa 17863487458 |
-| Privacidad y Términos eran stubs | Resuelto: contenido completo (commit `4d0350a`) — revisión legal no verificada |
-| Sin página 404 | Resuelto: `404.html` (commit `569df74`) |
+| Privacidad y Términos eran stubs | Contenido completo en el repo (commit `4d0350a`) — revisión legal no verificada. **No publicado:** producción sirve las versiones de `29c4b6f` (retirada temporal `4ef6506`; ver `PROJECT_STATUS.md` §0c) |
+| Sin página 404 | `404.html` en el historial (commit `569df74`). **No publicada:** retirada temporalmente en `4ef6506`; producción usa la 404 estándar de Vercel |
 | `/nosotros.html` mínimo | Resuelto: `about.html` completo; `/nosotros.html` redirige 308 |
 | `/blog/`, `/domotica/`, `/software/`, `/automatizaciones/` stubs | Persiste: siguen siendo stubs (ver `ROUTES.md`) |
 | Código de reserva no persistido | Resuelto en el flujo nuevo (tabla `bookings`) |

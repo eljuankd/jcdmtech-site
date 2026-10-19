@@ -65,12 +65,12 @@ Las decisiones D-001…D-008 se reconstruyen de la documentación de junio 2026 
 
 ---
 
-### D-014 · 2026-10-19 · Vigente (en rama, sin desplegar) — Cabeceras de seguridad y CSP progresiva
+### D-014 · 2026-10-19 · Vigente (en producción desde `4ef6506`; antes: en rama, sin desplegar) — Cabeceras de seguridad y CSP progresiva
 - **Decisión:** cabeceras globales en `vercel.json` (`nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`) y CSP primero en **Report-Only** con los orígenes del inventario. El 503 del middleware repite las básicas.
 - **Motivo:** J-05 de la auditoría; la CSP en modo informe no puede romper Maps, Supabase, Formspree ni GA.
 - **Consecuencias:** se mantiene `'unsafe-inline'` (JS inline y `onclick`); pasar a CSP bloqueante requiere revisar violaciones en Preview/producción y, para que proteja frente a XSS, sacar el JS inline (fase posterior).
 
-### D-015 · 2026-10-19 · Vigente (en rama, sin desplegar) — SQL y archivos internos fuera de la raíz publicada
+### D-015 · 2026-10-19 · Vigente (en producción desde `4ef6506`; antes: en rama, sin desplegar) — SQL y archivos internos fuera de la raíz publicada
 - **Decisión:** SQL en `supabase/` (`legacy/` histórico, `migrations/` nuevas) y archivos sueltos en `archive/`; `jcdmtech/.vercelignore` como segunda barrera.
 - **Motivo:** J-04 (`/copy.zip`, `/supabase-setup.sql` públicos).
 - **Consecuencias:** el repositorio es público: lo que esté en `supabase/` y `docs/` sigue visible en GitHub; no versionar secretos ni detalles de explotación.
@@ -79,6 +79,11 @@ Las decisiones D-001…D-008 se reconstruyen de la documentación de junio 2026 
 - **Decisión:** la migración de seguridad sustituye **todas** las políticas de `profiles`, `bookings`, `vehicles`, `drivers` (tras guardarlas) por un conjunto conocido; permisos por columna; `role` nunca editable desde la API; `public.is_admin()` `SECURITY DEFINER` en lugar de la política recursiva.
 - **Motivo:** las políticas permisivas se suman (OR): una antigua desconocida reabriría el acceso. Esquema remoto no versionado (R-01).
 - **Requiere:** restaurar Supabase y ejecutar el procedimiento de `docs/SECURITY_REMEDIATION.md` §4.4 con autorización.
+
+### D-017 · 2026-10-19 · Vigente (en producción) — Hotfix de seguridad independiente y retirada temporal de legales/404
+- **Decisión:** publicar la seguridad web (J-03/J-04/J-05 + `vercel.json` válido) desde la rama `hotfix/security-2026-10`, sin la suspensión ni la migración; mantener `privacy.html`/`terms.html` como en `29c4b6f` y retirar `404.html` (`4ef6506`) hasta su revisión.
+- **Motivo:** corregir producción sin activar la suspensión y sin publicar textos legales no revisados (aprobado por el propietario, opción R1).
+- **Consecuencias:** `main` contiene un commit de retirada que una fusión hacia la rama de mantenimiento adopta sin conflicto. Reincorporación sólo con `git revert 4ef6506` tras aprobación (`docs/PROJECT_STATUS.md` §0c). La sincronización entre ramas es `main` → mantenimiento; la inversa publica la suspensión.
 
 ## Decisiones propuestas (pendientes de aprobación)
 

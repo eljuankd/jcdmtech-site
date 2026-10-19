@@ -1,7 +1,7 @@
 # CLAUDE.md — JCDM Technologies LLC (jcdmtech.com)
 
 Instrucciones persistentes para cualquier sesión de Claude Code en este repositorio.
-Última revisión: 2026-10-19 (Fase 1 — Auditoría).
+Última revisión: 2026-10-19 (Fase 1 — Auditoría; actualizado tras publicar el hotfix de seguridad R1 `4ef6506`).
 
 ---
 
@@ -48,6 +48,13 @@ Reglas adicionales derivadas de la auditoría:
 - **Secretos:** no imprimir en la salida ni copiar a documentos la anon key de Supabase ni la API key de Google Maps. Referirse a ellas por archivo.
 - **Repositorio público** (`github.com/eljuankd/jcdmtech-site`): no versionar secretos ni detalles de explotación de vulnerabilidades abiertas. SQL fuera de `jcdmtech/` (en `supabase/`); nada interno en la raíz publicada (D-015).
 - **Commits:** sólo cuando el usuario lo pida. Formato convencional `tipo(ámbito): descripción` (ver `git log`).
+- **Ramas (2026-10-19):** la rama `maintenance/quelvo-onesound` tiene los flags de suspensión en `true`
+  (`jcdmtech/js/maintenance.config.js`). **Nunca fusionarla en `main`** sin autorización expresa de activar la suspensión:
+  publicaría el 503 de QUELVO y ocultaría OneSound. La sincronización autorizable es sólo `main` → mantenimiento
+  (`docs/PROJECT_STATUS.md` §0b).
+- **Páginas legales y 404:** `4ef6506` retiró temporalmente las versiones nuevas de `privacy.html`, `terms.html` y `404.html`.
+  No restaurarlas sin aprobación del propietario; procedimiento en `docs/PROJECT_STATUS.md` §0c. Tras cualquier fusión,
+  comprobar esos tres archivos.
 
 ---
 
@@ -57,7 +64,7 @@ Reglas adicionales derivadas de la auditoría:
 |---|---|
 | Tipo | Sitio estático multipágina (MPA): HTML + CSS + JavaScript vanilla. Sin framework, sin build, sin `package.json`. |
 | Raíz del sitio | `jcdmtech/` (todo lo publicado vive aquí; `vercel.json` está en esta carpeta) |
-| Hosting | Vercel. Producción `https://www.jcdmtech.com` (el apex redirige 307 a `www`). **Producción NO coincide con `main`:** sirve el commit `29c4b6f` (2026-06-30); todos los despliegues desde `569df74` (2026-08-02) fallan (estado de GitHub verificado 2026-10-19; causa inferida, logs no consultados: propiedad no válida `errors` en `vercel.json`, ver `docs/MAINTENANCE_MODE.md` §8.1). Corrección (opción B: `vercel.json` = versión de `29c4b6f`) aplicada en la rama `maintenance/quelvo-onesound`; `main` sin corregir. |
+| Hosting | Vercel. Producción `https://www.jcdmtech.com` (el apex redirige 307 a `www`). **Desde el 2026-10-19 producción = `origin/main` = `4ef6506`** (hotfix de seguridad R1; deployment GitHub `7185173081`, `success`); los despliegues vuelven a funcionar. Publicado: J-03, J-04, J-05 (CSP sólo Report-Only). **No** publicado: suspensión de QUELVO/OneSound, migración de Supabase, textos legales nuevos y `404.html` (retirados temporalmente en `4ef6506`; ver `docs/PROJECT_STATUS.md`). *Histórico:* del 2026-08-02 al 2026-10-19 producción quedó congelada en `29c4b6f` por `vercel.json` no válido (R-M9, `docs/MAINTENANCE_MODE.md` §8.1). Ojo: la rama **local** `main` puede ir detrás de `origin/main`; comprobar siempre `origin/main` tras `git fetch`. |
 | Servidor local | VS Code Live Server con raíz `/jcdmtech` (`.vscode/settings.json`). Los partials se cargan con `fetch()`, por lo que **no funciona abriendo los HTML con `file://`**. |
 | Backend | Supabase (Auth + Postgres) consumido desde el navegador. Config en `jcdmtech/js/supabase.config.js`. |
 | CSS global | `jcdmtech/styles.css` + mucho CSS inline por página (ver `docs/DESIGN_SYSTEM.md`). |

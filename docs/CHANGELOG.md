@@ -3,7 +3,33 @@
 Historial de cambios del sitio y de la documentación (más reciente primero).
 Desde 2026-10-19 cada entrada indica la fase del plan de 8 fases.
 
+## 2026-10-19 — Producción: hotfix de seguridad R1 (`4ef6506`)
+
+Publicado en `https://www.jcdmtech.com` (fast-forward `4d0350a..4ef6506` en `main`; deployment `7185173081`, `success`).
+Rama `hotfix/security-2026-10`, independiente del mantenimiento.
+
+### Publicado
+- `vercel.json` válido (opción B): Vercel vuelve a desplegar; 22 redirects sin cambios (`324ecfc`).
+- J-03 validación de `next` en el login (`fee2858`); J-04 `/copy.zip` y `/supabase-setup.sql` → 404 (`c9611e1`);
+  J-05 cabeceras de seguridad, CSP sólo **Report-Only** (`d30c02c`).
+
+### Retirado temporalmente
+- `privacy.html`/`terms.html` vuelven a las versiones de `29c4b6f`; `404.html` retirada (`4ef6506`). Los textos nuevos
+  (`4d0350a`, `569df74`) siguen en el historial, pendientes de revisión legal.
+
+### No incluido
+- Suspensión de QUELVO/OneSound, migración RLS de Supabase (no ejecutada; Supabase INACTIVE), protecciones de OneSound.
+
+Pruebas en producción (sólo lectura): 110/110 HTTP, 139/139 navegador.
+
+## 2026-10-19 — Documentación: organización de ramas tras el hotfix (sin commit)
+
+- Estado real de ramas tras `git fetch`; simulación `main` → mantenimiento sin conflictos; procedimientos de sincronización
+  y de reincorporación de textos legales (`PROJECT_STATUS.md` §0b–§0d); documentos actualizados a la producción `4ef6506`.
+
 ## 2026-10-19 — Seguridad: Fase 1 de remediación (local, sin commit)
+
+> Encabezado histórico: después se commiteó en la rama (`c4516e3`…`c10ce02`) y J-03/J-04/J-05 se publicaron con el hotfix R1.
 
 ### Corregido
 - Login: el destino `next` sólo admite rutas internas (`js/safe-next.js`); también en los enlaces mágicos (J-03).

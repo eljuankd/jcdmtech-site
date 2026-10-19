@@ -2,7 +2,10 @@
 
 > Creado: 2026-10-19. Origen: auditoría de seguridad del 2026-10-19 (informe entregado al propietario en la conversación;
 > **no** se publica aquí con detalle de explotación porque este repositorio es **público**).
-> Estado: **preparado y probado en local, sin commit, sin desplegar.** Rama `maintenance/quelvo-onesound`.
+> Estado original: **preparado y probado en local, sin commit, sin desplegar.** Rama `maintenance/quelvo-onesound`.
+> **Estado al 2026-10-19 (noche):** J-03, J-04 y J-05 **publicados en producción** con el hotfix R1 `4ef6506`
+> (rama `hotfix/security-2026-10`; 110/110 HTTP, 139/139 navegador). J-01/J-02/J-06: migración **no ejecutada**
+> (sólo en la rama de mantenimiento; Supabase INACTIVE). OneSound O-01…O-05: sin implementar.
 >
 > Etiquetas: **[VERIFICADO]** probado; **[HIPÓTESIS]** pendiente de comprobar en Vercel/Supabase reales.
 
@@ -20,6 +23,7 @@
 
 Producción sigue sirviendo `29c4b6f` (despliegues bloqueados hasta publicar `fd31034`). **Nada de esto llega a producción
 hasta un despliegue autorizado** (§6).
+*(Superado: producción = `4ef6506` desde el 2026-10-19; J-03 y J-04 "corregidos en local" y J-05 "preparado" están ya en producción.)*
 
 ---
 
@@ -153,6 +157,10 @@ cierra las sesiones activas ⇒ planificar en una franja de bajo uso, probar en 
    consola sin violaciones de CSP (incluidos Maps y GA4 reales); redirects y 503 de QUELVO (`scripts/verify-maintenance.sh`).
 3. Merge a `main` = producción: publica también `569df74`, `4d0350a`, la suspensión de QUELVO y estas correcciones.
 4. Después, y sólo entonces, el procedimiento de Supabase (§4.4).
+
+*(2026-10-19: los pasos 1–2 se hicieron; el paso 3 se sustituyó por el hotfix independiente `4ef6506` — D-017 — que publicó
+sólo la seguridad web. Queda el paso 4, que requiere restaurar Supabase con autorización. Ordenarlo con la decisión de
+activar o no la suspensión de QUELVO: `MAINTENANCE_MODE.md` §5.)*
 
 ## 7. Registro de pruebas (2026-10-19, todo en local)
 

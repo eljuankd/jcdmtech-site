@@ -102,8 +102,9 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 - [x] **R-M9:** `vercel.json` corregido en la rama con la opción B (autorizado): sin `errors`, `cleanUrls`, `trailingSlash`; idéntico a `29c4b6f`; `vercel build` local OK
 - [x] Preview de `fd31034` compila (`success`) — causa en `vercel.json` confirmada por resultado
 - [ ] Token de bypass del Preview fuera del repo (`MAINTENANCE_MODE.md` §6.1)
-- [ ] Repetir Preview: `scripts/verify-maintenance.sh <preview>` con 0 fallos + pruebas de navegador contra el Preview
-- [ ] **Autorización:** merge/push a `main` → producción; script contra producción
+- [x] Repetir Preview (`c10ce02`): revisado por el propietario con su sesión — QUELVO 503 + `Retry-After`, cabeceras, archivos internos 404 *(el script con bypass sigue pendiente)*
+- [ ] **Autorización:** sincronizar `main` (`4ef6506`) → rama de mantenimiento (`PROJECT_STATUS.md` §0b; simulación sin conflictos)
+- [ ] **Autorización:** publicar la suspensión en producción (llevar la rama a `main`; **activa el 503 de QUELVO y oculta OneSound** porque los flags están en `true`); script contra producción
 - [ ] **Autorización:** restaurar Supabase `jcdmtech-prod` (después del despliegue web) y confirmar plazo de restauración
 - [ ] **Autorización:** preflight + `quelvo-maintenance.test.sql` + instalación de `docs/sql/quelvo-maintenance.sql`
 - [ ] **Autorización + acceso:** OneSound — repo `jcdm-music-ride`, Render y Vercel (§3.1)
@@ -116,8 +117,10 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 - [x] J-04 `copy.zip` y `supabase-setup.sql` fuera de la raíz publicada + `.vercelignore` (local, probado)
 - [x] J-05 cabeceras de seguridad, CSP en Report-Only (local, probado)
 - [x] J-01/J-02/J-06 migración de roles/RLS preparada y probada en PGlite (**no aplicada**)
-- [ ] Autorizar commit(s) → Vercel Preview con bypass: cabeceras, 404 de archivos internos, `next`, CSP sin violaciones (Maps/GA reales)
-- [ ] Producción (merge a `main`) — publica también `569df74`, `4d0350a` y la suspensión
+- [x] Commits en la rama + Preview (`c10ce02`) y hotfix independiente `hotfix/security-2026-10` + Preview (`4ef6506`) — revisados por el propietario
+- [x] **Producción (2026-10-19):** hotfix R1 `4ef6506` (J-03, J-04, J-05; sin suspensión, sin legales nuevos ni 404) — 110/110 HTTP, 139/139 navegador *(sustituye a la idea anterior de "merge de la rama a `main`", que habría publicado también `569df74`, `4d0350a` y la suspensión)*
+- [ ] Revisar violaciones reales de la CSP Report-Only en producción (Maps/GA)
+- [ ] Decidir el tratamiento de `archive/copy.zip` y `supabase/legacy/supabase-setup.sql` en el repositorio público (ya no se sirven; siguen en árbol e historial). No borrar sin autorización
 - [ ] Supabase: restaurar → preflight → migración → verify → pruebas de login/cuenta/admin (§4.4)
 - [ ] CSP bloqueante (tras revisar violaciones; sacar JS inline para quitar `unsafe-inline`)
 - [ ] Pendientes de auditoría: fijar versión de supabase-js (R-13), restricción de claves de Maps/YouTube en Google Cloud, escape en `buildSummary()` (R-15), anti-spam en reservas y contacto, PKCE, monitorización y alertas
@@ -125,7 +128,9 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 
 ## 9. Pendientes transversales / bloqueos
 
-- [ ] **Seguridad (recomendado antes de Fase 2, como hotfix aislado):** validar `next` en `login.html` (sólo rutas relativas que empiecen por `/` y no por `//`) — R-03.
+- [x] **Seguridad (recomendado antes de Fase 2, como hotfix aislado):** validar `next` en `login.html` (sólo rutas relativas que empiecen por `/` y no por `//`) — R-03. *Publicado en producción (`4ef6506`, 2026-10-19).*
+- [ ] **Textos legales y 404** retirados temporalmente en `4ef6506`: revisión legal (incluido email `info@` vs `contacto@`) → reincorporar con el procedimiento de `PROJECT_STATUS.md` §0c.
+- [ ] Alinear la rama local `main` con `origin/main` (`git merge --ff-only origin/main`; hoy 5 commits detrás) — sólo con autorización.
 - [ ] Obtener esquema y políticas RLS reales de Supabase (reintentar MCP o exportar desde el panel) — R-01, R-02, R-08.
 - [ ] Confirmar restricción por referrer de la API key de Google Maps — R-14.
 - [ ] Validar con el propietario la lista de afirmaciones [POR VALIDAR] (`PROJECT_AUDIT.md` §6, R-06).
@@ -147,10 +152,10 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 | Actualizar about y contact | Hecho (como `about.html`, `contact.html`) |
 | vercel.json y sitemap con nuevas rutas | Hecho (revisar en Fase 8) |
 | Teléfono inconsistente | Hecho |
-| 404 | Hecho |
+| 404 | Hecho en el repo (`569df74`); **no publicada** (retirada temporal `4ef6506`) |
 | robots.txt | Parcial (Fase 8) |
 | Music Ride como feature de QUELVO | Parcial (Fase 5) |
-| Privacidad / Términos completos | Hecho (`4d0350a`) |
+| Privacidad / Términos completos | Hecho en el repo (`4d0350a`); **no publicados** (retirada temporal `4ef6506`, pendiente de revisión legal) |
 | Blog con posts | Pendiente — fuera del plan |
 | Stubs domotica/software/automatizaciones → /services/ | Parcial: sin barra redirige; con barra sirve stub (Fase 8) |
 | Persistir códigos de reserva | Hecho (tabla `bookings`) |

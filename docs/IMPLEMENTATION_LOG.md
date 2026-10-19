@@ -327,3 +327,182 @@ difiere de él; si la recursión se resolvió quitando la política de admin, J-
 ### Resultado
 Preparado y probado en local. Sin commit. Sin cambios en producción, Supabase, OneSound, Survivor ni DNS.
 Pendiente: autorización de commit → Preview → producción → procedimiento de Supabase (`SECURITY_REMEDIATION.md` §4.4, §6).
+
+---
+
+## 2026-10-19 — Commits de seguridad, push a la rama y Vercel Preview (autorizado)
+
+Autorización: commits separados y push **sólo** a `maintenance/quelvo-onesound`. Sin `main`, producción, Supabase, OneSound, Survivor.
+
+### Commits (sobre `fd31034`)
+| Hash | Mensaje |
+|---|---|
+| `c4516e3` | fix(auth): only allow same-origin destinations after sign-in |
+| `bc9b189` | chore(security): stop publishing internal files from the site root (renombrados R100, historial conservado) |
+| `b6b821d` | feat(security): add HTTP security headers and report-only CSP |
+| `01037ee` | feat(maintenance): send baseline security headers on 503 responses (sólo rama; separado para el hotfix) |
+| `f8d07a4` | feat(db): prepare Supabase roles/RLS security migration (not applied) |
+| `ddee55f` | test(security): add browser checks against a local vercel build |
+| `c10ce02` | docs(security): record audit remediation and preview results (incluye los resultados de `fd31034` que estaban sin commit) |
+
+Antes del push: escaneo de credenciales del rango `fd31034..c10ce02` limpio; sin rutas temporales; pruebas 4/4 y 83/83 sobre el árbol commiteado.
+El detalle de OneSound se movió a `docs/private/` (en `.gitignore`): el repo es público y OneSound sigue en producción sin corregir.
+
+### Vercel Preview
+- Estado GitHub `Vercel`: **success**. URL: `https://jcdmtech-site-nvgubpe83-juanks-projects-50846d74.vercel.app` (deployment GitHub `7181602367`).
+- Protegido por Vercel Authentication (302 a `vercel.com/sso-api`); sin token de bypass ⇒ **pruebas funcionales en el Preview pendientes** (revisión por el propietario con su sesión; script de consola probado en local 31/31).
+
+### Prueba en seco del hotfix (worktree temporal desacoplado, eliminado; sin ramas ni push)
+- Sobre `main` (`4d0350a`): `vercel.json` tomado de `fd31034` (sólo el archivo: el commit completo choca en docs inexistentes en `main`) + cherry-pick `c4516e3 bc9b189 b6b821d f8d07a4` → sin conflictos.
+- Árbol resultante vs. producción (`29c4b6f`): sólo seguridad + `404.html`, `privacy.html`, `terms.html` (ya en `main`). Sin middleware ni marcado de mantenimiento.
+- `vercel build` OK; local: `/quelvo/`, `/quelvo/book/`, `/music-ride/` 200; enlaces de reserva y de OneSound visibles; cabeceras 5/5; `/copy.zip`, `/supabase-setup.sql` 404; navegador 82/88 (las 6 diferencias son las comprobaciones de mantenimiento, esperadas).
+- Fusión simulada de la rama de mantenimiento sobre el hotfix: automática, sin conflictos.
+
+### Estado
+Producción sin cambios (`privacy.html` = `29c4b6f`; `/copy.zip` aún 200). OneSound 200, `/health` ok. Survivor: sin peticiones.
+
+---
+
+## 2026-10-19 — Hotfix de seguridad independiente del mantenimiento: rama `hotfix/security-2026-10` y Preview (autorizado)
+
+Autorización: crear la rama, commits y push **sólo** a ella; Preview. Sin `main`, producción, Supabase, SQL, Render, OneSound, Survivor, DNS.
+Revisión del propietario del Preview anterior (`c10ce02`): QUELVO 503 + `Retry-After: 86400`, cabeceras, `/copy.zip` y `/supabase-setup.sql` 404, navegación correcta.
+
+### Estado inicial
+`main` = `origin/main` = `4d0350a`; `maintenance/quelvo-onesound` = `c10ce02` (local = remoto); pendientes sin commit: `IMPLEMENTATION_LOG.md`, `PROJECT_STATUS.md` (copia de seguridad en el scratchpad; conservados).
+Hotfix preparado en un **worktree aparte** (sin tocar el árbol de mantenimiento; sin reset/clean/stash).
+
+### Commits (`hotfix/security-2026-10`, sobre `4d0350a`)
+| Hash | Origen | Contenido |
+|---|---|---|
+| `324ecfc` | sólo `jcdmtech/vercel.json` de `fd31034` | `vercel.json` = producción (`29c4b6f`); 22 redirects |
+| `fee2858` | cherry-pick `-x` de `c4516e3` | validación de `next` (mismo patch-id) |
+| `c9611e1` | cherry-pick `-x` de `bc9b189` | archivos internos fuera de la raíz + `.vercelignore` (mismo patch-id) |
+| `d30c02c` | cherry-pick `-x` de `b6b821d` | cabeceras + CSP Report-Only (mismo patch-id) |
+
+Excluidos: `abc90c8` (suspensión), `01037ee` (middleware), `f8d07a4` (migración SQL), `ddee55f` (pruebas e2e de mantenimiento), docs. Decisión: `fd31034` completo choca con documentación inexistente en `main` ⇒ sólo su `vercel.json`.
+Sin documentación en el hotfix (evita divergencias de `docs/` con la rama de mantenimiento); esta entrada vive en la rama de mantenimiento.
+
+### Pruebas (locales, salida de `npx vercel@64.5.0 build` del hotfix; sin tráfico externo)
+| Prueba | Resultado |
+|---|---|
+| Build | OK; 53 estáticos, sin `.zip`/`.sql`; 22 redirects; cabeceras; **sin middleware** |
+| `node --test scripts/tests/safe-next.test.mjs`; `node --check`; enlaces | 4/4; OK; sólo `safari-pinned-tab.svg` (conocido) |
+| Chrome headless, variante sin mantenimiento (scratchpad `tools/e2e-hotfix.mjs`) | **133/133**: login (`next` legítimos/maliciosos, magic link, `SIGNED_IN`, reset, registro); 16 páginas 200/404 sin violaciones de CSP, sin errores JS y sin avisos de suspensión; `/admin/` no enmarcable; Home con 4 servicios + enlace de reserva + enlace a OneSound; QUELVO con enlaces de reserva; wizard pasos 1→3 (nunca confirmado); Music Ride → app; menú móvil; EN/ES; claro/oscuro; 9 rutas antiguas; formulario de contacto con opción QUELVO activa |
+| Control negativo: misma batería contra el build de mantenimiento | falla en avisos, 503 y enlaces ocultos (la prueba discrimina) |
+| Script de consola para el Preview (`preview-console-check-hotfix.js`) en local | hotfix 74/74; control mantenimiento 59/74 |
+| Escaneo de credenciales `main..d30c02c` | limpio |
+
+Ajuste durante las pruebas: el detector de avisos marcaba cláusulas legales de `terms.html` ("modify, suspend, or discontinue", "interruptions due to maintenance"); se restringió a las frases reales de los avisos del sitio.
+
+### Vercel Preview
+`success` — `https://jcdmtech-site-211ssi2ck-juanks-projects-50846d74.vercel.app` (deployment GitHub `7183158107`). Protegido (302 a `vercel.com/sso-api`): revisión en el Preview pendiente del propietario.
+
+### Diferencias con producción (`29c4b6f`) que publicaría el hotfix
+Seguridad (`login.html`, `js/safe-next.js`, `vercel.json` headers, `.vercelignore`, retirada de `copy.zip`/`supabase-setup.sql`) **y** contenido de `main` aún no publicado: `404.html` nueva (`569df74`), `privacy.html` y `terms.html` completas (`4d0350a`; hoy en producción son esbozos). Revisión legal **no verificada**.
+
+### Estado
+Producción sin cambios (`privacy.html` = `29c4b6f`; `/quelvo/`, `/quelvo/book/` 200; `/copy.zip` aún 200). OneSound 200, `/health` ok. Survivor: sin peticiones. Remoto: `main` `4d0350a`, mantenimiento `c10ce02`, hotfix `d30c02c`.
+
+---
+
+## 2026-10-19 — Hotfix R1: páginas legales y 404 como en producción (rama `hotfix/security-2026-10`, autorizado)
+
+Validación previa del propietario en el Preview `d30c02c`: QUELVO 200 sin suspensión, `/copy.zip` y `/supabase-setup.sql` 404, cabeceras presentes, OneSound abierto.
+Autorización: commit y push **sólo** a `hotfix/security-2026-10`. Sin `main`, producción, Supabase, SQL, Render, OneSound, Survivor, DNS.
+
+### Cambio
+Commit `4ef6506` chore(hotfix): keep legal pages and 404 as in production (temporary) — worktree aparte:
+- `jcdmtech/privacy.html`, `jcdmtech/terms.html` ← versiones de `29c4b6f` (blobs `ce65830…`, `8e48261…` idénticos a producción).
+- `jcdmtech/404.html` retirado (no existía en `29c4b6f`; ningún archivo lo referencia). Vercel sirve su 404 estándar, como hoy en producción.
+- **Temporal:** los textos legales completos (`4d0350a`) y la 404 (`569df74`) siguen en el historial de `main`. Reincorporación: `git revert 4ef6506` en `main` cuando se aprueben. Riesgo documentado: hasta entonces, cualquier fusión entre `main` y la rama de mantenimiento mantendrá la retirada sin conflicto (la rama de mantenimiento no tocó esos archivos tras `4d0350a`) ⇒ revisar esos 3 archivos tras cada fusión.
+
+### Diferencia del sitio publicado respecto a producción (`29c4b6f`)
+Sólo seguridad: `login.html` (import + `safeNext`), `js/safe-next.js`, `vercel.json` (`headers`), `.vercelignore`, retirada de `copy.zip` y `supabase-setup.sql`. Fuera de la raíz publicada: `.gitignore`, `archive/`, `supabase/legacy/`, `scripts/tests/safe-next.test.mjs`.
+
+### Pruebas (locales)
+| Prueba | Resultado |
+|---|---|
+| `npx vercel@64.5.0 build` | OK; 52 estáticos; sin `.zip`/`.sql`/`404.html`; 22 redirects; cabeceras; sin middleware; ruta de error estándar de Vercel |
+| Páginas legales vs. `29c4b6f` y producción | idénticas (blob Git y contenido; la diferencia de MD5 local era sólo CRLF de `core.autocrlf`) |
+| Chrome headless (`tools/e2e-hotfix.mjs` + 6 comprobaciones R1) | **139/139**; control con el build anterior (textos nuevos + 404 personalizada): las 6 de R1 fallan |
+| Script de consola del Preview, en local | 78/78; control 74/78 |
+| Unitarias `safe-next`, `node --check`, enlaces, credenciales `main..4ef6506` | 4/4; OK; sólo `safari-pinned-tab.svg` (conocido); 0 |
+
+### Vercel Preview
+`success` — `https://jcdmtech-site-plc4kclv7-juanks-projects-50846d74.vercel.app` (deployment GitHub `7184394348`), protegido (302 a `vercel.com/sso-api`). Revisión en el Preview pendiente del propietario (script de consola R1 78/78 en local).
+Remoto: `main` `4d0350a`, mantenimiento `c10ce02`, hotfix `4ef6506`. Producción sin cambios (`/copy.zip` y `/supabase-setup.sql` aún 200 en producción). OneSound 200. Survivor sin peticiones.
+
+---
+
+## 2026-10-19 — PUBLICACIÓN EN PRODUCCIÓN del hotfix de seguridad R1 (autorizada: sólo `4ef6506`)
+
+Autorización expresa del propietario tras revisar el Preview `4ef6506` (78/78 PASS) y las 139 pruebas locales.
+
+### Verificaciones previas
+- `git fetch`: `origin/main` = `4d0350a`, `origin/hotfix/security-2026-10` = `4ef6506`, `origin/maintenance/quelvo-onesound` = `c10ce02`. Fast-forward `4d0350a → 4ef6506` confirmado (`merge-base --is-ancestor`).
+- Commits `main..4ef6506`: `324ecfc`, `fee2858`, `c9611e1`, `d30c02c`, `4ef6506` (los autorizados).
+- Sitio publicado vs. producción anterior (`29c4b6f`): sólo `.vercelignore` (A), `js/safe-next.js` (A), `login.html` (M: `safeNext`), `vercel.json` (M: `headers`), `copy.zip` y `supabase-setup.sql` (D). `privacy.html`/`terms.html`: blobs idénticos a `29c4b6f`. Sin `404.html`, middleware, `maintenance.config.js`, `maintenance/`, marcado `data-maint`, migraciones ni `docs/private`. 22 redirects idénticos a producción. 0 coincidencias de credenciales.
+- Punto de recuperación: despliegue de producción de `29c4b6f` — GitHub deployment `5259892954`, Vercel `jcdmtech-site-vewbk2hqt-juanks-projects-50846d74.vercel.app` (`success`). `569df74`/`4d0350a` habían fallado (no válidos). Sin CLI de Vercel autenticada en esta máquina ⇒ un Instant Rollback lo ejecutaría el propietario desde el panel.
+
+### Publicación
+- `git push origin 4ef6506…:refs/heads/main` → `4d0350a..4ef6506` (fast-forward, sin force). GitHub API: `main` = `4ef65060be583ddda4aa701d17907e0482886208`.
+- Vercel: deployment de **producción** GitHub `7185173081` → `success`; URL `jcdmtech-site-2yxoa5uov-juanks-projects-50846d74.vercel.app`; inspector `9Gr9tUtcAZ4zS8u3B2ArZXUSvN9t`. `www.jcdmtech.com` sirve el contenido nuevo (cabeceras y `safe-next.js` presentes).
+
+### Comprobaciones en producción (sólo lectura)
+- HTTP/cabeceras/redirects (`tools/prod-check.sh`): **110/110** — 21 rutas 200 (Home, Services, Projects, About, Contact, Login, QUELVO, `/quelvo/book/`, Music Ride, legales, cuenta, admin…); `/copy.zip`, `/supabase-setup.sql`, `/.vercelignore`, `/vercel.json`, `/middleware.js`, `/maintenance/quelvo/`, `/js/maintenance.config.js`, `/404.html` → 404; ruta desconocida → 404 estándar de Vercel; 22 redirects correctos; en 6 páginas: nosniff, XFO DENY, Referrer-Policy, Permissions-Policy, CSP **Report-Only** (sin CSP aplicada), HSTS; `login.html` usa `safeNext`; legales idénticas a `29c4b6f`; QUELVO con "Book a Ride" y wizard; sin avisos de mantenimiento; enlace a `https://music-ride.jcdmtech.com/`; 4 secciones de servicios; OneSound app 200 y `/health` ok.
+- Navegador contra `https://www.jcdmtech.com` (tráfico externo bloqueado, supabase-js simulado, sin envíos): **139/139**.
+- Supabase (`list_projects`, lectura): `jcdmtech-prod` y `quelvo-prod` INACTIVE.
+
+### Rollback
+No necesario.
+
+### Estado activo en producción
+Corregido y desplegado: J-03 (`next` del login), J-04 (archivos internos), J-05 (cabeceras; CSP en Report-Only).
+**No** corregido: J-01/J-02/J-06 (roles/RLS de Supabase; migración sólo en la rama de mantenimiento, sin aplicar). Mantenimiento de QUELVO no activado. Textos legales nuevos no publicados (retirada temporal `4ef6506`).
+
+---
+
+## 2026-10-19 — Organización de Git y documentación posterior al hotfix (sólo documentación local)
+
+Autorización: modificaciones locales de documentación y comprobaciones seguras. **Sin** commit, push, merge, cambios en
+`main`, Vercel, Supabase, SQL, OneSound, DNS ni Survivor.
+
+### Estado de Git (tras `git fetch origin`)
+| Ref | Commit | ¿Coincide con lo esperado? |
+|---|---|---|
+| `origin/main` | `4ef6506` | sí |
+| `hotfix/security-2026-10` / `origin/…` | `4ef6506` / `4ef6506` | sí |
+| `maintenance/quelvo-onesound` / `origin/…` | `c10ce02` / `c10ce02` | sí |
+| `main` **local** | `4d0350a` | **no** — 5 commits detrás de `origin/main`, sin divergencia |
+
+Causa revisada: el push de producción fue `4ef6506:refs/heads/main` desde el worktree del hotfix; la rama local `main` no se
+movió. No es un problema del remoto; no se corrigió (cambiar `main` no estaba autorizado). Un único worktree; sin stash.
+Pendientes previos: `docs/IMPLEMENTATION_LOG.md`, `docs/PROJECT_STATUS.md`. Ignorados a preservar: `docs/private/`
+(`ONESOUND_SECURITY_PLAN.md`), `.claude/settings.local.json`.
+
+### Copia de seguridad (antes de editar)
+Scratchpad `backup-2026-10-19/`: ambos documentos (SHA-256 idénticos al original), `uncommitted.diff` (157 líneas) y
+`docs/private/`. Ruta completa en `PROJECT_STATUS.md` §0d.
+
+### Simulación de integración `main` → mantenimiento (sin tocar refs)
+- `git merge-tree --write-tree maintenance/quelvo-onesound origin/main` → exit 0, **sin conflictos** (árbol `e0ec7f2`).
+- Cambios respecto a `c10ce02`: sólo `jcdmtech/404.html` (eliminado), `privacy.html`, `terms.html` (versiones de `29c4b6f`).
+- `vercel.json`, `.vercelignore`, `login.html`, `js/safe-next.js` idénticos en ambas ramas; middleware, flags, página de
+  mantenimiento, migración RLS, `docs/sql/` y pruebas sin cambios.
+- Reversión de `4ef6506` simulada (`merge-tree --merge-base=4ef6506 … 4ef6506^`) sobre `origin/main` y sobre un commit de
+  fusión simulado (objeto suelto creado con `commit-tree`, **sin ref**; lo limpiará `git gc`): limpia en ambos casos;
+  restaura los blobs `4f7f7ba` (privacy), `9169e1c` (terms), `616111d` (404) de `4d0350a`/`569df74`.
+- Hallazgo: `maintenance.config.js` tiene `quelvo.maintenance: true` y `onesound.maintenance: true` ⇒ fusionar la rama en
+  `main` activaría la suspensión en producción. Documentado como regla en `CLAUDE.md` y en `PROJECT_STATUS.md` §0b.
+
+### Documentos actualizados
+`CLAUDE.md` (§2 producción = `4ef6506`; reglas de ramas y legales), `PROJECT_STATUS.md` (cabecera, estado por nivel,
+§0b sincronización, §0c legales, §0d backups, bloqueos B-6…B-10, próximo paso), `PROJECT_CONTEXT.md`, `PROJECT_AUDIT.md`
+(R-22 resuelto; J-03/J-04/J-05 en producción), `TODO.md`, `MAINTENANCE_MODE.md` (estado, paso 3′, R-M9 resuelto),
+`CHANGELOG.md`, y por coherencia `DECISIONS.md` (D-014/D-015 en producción; nueva D-017), `SECURITY_REMEDIATION.md`,
+`ROUTES.md`. Contenido previo conservado: los estados superados se marcan como históricos en lugar de borrarse.
+
+### Comprobaciones
+`git diff --check`; recuento de líneas eliminadas por archivo; escaneo de credenciales en el diff; refs sin cambios.
+Resultados en el informe de la sesión.

@@ -44,6 +44,8 @@ Procedimiento: `docs/MAINTENANCE_MODE.md`. Comprobación automática: `scripts/v
 > los de `29c4b6f`. Si se despliega `cleanUrls`/`trailingSlash`, `/about.html` pasaría a 308 → `/about/`. Ver `MAINTENANCE_MODE.md` §8.
 > **Rama `maintenance/quelvo-onesound`:** `vercel.json` restaurado al de `29c4b6f` (opción B) ⇒ se conservan `/about.html`, `/contact.html`,
 > `/qrcard.html` (200) y `/about` → 308 → `/about.html`. Cualquier ruta inexistente → `404.html` (generado por el build; pendiente de confirmar en Preview).
+> **Producción desde 2026-10-19 = `4ef6506`:** mismo `vercel.json` (22 redirects verificados en producción); sin `404.html`
+> propia (retirada temporal) ⇒ rutas inexistentes → 404 estándar de Vercel.
 
 ## 2. Rutas de cuenta / protegidas [VERIFICADO]
 
@@ -72,8 +74,8 @@ Procedimiento: `docs/MAINTENANCE_MODE.md`. Comprobación automática: `scripts/v
 
 | Ruta | HTTP | Acción propuesta |
 |---|---|---|
-| `/copy.zip` | 200 en producción | **Movido a `archive/copy.zip`** (rama, sin desplegar). Tras el despliegue: 404 |
-| `/supabase-setup.sql` | 200 en producción | **Movido a `supabase/legacy/`** (rama, sin desplegar). Tras el despliegue: 404 |
+| `/copy.zip` | **404 en producción** desde `4ef6506` (antes 200) | Movido a `archive/copy.zip` (sigue en el repo público) |
+| `/supabase-setup.sql` | **404 en producción** desde `4ef6506` (antes 200) | Movido a `supabase/legacy/` (sigue en el repo público) |
 | `/js/supabase.client.js` | 200 | Sin uso; candidato a eliminar |
 
 ## 5. Rutas planificadas [PLANIFICADO — no existen]

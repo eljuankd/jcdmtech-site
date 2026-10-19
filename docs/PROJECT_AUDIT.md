@@ -241,19 +241,21 @@ elif [ ! -f "$t" ]; then echo "MISSING: $p"; fi; done
 **Hipótesis:** el fallo de despliegue se debe a la propiedad no válida `errors` (sin logs; se verifica con el Preview de la rama `maintenance/quelvo-onesound`, que retira `errors`, `cleanUrls` y `trailingSlash`).
 
 Nuevo riesgo **R-22 🔴 Despliegues bloqueados desde 2026-08-02** — cualquier cambio en `main` no llega a producción hasta corregir `vercel.json` (detalle: `docs/MAINTENANCE_MODE.md` §8.1).
+**Actualización (2026-10-19, tarde): R-22 resuelto.** `vercel.json` restaurado (opción B) y publicado con el hotfix R1; producción = `origin/main` = `4ef6506` (deployment `7185173081`, `success`). La hipótesis queda confirmada por resultado (sin logs: no se sabe cuál de las tres propiedades era la culpable). Las páginas legales completas y la 404 siguen **sin publicar**, ahora por decisión (retirada temporal en `4ef6506`).
 
 ---
 
 ## 11. Seguridad — auditoría y remediación (2026-10-19)
 
 Auditoría de seguridad entregada al propietario en la conversación (el repositorio es público; aquí sólo el estado).
-Remediación local, sin commit ni despliegue: `docs/SECURITY_REMEDIATION.md`.
+Remediación: `docs/SECURITY_REMEDIATION.md`. *(Primera redacción: "local, sin commit ni despliegue". Desde el 2026-10-19 J-03, J-04 y J-05 están **en producción** con el hotfix R1 `4ef6506`.)*
 
 | Riesgo | Estado |
 |---|---|
-| R-03 (`next` del login) = J-03 | **Corregido en la rama (sin desplegar)** — `js/safe-next.js`; pruebas unitarias y de navegador; control con la versión anterior confirma el fallo |
-| R-07 (archivos internos publicados) = J-04 | **Corregido en la rama (sin desplegar)** — movidos a `archive/` y `supabase/legacy/`; `.vercelignore` |
+| R-03 (`next` del login) = J-03 | **Corregido y publicado en producción** (`4ef6506`) — `js/safe-next.js`; pruebas unitarias y de navegador; control con la versión anterior confirma el fallo |
+| R-07 (archivos internos publicados) = J-04 | **Corregido y publicado en producción** (`4ef6506`; 404) — movidos a `archive/` y `supabase/legacy/`; `.vercelignore`. **Persiste:** los archivos y su historial siguen en el repositorio público |
 | R-08 (política recursiva) | **Confirmado en PGlite:** el SQL histórico literal hace fallar toda lectura autenticada de `profiles` ⇒ la base real difiere del archivo. La migración lo sustituye por `public.is_admin()` |
-| R-01 / R-02 (esquema y RLS) = J-01, J-02, J-06 | **Migración preparada, no aplicada** (Supabase pausado). Procedimiento en `SECURITY_REMEDIATION.md` §4.4 |
-| Cabeceras HTTP = J-05 | **Preparadas** en `vercel.json` (CSP en Report-Only) |
+| R-01 / R-02 (esquema y RLS) = J-01, J-02, J-06 | **Migración preparada, no aplicada** (Supabase INACTIVE; sólo en la rama de mantenimiento). Procedimiento en `SECURITY_REMEDIATION.md` §4.4 |
+| Cabeceras HTTP = J-05 | **Publicadas en producción** (`4ef6506`); CSP sigue en **Report-Only** (no bloquea) |
+| R-22 (despliegues bloqueados) | **Resuelto** (§10) |
 | R-13 (supabase-js sin versión fija), R-14 (clave de Maps), R-15 (resumen de reserva sin escapar) | Pendientes |
