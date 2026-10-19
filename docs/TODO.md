@@ -1,79 +1,130 @@
-# TODO — JCDM Technologies Site Restructure
+# TODO — Plan de modernización en 8 fases
 
-## In Progress
-
-- [ ] Phase 5: Redesign index.html (tech company homepage)
-- [ ] Update partials/header.html (new navigation)
-- [ ] Update partials/footer.html (column structure)
-- [ ] Add CSS components (services grid, platform cards, why section)
+> Actualizado: 2026-10-19. La lista de junio 2026 se conserva al final (§10) con su estado real.
+> Cada fase: objetivo · dependencias · riesgos · criterios de aceptación · pruebas · tareas.
+> Regla general: ninguna fase incluye `git push` ni despliegue sin autorización explícita.
 
 ---
 
-## Pending Implementation
+## Fase 1 — Auditoría y documentación ✅ (2026-10-19)
 
-### High Priority
-- [ ] Create `quelvo/index.html` — QUELVO premium landing page
-- [ ] Create `quelvo/book/index.html` — QUELVO booking form (multi-tab)
-- [ ] Create `services/index.html` — Tech services page
-- [ ] Create `projects/index.html` — Products & projects page
-- [ ] Update `nosotros.html` — Full About JCDM Technologies content
-- [ ] Update `contacto.html` — New service dropdown options
-- [ ] Update `vercel.json` — New redirects for /quelvo, /services, /projects, /about, /contact
-- [ ] Update `sitemap.xml` — Add new routes
-
-### Medium Priority
-- [ ] Fix phone number mismatch (booking.js: 17863487458 vs contacto.html: +13050000000)
-- [ ] Create `404.html` — Custom 404 error page
-- [ ] Update `robots.txt` — Add new protected routes
-- [ ] Update `music-ride/index.html` — Reposition as QUELVO feature/product
-
-### Lower Priority
-- [ ] Expand `privacidad.html` — Full privacy policy text
-- [ ] Expand `terminos.html` — Full terms of service text
-- [ ] Expand `blog/index.html` — Blog landing with placeholder posts
-- [ ] Update `automatizaciones/index.html`, `domotica/index.html`, `software/index.html` — Redirect to /services/ instead of /chofer-privado/reservar.html
+- [x] Inventario de archivos, rutas, dependencias, formularios, reservas, Music Ride, SEO, estilos
+- [x] Comprobación de producción (sólo lectura)
+- [x] `CLAUDE.md` + 11 documentos en `docs/`
+- [ ] Verificar esquema y RLS de Supabase — **bloqueado** (timeout del MCP); se traslada a pre-Fase 4
 
 ---
 
-## Future / Next Version
+## Fase 2 — Rediseño de Home
 
-- [ ] QUELVO booking form: multi-tab (One Way / By Hour / Airport / City-to-City)
-- [ ] QUELVO fleet selection (Step 2: Black Sedan / Business SUV / Premium SUV)
-- [ ] Persist booking codes to Supabase
-- [ ] QUELVO: City-to-City routes page (/quelvo/city-to-city/)
-- [ ] QUELVO: Airport transfers page (/quelvo/airport/)
-- [ ] QUELVO: Hourly chauffeur page (/quelvo/hourly/)
-- [ ] QUELVO: Business travel page (/quelvo/business/)
-- [ ] Projects page: Financial Automation System detail
-- [ ] Projects page: Smart Home Dashboard detail
-- [ ] Add og:image per page (currently all use same og-image.png)
-- [ ] Add English/Spanish language toggle
-- [ ] Automate `window.__SITE_VERSION__` from git tag
-- [ ] Add Content Security Policy (CSP) headers in vercel.json
-- [ ] Add structured data (JSON-LD) for new pages
-- [ ] Verify Supabase RLS policies cover all tables
-- [ ] Add 2FA option for admin accounts
+- **Objetivo:** Home que presente JCDM como empresa tecnológica con los 5 servicios, QUELVO y Music Ride, sobre un sistema de diseño consolidado.
+- **Dependencias:** aprobación de P-001 (lenguaje visual); textos validados por el propietario; Fase 1.
+- **Riesgos:** romper header/footer compartidos (IDs usados por `app.js`); regresión del toggle ES/EN (`data-es`) y del tema claro; LCP por imágenes PNG; promesas no verificadas (R-06).
+- **Criterios de aceptación:**
+  - Los 5 servicios visibles con enlace a su destino real (`/services/#…`, `/quelvo/`).
+  - Sin afirmaciones no validadas (precios, integraciones, plazos).
+  - Tokens de Home en `styles.css` (sin `--jh-*`).
+  - Imagen hero < 300 KB (WebP/AVIF) con `fetchpriority="high"`.
+  - `prefers-reduced-motion` respetado.
+  - ES/EN completo en Home; tema claro legible.
+  - Sin cambios en `/quelvo/book/`, auth ni admin.
+- **Pruebas:** `node --check`; script de enlaces; revisión visual a 375 / 768 / 1280 px; toggle ES/EN y tema; consola sin errores; navegación con teclado; Lighthouse local (rendimiento, accesibilidad, SEO) antes/después; comprobar que services, about, admin y login no cambiaron visualmente si se tocó `styles.css`.
+- **Tareas:** ver plan detallado en `PROJECT_STATUS.md` §4.
+
+## Fase 3 — Services
+
+- **Objetivo:** página de servicios clara para las 4 líneas técnicas + QUELVO como quinta línea.
+- **Dependencias:** Fase 2 (sistema de diseño); lista validada de servicios/tecnologías que realmente se ofrecen.
+- **Riesgos:** anclas `#web`, `#automation`, `#smarthome`, `#support` enlazadas desde footer y Home; afirmar Stripe/React Native/pagos sin validación; decisión subpáginas vs. anclas (afecta sitemap y redirects legado `/domotica` etc.).
+- **Criterios:** cada servicio con descripción, entregables, tecnologías validadas y CTA a contacto con el servicio preseleccionado; anclas preservadas o redirigidas; `data-es` completo.
+- **Pruebas:** enlaces desde footer/Home a cada ancla; CTA → `/contact.html` con valor de `service` correcto; responsive; accesibilidad de encabezados (un `h1`, jerarquía).
+
+## Fase 4 — QUELVO y experiencia de reservas
+
+- **Objetivo:** experiencia premium de reserva inspirada funcionalmente en Blacklane (pasos, clases, precio previo) con identidad propia, más segura y accesible.
+- **Dependencias (bloqueantes):** acceso al esquema y RLS reales de `bookings` (P-003); confirmación de tarifas, zonas y servicios (aeropuertos, eventos, city-to-city); decisión sobre notificaciones (email/WhatsApp al admin y al cliente) y vista "Mis reservas".
+- **Riesgos:** perder reservas reales; cambiar columnas usadas por el admin; zona horaria (R-04); precio manipulable (R-05); spam (R-09); imágenes pesadas; accesibilidad del wizard (R-11); no hay staging (R-12).
+- **Criterios:**
+  - Mismo contrato de datos con `bookings` (o migración documentada y aplicada con autorización).
+  - `pickup_at` almacenado en hora de Miami (America/New_York) independientemente del navegador.
+  - Wizard operable con teclado, `label for`, foco gestionado entre pasos, errores anunciados (`aria-live`).
+  - Textos de confirmación coherentes con lo que realmente ocurre.
+  - Admin sigue listando y editando reservas nuevas.
+- **Pruebas:** cálculo de precio con casos tabulados (transfer corto, mínimo, >50 mi, por horas bajo mínimo); reserva de prueba **sólo** con autorización y marcada para borrar; verificación en admin; zona horaria simulada (navegador en otra TZ); teclado; móvil 375 px.
+
+## Fase 5 — Integración de Music Ride
+
+- **Objetivo:** presentar Music Ride como producto propio y como experiencia para pasajeros QUELVO, sin alterar la app.
+- **Dependencias:** información del propietario sobre la app (cómo se crea una sesión, si acepta parámetros, quién es host); Fase 4.
+- **Riesgos:** romper la app externa o sus URLs; prometer "cada viaje incluye Music Ride" sin proceso real; landing sólo en español.
+- **Criterios:** landing bilingüe con canonical correcto (`/music-ride/`); enlaces a `music-ride.jcdmtech.com` intactos; bloque Music Ride en QUELVO con texto validado; cualquier vínculo reserva↔sesión documentado y opcional.
+- **Pruebas:** `curl -I` a la app antes/después (200); todos los enlaces Music Ride; ES/EN; responsive.
+
+## Fase 6 — Projects
+
+- **Objetivo:** portafolio fiel de productos y sistemas.
+- **Dependencias:** Fases 4–5 (descripciones de QUELVO y Music Ride actualizadas); validación del stack de cada proyecto.
+- **Riesgos:** descripciones desactualizadas (hoy dice que la reserva usa WhatsApp/Formspree); exponer detalles internos de sistemas privados.
+- **Criterios:** cada proyecto con estado real (Live / Internal), stack validado, sin datos sensibles; ES/EN.
+- **Pruebas:** enlaces; contenido revisado por el propietario; responsive.
+
+## Fase 7 — About, Contact y Footer
+
+- **Objetivo:** información corporativa coherente y canal de contacto único.
+- **Dependencias:** P-005 (email oficial); Fase 3 (lista de servicios para el `<select>`).
+- **Riesgos:** romper Formspree (`name` de campos, honeypot); footer compartido por todas las páginas; anclas de servicios.
+- **Criterios:** un solo email en todo el sitio; formulario envía y muestra éxito/error; footer con enlaces válidos y versión; ES/EN.
+- **Pruebas:** envío real de contacto sólo con autorización; script de enlaces; revisión de footer en todas las páginas.
+
+## Fase 8 — SEO, rutas, responsive, accesibilidad y pruebas finales
+
+- **Objetivo:** cierre técnico.
+- **Dependencias:** Fases 2–7; decisión P-002.
+- **Riesgos:** redirects que rompen QR/enlaces externos; cambios de canonical que afectan indexación; sólo verificable en Vercel.
+- **Tareas candidatas:** canonicals coherentes; redirects de stubs con barra final; `noindex` o redirect de stubs; sitemap con lastmod y páginas legales; robots (`/account.html`, `/reset-password.html`); OG por página; JSON-LD (Organization, LocalBusiness/TaxiService para QUELVO); retirar `copy.zip`, `supabase-setup.sql`, `supabase.client.js` del público; `safari-pinned-tab.svg`; fijar versión supabase-js; validar `next` en login (si no se hizo antes); cabeceras de seguridad (CSP, etc.) en `vercel.json`; breakpoints; auditoría WCAG 2.1 AA.
+- **Criterios:** 0 enlaces rotos; todas las rutas de `ROUTES.md` con el código esperado en un Preview de Vercel; Lighthouse ≥ 90 en accesibilidad y SEO en páginas principales; sin errores de consola.
+- **Pruebas:** batería `curl -I` sobre todas las rutas en Preview; Lighthouse; teclado y lector de pantalla en Home, QUELVO y reserva; móvil real.
 
 ---
 
-## Known Bugs / Issues
+## 9. Pendientes transversales / bloqueos
 
-- [ ] **CRITICAL:** Phone mismatch — booking uses `17863487458`, contact shows `+13050000000`
-- [ ] **HIGH:** Privacy policy and Terms are placeholder stubs
-- [ ] **MEDIUM:** No 404 page
-- [ ] **MEDIUM:** Booking code not stored in database
-- [ ] **LOW:** GA4 debug mode accessible via `?debug=1` on all pages
+- [ ] **Seguridad (recomendado antes de Fase 2, como hotfix aislado):** validar `next` en `login.html` (sólo rutas relativas que empiecen por `/` y no por `//`) — R-03.
+- [ ] Obtener esquema y políticas RLS reales de Supabase (reintentar MCP o exportar desde el panel) — R-01, R-02, R-08.
+- [ ] Confirmar restricción por referrer de la API key de Google Maps — R-14.
+- [ ] Validar con el propietario la lista de afirmaciones [POR VALIDAR] (`PROJECT_AUDIT.md` §6, R-06).
+- [ ] Decidir email oficial (P-005).
+- [ ] Revisar `.claude/settings.local.json` (`git push *` permitido) — R-20.
 
 ---
 
-## Completed
+## 10. Lista de junio 2026 — estado real
 
-- [x] Direction C design system implemented in styles.css
-- [x] Logo replaced with JCDM Fraunces wordmark
-- [x] Hero redesigned (dramatic typographic layout)
-- [x] Stats bar added below hero
-- [x] Music Ride page created at /music-ride/
-- [x] Music Ride nav link added
-- [x] Music Ride deployed at music-ride.jcdmtech.com
-- [x] /docs folder created with 7 documentation files
-- [x] Full project analysis completed
+| Tarea original | Estado 2026-10-19 |
+|---|---|
+| Rediseñar index.html como Home tecnológica | Hecho (`75c8a5c`, `29c4b6f`); se refina en Fase 2 |
+| Actualizar header/footer | Hecho |
+| CSS: services grid, platform cards, why | Hecho |
+| Crear `quelvo/index.html` | Hecho |
+| Crear `quelvo/book/index.html` multi-paso | Hecho (`522f732`) |
+| Crear `services/`, `projects/` | Hecho |
+| Actualizar about y contact | Hecho (como `about.html`, `contact.html`) |
+| vercel.json y sitemap con nuevas rutas | Hecho (revisar en Fase 8) |
+| Teléfono inconsistente | Hecho |
+| 404 | Hecho |
+| robots.txt | Parcial (Fase 8) |
+| Music Ride como feature de QUELVO | Parcial (Fase 5) |
+| Privacidad / Términos completos | Hecho (`4d0350a`) |
+| Blog con posts | Pendiente — fuera del plan |
+| Stubs domotica/software/automatizaciones → /services/ | Parcial: sin barra redirige; con barra sirve stub (Fase 8) |
+| Persistir códigos de reserva | Hecho (tabla `bookings`) |
+| Páginas `/quelvo/airport/`, `/hourly/`, `/business/`, `/city-to-city/` | Pendiente — evaluar en Fase 4 |
+| Detalle de Financial Automation / Smart Home en Projects | Parcial (Fase 6) |
+| og:image por página | Pendiente (Fase 8) |
+| Toggle EN/ES | Hecho parcialmente (Fases 2–7) |
+| Automatizar `__SITE_VERSION__` | Pendiente (sigue `booking-ux-01` fijo) |
+| CSP en vercel.json | Pendiente (Fase 8) |
+| JSON-LD en páginas nuevas | Pendiente (Fase 8) |
+| Verificar RLS | Pendiente — bloqueado |
+| 2FA para admin | Pendiente — fuera del plan |
+| GA4 `?debug=1` accesible | Persiste sólo en páginas legado (`chofer-privado/reservar.html`, `chofer-privado/gracias.html`), ambas redirigidas en producción; se resuelve al retirar el legado (Fase 8) |

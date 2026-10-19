@@ -1,130 +1,135 @@
-# JCDM Technologies LLC — Project Context
+# JCDM Technologies LLC — Contexto del proyecto
 
-## What is JCDM Technologies LLC?
-
-JCDM Technologies LLC is a Miami-based technology company focused on practical digital solutions for businesses and individuals. The company builds and operates technology platforms, offers consulting services, and manages QUELVO — its private chauffeur platform.
-
-**tagline:** "Technology, automation & digital platforms for real-world needs."
-
-**Mission:** Create practical technology that helps people and businesses simplify daily operations, improve comfort, and connect services through modern digital tools.
+> Actualizado: 2026-10-19 (Fase 1). Sustituye a la versión del 2026-06-11; la información previa se conserva aquí,
+> marcada cuando quedó obsoleta.
+>
+> Convención: **[VERIFICADO]** = comprobado en el código o en producción. **[PLANIFICADO]** = objetivo futuro, aún no existe.
+> **[POR VALIDAR]** = afirmación presente en el sitio que no puede comprobarse desde el código; requiere confirmación del propietario.
 
 ---
 
-## Services
+## 1. La empresa
 
-### 1. Web Development & Applications
-Websites, business systems, dashboards, forms and custom applications.
-- Business websites & landing pages
-- Admin systems & dashboards
-- Smart forms & booking systems
-- Database integrations
-- Customer portals
-- Basic mobile apps
+JCDM Technologies LLC es una empresa tecnológica con sede en Miami, FL, centrada en soluciones digitales prácticas para
+negocios y particulares. Construye y opera plataformas propias, ofrece servicios técnicos y gestiona **QUELVO**, su
+plataforma de transporte privado.
 
-### 2. Automation & Smart Systems
-Automated workflows, bots, reports and connected systems.
-- n8n workflows
-- Telegram bots
-- API integrations
-- PostgreSQL/MySQL
-- Automatic reports
-- Financial tracking systems
-- Business process automation
-
-### 3. Smart Home & IoT
-Home Assistant, sensors, smart locks, cameras and custom automations.
-- Home Assistant setup & configuration
-- Smart locks, lights, sensors
-- Alexa & voice assistant integration
-- Security cameras & monitoring
-- IoT dashboards
-- Custom automations
-
-### 4. Technical Support & Consulting
-Practical support for homes, individuals and small businesses.
-- Computer setup & configuration
-- Software installation
-- Basic networks
-- Device configuration
-- Technical diagnosis
-- Small business tech consulting
+- **Lema actual en el sitio [VERIFICADO]:** "Technology, automation & digital platforms for real-world needs."
+- **Misión:** crear tecnología práctica que ayude a personas y negocios a simplificar operaciones, mejorar su comodidad y conectar servicios mediante herramientas digitales modernas.
+- **Ubicación:** Miami, FL. Mercado objetivo: Miami-Dade y alrededores; servicios técnicos también en remoto.
+- **Contacto publicado [VERIFICADO]:** teléfono/WhatsApp +1 (786) 348-7458. Email: `contacto@jcdmtech.com` en `contact.html`, pero `info@jcdmtech.com` en `privacy.html`/`terms.html` → **inconsistencia por resolver**.
+- **Tono:** moderno, fiable, práctico, profesional. Ni corporativo rígido ni informal.
+- **Idioma:** inglés por defecto con conmutador a español (`data-es`) **parcialmente implementado**. Algunas páginas (Music Ride, stubs legado) están sólo en español.
 
 ---
 
-## Owned Platforms & Products
+## 2. Objetivo de la modernización (8 fases)
+
+Actualizar completamente `https://www.jcdmtech.com/` para presentar a JCDM Technologies como empresa tecnológica con
+cinco líneas principales, manteniendo operativos los flujos actuales (reservas, auth, admin, Music Ride).
+
+Plan de fases (detalle de dependencias, riesgos, criterios y pruebas en `docs/TODO.md`):
+
+1. Auditoría y documentación ← **completada 2026-10-19**
+2. Rediseño de Home
+3. Desarrollo de Services
+4. QUELVO y su experiencia de reservas
+5. Integración de Music Ride
+6. Projects
+7. About, Contact y Footer
+8. SEO, rutas, responsive, accesibilidad y pruebas finales
+
+> Nota histórica: en junio 2026 hubo otra numeración de fases ("Phases 2–8", commit `75c8a5c`) que ya creó
+> `/services/`, `/projects/`, `/quelvo/`, etc. El plan actual de 8 fases **parte de ese estado existente** y lo refina;
+> no lo construye desde cero.
+
+---
+
+## 3. Los cinco servicios principales
+
+| # | Servicio | Estado actual en el sitio |
+|---|---|---|
+| 1 | Web Development & Applications | [VERIFICADO] Sección en `/services/` (#web) y card en Home |
+| 2 | Automation & Smart Systems | [VERIFICADO] Sección en `/services/` (#automation) |
+| 3 | Smart Home & IoT Solutions | [VERIFICADO] Sección en `/services/` (#smarthome) |
+| 4 | Technical Support & Consulting | [VERIFICADO] Sección en `/services/` (#support) |
+| 5 | QUELVO — Private Chauffeur Platform | [VERIFICADO] Landing `/quelvo/` + reserva `/quelvo/book/` |
+
+Contenido de referencia por servicio (de la versión anterior de este documento):
+
+- **Web Development & Applications:** webs corporativas y landing pages, sistemas admin y dashboards, formularios inteligentes y sistemas de reserva, integraciones con bases de datos, portales de clientes, apps móviles básicas.
+- **Automation & Smart Systems:** flujos n8n, bots de Telegram, integraciones API, PostgreSQL/MySQL, informes automáticos, seguimiento financiero, automatización de procesos.
+- **Smart Home & IoT:** Home Assistant, cerraduras/luces/sensores, Alexa y asistentes de voz, cámaras de seguridad, dashboards IoT, automatizaciones a medida.
+- **Technical Support & Consulting:** configuración de equipos, instalación de software, redes básicas, configuración de dispositivos, diagnóstico técnico, consultoría para pequeños negocios.
+
+[POR VALIDAR] `/services/` menciona tecnologías como Stripe, React Native, Zapier, Z-Wave o "payment integration"
+en sistemas de reserva. Ninguna integración de pagos existe en este repositorio. Confirmar con el propietario qué
+se ofrece realmente antes de reutilizar ese texto en Fase 3.
+
+---
+
+## 4. Plataformas y productos propios
 
 ### QUELVO — Private Chauffeur Platform
-Premium private chauffeur service in Miami. Formerly branded as "Chofer privado" on jcdmtech.com.
-- Airport transfers (MIA, FLL, PBI)
-- Hourly chauffeur bookings
-- Business travel
-- Events
-- City-to-city rides
-- Scheduled private rides
+Marca propia de transporte privado en Miami; antes "Chofer privado" en `/chofer-privado/`.
+Experiencia de reserva premium **inspirada funcionalmente** en Blacklane (flujo por pasos, clases de vehículo,
+precio previo) pero con **diseño, contenido e identidad originales**. No copiar textos, logos, imágenes ni marcas de Blacklane.
 
-**URL:** /quelvo (new) — previously at /chofer-privado
+[VERIFICADO] Hoy existe:
+- Dos clases de vehículo: *QUELVO Private* (sedán, hasta 3 pax, desde $75/h, mínimo $50 transfer, mínimo 2 h por horas) y *QUELVO Black SUV* (hasta 6 pax, desde $120/h, mínimo $85 transfer, mínimo 3 h).
+- Tres tipos de servicio en la reserva: Transfer (precio automático), By the hour (precio automático), Request a quote (manual). Trayectos > 50 millas pasan a cotización manual.
+- Reserva almacenada en Supabase (`bookings`) con código `QLV-XXXXXXXX`; gestión desde `/admin/`.
+- Sin pagos online, sin envío de emails desde el código del repositorio.
+
+[POR VALIDAR] Textos publicados: "Instant confirmation", "We'll send a confirmation to your email",
+"Flight tracking / Real-time flight monitoring", "Every ride includes Music Ride", "Same-day · 2h notice",
+"Airport meet & greet", precios mostrados. Ver `docs/PROJECT_AUDIT.md` §6.
+
+[PLANIFICADO] Servicios mencionados como objetivo: aeropuertos MIA/FLL/PBI, eventos, viajes de negocio, city-to-city.
 
 ### Music Ride
-Collaborative music experience for QUELVO rides and private events.
-- Passengers scan QR to join session
-- No app install required
-- YouTube-based song search & queue
-- Real-time collaborative playlist
-- Host controls: pause, skip, permissions
-- Feature of QUELVO, also usable standalone
+Producto propio de JCDM Technologies: experiencia de música colaborativa para trayectos QUELVO y eventos privados.
+- [VERIFICADO] Aplicación desplegada en `https://music-ride.jcdmtech.com` (responde 200). **Su código no está en este repositorio.**
+- [VERIFICADO] Landing en `/music-ride/` (español) y bloques promocionales en Home, QUELVO, Projects, About y footer.
+- Funcionamiento descrito en la landing: el host abre sesión y muestra un QR; los pasajeros se unen desde el navegador sin instalar nada; buscan en YouTube y añaden a una cola en tiempo real; el host controla pausa/salto/permisos/límites; modo Repeat All.
+- [POR VALIDAR] Stack declarado en `/projects/`: React, Node.js, Socket.IO, YouTube IFrame API, Railway, PostgreSQL, JWT.
+- Requisito: **su funcionamiento existente debe conservarse**; la integración con QUELVO (Fase 5) no debe modificar la app externa sin autorización.
 
-**External app URL:** https://music-ride.jcdmtech.com
-**Landing page:** /music-ride/
+### Financial Automation System (interno / showcase)
+n8n + PostgreSQL + Python + bot de Telegram; informes automáticos. Aparece en `/projects/` como "Internal use".
 
-### Financial Automation System (Internal / Showcase)
-- n8n + PostgreSQL + Telegram Bot + dashboard
-- Tracks business transactions automatically
-
-### Smart Home Dashboard (Internal / Showcase)
-- Home Assistant + IoT sensors + custom automations
+### Smart Home Dashboard (interno / showcase)
+Home Assistant + sensores IoT + automatizaciones; acceso remoto vía Cloudflare Tunnel (según `/projects/`).
 
 ---
 
-## Company Identity
+## 5. Dependencias externas [VERIFICADO en código]
 
-- **Location:** Miami, FL
-- **Target market:** Miami-Dade and surrounding areas; remote tech services available
-- **Language:** Bilingual (English primary for tech brand, Spanish for QUELVO/local services)
-- **Tone:** Modern, reliable, practical, professional. Not corporate-stiff, not casual.
-- **Key values:** Seriedad, tecnología aplicada, soluciones reales, atención personalizada
+| Servicio | Uso | Dónde |
+|---|---|---|
+| Vercel | Hosting estático + redirects | `jcdmtech/vercel.json` |
+| Supabase (proyecto `nrmajnnfejafbtkpvpob`) | Auth, `profiles`, `vehicles`, `drivers`, `bookings` | `js/supabase.config.js`, `js/app.js`, páginas de auth/admin/reserva |
+| supabase-js v2 vía esm.sh (versión mayor sin fijar) | Cliente Supabase | import dinámico |
+| Google Maps JS API (Places + Distance Matrix) | Autocompletado y cálculo de ruta/precio | `quelvo/book/index.html` |
+| Formspree (`/f/xgvljywo`) | Formulario de contacto + reserva legado | `contact.html`, `chofer-privado/reservar.html` |
+| Google Analytics 4 (`G-85LR7PFMVT`) | Analítica | `partials/header.html` (init idempotente) |
+| Google Fonts (Inter, Fraunces) | Tipografía | `partials/header.html` |
+| WhatsApp (`wa.me/17863487458`) | Contacto y reserva legado | varias páginas, `js/booking.js` |
+| Music Ride (`music-ride.jcdmtech.com`) | App externa | enlaces |
 
----
-
-## Architecture Decisions
-
-1. **Static HTML site** — No framework (React, Next.js, etc.). Plain HTML/CSS/JS for simplicity and speed.
-2. **Partials via fetch()** — Header and footer injected from `/partials/header.html` and `/partials/footer.html`.
-3. **Vercel hosting** — Static hosting with edge redirects via `vercel.json`.
-4. **Supabase** — Authentication and admin data (profiles, vehicles, drivers).
-5. **Formspree** — Form-to-email for contact and bookings.
-6. **booking.js** — WhatsApp + email dual submission for QUELVO bookings.
-7. **Direction C design system** — High-contrast black (#09090B) + cream (#F5F0E8) + gold (#C8A96E). No glass morphism. Rectangular components. Fraunces serif headlines + Inter body.
-8. **QUELVO brand separation** — QUELVO gets its own section of the site (/quelvo/*) but shares the global design system with its own premium emphasis.
+> Histórico: la versión de junio citaba el proyecto Supabase `fsqfialyjhpalxbdjktd`; se migró a `nrmajnnfejafbtkpvpob` (commit `ac73233`).
 
 ---
 
-## Key External Dependencies
+## 6. Problemas conocidos — estado de los listados en la versión anterior
 
-| Service | Purpose | Endpoint |
-|---------|---------|----------|
-| Supabase | Auth + admin DB | fsqfialyjhpalxbdjktd.supabase.co |
-| Formspree | Form submissions | formspree.io/f/xgvljywo |
-| Google Analytics 4 | Tracking | G-85LR7PFMVT |
-| Google Fonts | Typography | Inter + Fraunces |
-| WhatsApp | Booking notifications | wa.me/17863487458 |
+| Problema (junio 2026) | Estado 2026-10-19 |
+|---|---|
+| Teléfono distinto entre booking.js y contacto | Resuelto: todo usa 17863487458 |
+| Privacidad y Términos eran stubs | Resuelto: contenido completo (commit `4d0350a`) — revisión legal no verificada |
+| Sin página 404 | Resuelto: `404.html` (commit `569df74`) |
+| `/nosotros.html` mínimo | Resuelto: `about.html` completo; `/nosotros.html` redirige 308 |
+| `/blog/`, `/domotica/`, `/software/`, `/automatizaciones/` stubs | Persiste: siguen siendo stubs (ver `ROUTES.md`) |
+| Código de reserva no persistido | Resuelto en el flujo nuevo (tabla `bookings`) |
 
----
-
-## Known Issues to Address
-
-- Phone number mismatch: booking.js uses `17863487458`, contact page shows `+13050000000`
-- Privacy policy and Terms of Service are placeholder stubs
-- No 404 error page
-- `/nosotros.html` has minimal content
-- `/blog/`, `/domotica/`, `/software/`, `/automatizaciones/` are stubs
-- Booking code not persisted to database
+Los problemas vigentes están en `docs/PROJECT_AUDIT.md`.

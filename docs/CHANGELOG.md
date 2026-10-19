@@ -1,5 +1,50 @@
 # Changelog
 
+Historial de cambios del sitio y de la documentación (más reciente primero).
+Desde 2026-10-19 cada entrada indica la fase del plan de 8 fases.
+
+## 2026-10-19 — Fase 1: Auditoría y documentación
+
+### Añadido
+- `CLAUDE.md` (raíz) — instrucciones persistentes, reglas 1–13, zonas protegidas, cómo probar.
+- `docs/PROJECT_AUDIT.md` — auditoría técnica completa (stack, estructura, funcionalidades, reservas, Music Ride, SEO, 21 riesgos, comprobaciones).
+- `docs/DECISIONS.md` — decisiones D-001…D-012 y propuestas P-001…P-005.
+- `docs/PROJECT_STATUS.md` — estado actual, bloqueos y plan de Fase 2.
+
+### Actualizado
+- `docs/PROJECT_CONTEXT.md` — 5 servicios, QUELVO, Music Ride; marcas [VERIFICADO]/[PLANIFICADO]/[POR VALIDAR]; estado de los problemas de junio.
+- `docs/SITE_ARCHITECTURE.md` — arquitectura real, modelo de datos inferido, propuesta incremental.
+- `docs/DESIGN_SYSTEM.md` — documenta la coexistencia Direction C / estilo QUELVO; conserva la especificación original; propuesta de consolidación.
+- `docs/ROUTES.md` — códigos HTTP medidos en producción; legado, stubs, archivos expuestos, rutas planificadas.
+- `docs/TODO.md` — plan de 8 fases con dependencias, riesgos, criterios y pruebas; estado de la lista de junio.
+- `docs/IMPLEMENTATION_LOG.md` — entrada de Fase 1.
+
+### Sin cambios
+- Ningún archivo bajo `jcdmtech/` (código del sitio) fue modificado. Sin commit ni despliegue.
+
+---
+
+## 2026-06-11 → 2026-08-02 — Cambios de código no registrados antes (reconstruidos desde Git)
+
+- `4d0350a` (2026-08-02) feat(legal): privacidad y términos completos.
+- `569df74` (2026-08-02) feat(site): página 404 con enlaces de navegación.
+- `29c4b6f` (2026-06-30) feat(home): Home rediseñada en estilo QUELVO/Blacklane.
+- `f571db1` (2026-06-30) feat(nav): se elimina "Book a Ride" del nav principal.
+- `3ce3470` (2026-06-30) refactor(quelvo): assets en kebab-case + tarjetas de vehículo.
+- `68c4ac5` (2026-06-30) feat(quelvo): landing QUELVO rediseñada con fotos IA.
+- `ceb8e96`, `5ac8646` (2026-06-30) feat/fix: modo oscuro por defecto, toggle tema y EN/ES.
+- `4649f19` fix(nav): "Sign in" visible por defecto.
+- `41a6f05` fix(quelvo): corrección de la key de Google Maps.
+- `2de49ab` feat(admin): sección de reservas en admin.
+- `522f732` feat(quelvo): flujo de reserva completo con precio en vivo.
+- `ac73233` fix(auth): migración a nuevo proyecto Supabase.
+- `9af8089` refactor(filenames): páginas renombradas de español a inglés.
+- `6693cb1` fix(auth): auth en inglés + corrección XSS en admin.
+- `75c8a5c` feat(site): transformación a JCDM Technologies (services, projects, quelvo…).
+
+---
+
+
 ## 2026-06-11 — Session: Full Site Restructure (Phase 1–2)
 
 ### Analyzed

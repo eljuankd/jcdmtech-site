@@ -73,3 +73,62 @@ Redesign index.html from chauffeur-focused to JCDM Technologies tech company hom
 - `jcdmtech/styles.css` — Add service grid, platform card, why-grid CSS
 
 ### Status: IN PROGRESS
+
+---
+
+> **Nota (2026-10-19):** la entrada anterior "Phase 5: Homepage Redesign (PENDING / IN PROGRESS)" pertenece a la
+> numeración de fases de junio 2026. Ese trabajo se completó en los commits `75c8a5c` y `29c4b6f`.
+> A partir de aquí rige el plan de 8 fases descrito en `docs/TODO.md`.
+
+---
+
+## 2026-10-19 — Fase 1 (plan de 8 fases): Auditoría técnica y documentación
+
+### Estado inicial
+- Rama `main`, árbol limpio, al día con `origin/main`; último commit `4d0350a`.
+- Producción (`www.jcdmtech.com`) idéntica a `main` en los 7 archivos comparados por MD5.
+
+### Acciones
+1. Inventario de los 66 archivos versionados; lectura completa de `js/*.js`, partials, `vercel.json`, `robots.txt`, `sitemap.xml`, `supabase-setup.sql`, `quelvo/book/index.html`; lectura dirigida (grep/extracción de texto) del resto de páginas.
+2. Lectura de la documentación existente (`AI_PROJECT_CONTEXT.md`, 7 archivos de `docs/`).
+3. Comprobaciones en producción (sólo `curl` GET/HEAD): 27 rutas, app Music Ride, archivos expuestos.
+4. Intento de lectura del esquema Supabase vía MCP (`list_tables`, `get_advisors`): **timeout**, no verificado.
+5. `node --check` sobre JS externo; script de enlaces internos; búsqueda de mojibake; tamaño de imágenes; cobertura `data-es`; CSS inline por página.
+6. Redacción/actualización de la documentación.
+
+### Archivos creados
+- `CLAUDE.md`
+- `docs/PROJECT_AUDIT.md`, `docs/DECISIONS.md`, `docs/PROJECT_STATUS.md`
+
+### Archivos actualizados (información previa conservada o marcada como histórica)
+- `docs/PROJECT_CONTEXT.md`, `docs/SITE_ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/ROUTES.md`,
+  `docs/TODO.md`, `docs/CHANGELOG.md`, `docs/IMPLEMENTATION_LOG.md`
+
+### Archivos NO modificados
+- Todo `jcdmtech/` (código del sitio), `AI_PROJECT_CONTEXT.md`, `README.md`, `.vscode/`, `.claude/`.
+
+### Motivo
+Establecer una base documental fiable antes del rediseño; la documentación de junio estaba desactualizada
+(rutas en español, páginas "por crear" ya existentes, proyecto Supabase antiguo).
+
+### Hallazgos principales
+- Dos flujos de reserva: actual (Supabase `bookings`) y legado (`booking.js`, inaccesible en producción).
+- Esquema Supabase no versionado en el repo; RLS de `bookings` no verificable.
+- Redirección abierta en `login.html` (`next`).
+- `pickup_at` depende de la zona horaria del navegador.
+- `/copy.zip` y `/supabase-setup.sql` públicos.
+- Textos de marketing que prometen funciones no implementadas.
+- Dos lenguajes visuales; ~17 MB de PNG; i18n parcial.
+Detalle: `docs/PROJECT_AUDIT.md` §8.
+
+### Pruebas y resultados
+| Prueba | Resultado |
+|---|---|
+| `node --check` app.js, booking.js, version.js | OK |
+| Enlaces internos | 1 roto (`/assets/safari-pinned-tab.svg`) |
+| Mojibake | 0 |
+| Rutas producción | Ver `ROUTES.md` (incluye `/about/` 404 y stubs 200) |
+| Supabase remoto | No verificado (timeout) |
+
+### Resultado
+Fase 1 completada salvo la verificación de Supabase (bloqueo registrado en `PROJECT_STATUS.md`). Sin commit ni despliegue.

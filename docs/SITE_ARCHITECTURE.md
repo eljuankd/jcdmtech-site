@@ -1,136 +1,112 @@
-# Site Architecture
+# Arquitectura del sitio — actual y propuesta
 
-## Stack
-- **Type:** Static HTML/CSS/JS — no build framework
-- **Hosting:** Vercel (static + edge redirects)
-- **CSS:** Single file `styles.css` — Direction C design system
-- **JS:** Vanilla JS — `app.js` (core), `booking.js` (forms), Supabase client
-- **Partials:** `header.html` + `footer.html` injected via `fetch()` into `#header` / `#footer`
+> Actualizado: 2026-10-19 (Fase 1). Sustituye la versión de junio 2026, cuyo "mapa objetivo" ya se implementó en gran parte.
 
 ---
 
-## Current Site Map
+## 1. Arquitectura actual [VERIFICADO]
+
+**Patrón:** MPA estática + BaaS. Sin servidor propio, sin build.
 
 ```
-jcdmtech.com/
-├── /                           index.html             FUNCTIONAL (chofer hero — needs redesign)
-├── /chofer-privado/            chofer-privado/index.html    FUNCTIONAL (service landing)
-├── /chofer-privado/reservar.html                            FUNCTIONAL (booking form)
-├── /chofer-privado/gracias.html                             FUNCTIONAL (thank you page)
-├── /music-ride/                music-ride/index.html        FUNCTIONAL (Music Ride landing)
-├── /nosotros.html                                           PLACEHOLDER (1-line about)
-├── /contacto.html                                           FUNCTIONAL (contact form)
-├── /privacidad.html                                         PLACEHOLDER (stub)
-├── /terminos.html                                           PLACEHOLDER (stub)
-├── /login.html                                              FUNCTIONAL (Supabase auth)
-├── /mi-cuenta.html                                          FUNCTIONAL (user profile)
-├── /admin/                     admin/index.html             FUNCTIONAL (admin panel, protected)
-├── /qrcard.html                                             FUNCTIONAL (QR business card)
-├── /automatizaciones/          automatizaciones/index.html  PLACEHOLDER → redirects to reservar
-├── /domotica/                  domotica/index.html          PLACEHOLDER → redirects to reservar
-├── /software/                  software/index.html          PLACEHOLDER → redirects to reservar
-└── /blog/                      blog/index.html              PLACEHOLDER (coming soon)
+Navegador
+  │
+  ├── GET páginas HTML estáticas ──────────── Vercel (jcdmtech/, vercel.json: redirects, cleanUrls, 404)
+  │      └── app.js → fetch /partials/header.html, /partials/footer.html
+  │
+  ├── supabase-js v2 (esm.sh) ─────────────── Supabase nrmajnnfejafbtkpvpob
+  │      ├── Auth (password, magic link, reset)
+  │      └── Postgres + RLS: profiles, vehicles, drivers, bookings
+  │
+  ├── Google Maps JS (Places, Distance Matrix)  ← sólo /quelvo/book/
+  ├── Formspree /f/xgvljywo                     ← /contact.html (+ reserva legado)
+  ├── GA4 G-85LR7PFMVT                          ← vía header partial
+  ├── wa.me/17863487458                         ← enlaces
+  └── https://music-ride.jcdmtech.com           ← app externa (otro repositorio/hosting)
 ```
+
+### Capas en el cliente
+
+| Capa | Archivo(s) | Responsabilidad |
+|---|---|---|
+| Arranque común | `js/version.js`, `js/app.js` | Versión, preferencias (tema/idioma), partials, nav, auth nav |
+| Config | `js/supabase.config.js` | `window.__SUPABASE__ = { url, anon }` (script clásico, debe cargarse antes de `app.js`) |
+| UI compartida | `partials/header.html`, `partials/footer.html`, `styles.css` | Nav, footer, tokens y componentes |
+| Lógica por página | `<script>` inline en `login`, `account`, `reset-password`, `admin`, `quelvo/book`, `contact`, `gracias` | Cada página crea su propio cliente Supabase |
+| Reserva legado | `js/booking.js` | WhatsApp/Formspree (no alcanzable en producción) |
+
+### Orden de carga típico
+
+```html
+<div id="header"></div> … <div id="footer"></div>
+<script src="/js/supabase.config.js"></script>
+<script src="/js/app.js" defer></script>
+<!-- script inline de la página -->
+```
+Excepciones: stubs legado sin `supabase.config.js` (auth nav no se muestra); `chofer-privado/index.html` carga config después de `app.js`.
+
+### Modelo de datos usado por el código [INFERIDO del código; esquema remoto NO VERIFICADO]
+
+| Tabla | Columnas referenciadas | Usada por |
+|---|---|---|
+| `profiles` | `id`, `role`, `full_name`, `phone`, `theme`, `lang` | app.js, login, account, admin, quelvo/book |
+| `vehicles` | `id`, `make`, `model`, `year`, `color`, `plate`, `capacity`, `notes`, `created_at` | admin |
+| `drivers` | `id`, `name`, `phone`, `email`, `license`, `notes`, `hourly_rate`, `min_transfer_price`, `created_at` (+ otros en el formulario) | admin, join en bookings |
+| `bookings` | `id`, `booking_code`, `user_id`, `service_type`, `vehicle_class`, `pickup_address`, `dropoff_address`, `pickup_lat/lng`, `dropoff_lat/lng`, `pickup_at`, `requested_hours`, `estimated_minutes`, `estimated_miles`, `passengers`, `client_name/email/phone`, `flight_number`, `special_requests`, `base_price`, `pricing_type`, `requires_quote`, `status`, `driver_id`, `admin_price`, `admin_notes`, `created_at` | quelvo/book (insert), admin (select/update) |
+
+`jcdmtech/supabase-setup.sql` sólo cubre parte de `profiles`, `vehicles`, `drivers` (ver R-01).
 
 ---
 
-## New Site Map (Target)
+## 2. Arquitectura propuesta [PLANIFICADO]
+
+Principio: **evolución incremental, no reescritura**. Mantener MPA estática en Vercel + Supabase (D-001, D-002).
+No introducir framework ni build en las fases 2–8 salvo decisión explícita registrada en `DECISIONS.md`.
+
+### 2.1 Cambios estructurales propuestos
+
+| # | Propuesta | Motivo | Fase |
+|---|---|---|---|
+| A1 | Consolidar tokens en `styles.css` (eliminar `--jh-*`, `--q-*` duplicados) y extraer CSS de página a archivos `/css/pages/*.css` o secciones de `styles.css` | Coherencia, caché, mantenimiento | 2 (Home) y siguientes |
+| A2 | Versionar el esquema real de Supabase en `supabase/` (fuera de `jcdmtech/`) a partir de un volcado del proyecto | R-01, R-07 | 4 (requiere acceso al proyecto) |
+| A3 | Extraer la lógica de reserva a `js/quelvo-booking.js` (precio, estado, validación) manteniendo el HTML | Testabilidad, accesibilidad | 4 |
+| A4 | Un único cliente Supabase compartido (`window.JCDM.sb`) en lugar de `createClient` por página | Evitar instancias múltiples de GoTrue | 4 / 8 |
+| A5 | Fijar versión exacta de supabase-js | R-13 | 8 |
+| A6 | Imágenes en WebP/AVIF con `<picture>`/`srcset` | R-10 | 2 y 4 |
+| A7 | Integración Music Ride ↔ QUELVO mediante enlace/parámetro, sin tocar la app externa | Requisito de producto | 5 (diseño a acordar) |
+| A8 | Unificar estrategia de URL y canonicals | SEO | 8 |
+
+### 2.2 Mapa de sitio objetivo
 
 ```
-jcdmtech.com/
-├── /                           index.html             REDESIGN (tech company homepage)
-│
-├── /services/                  services/index.html    NEW (4 tech services)
-│
-├── /projects/                  projects/index.html    NEW (QUELVO, Music Ride, Automation, Smart Home)
-│
-├── /quelvo/                    quelvo/index.html      NEW (premium chauffeur landing)
-│   └── /quelvo/book/           quelvo/book/index.html NEW (booking form, adapted from reservar.html)
-│
-├── /music-ride/                music-ride/index.html  KEEP + minor updates
-│
-├── /nosotros.html                                     UPDATE (About JCDM Technologies)
-├── /contacto.html                                     UPDATE (new service dropdown)
-│
-├── /privacidad.html                                   KEEP (stub — legal work pending)
-├── /terminos.html                                     KEEP (stub — legal work pending)
-├── /login.html                                        KEEP (functional)
-├── /mi-cuenta.html                                    KEEP (functional)
-├── /admin/                                            KEEP (functional)
-├── /qrcard.html                                       KEEP (functional)
-│
-├── /chofer-privado/            LEGACY — keep for backward compatibility
-│   ├── /chofer-privado/reservar.html    KEEP (legacy booking still works)
-│   └── /chofer-privado/gracias.html     KEEP (legacy confirmation)
-│
-├── /automatizaciones/          PLACEHOLDER → keep or redirect to /services
-├── /domotica/                  PLACEHOLDER → keep or redirect to /services
-├── /software/                  PLACEHOLDER → keep or redirect to /services
-└── /blog/                      KEEP placeholder
+/                         Home JCDM (Fase 2)
+/services/                5 líneas: 4 servicios + QUELVO destacado (Fase 3)
+/quelvo/                  Landing QUELVO (Fase 4)
+/quelvo/book/             Reserva (Fase 4) — misma URL, protegida
+/music-ride/              Producto Music Ride (Fase 5)
+/projects/                Portafolio de productos/sistemas (Fase 6)
+/about.html, /contact.html  (Fase 7; posible migración de URL en Fase 8)
+/privacy.html, /terms.html  Mantener
+/login.html, /account.html, /reset-password.html, /admin/  Mantener
+/qrcard.html              Mantener (QR impresos)
+Legado (/chofer-privado/*, /domotica/, /software/, /automatizaciones/)  Redirects correctos (Fase 8)
 ```
+
+### 2.3 Navegación
+
+Actual [VERIFICADO]: `JCDM | Home | Services | QUELVO | Projects | About | Contact | (My account / Sign in / Admin / Sign out) | ES | ☀️`.
+Music Ride no está en el menú principal (sólo footer). "Book a Ride" se retiró del nav (commit `f571db1`).
+La estructura final de navegación se decide en Fase 2 (header) y Fase 7 (footer).
 
 ---
 
-## Pages: Status Table
+## 3. Reutilización de componentes
 
-| Page | URL | Status | Action |
-|------|-----|--------|--------|
-| Homepage | / | EXISTS | REDESIGN — tech company focus |
-| Services | /services/ | MISSING | CREATE |
-| Projects | /projects/ | MISSING | CREATE |
-| QUELVO Landing | /quelvo/ | MISSING | CREATE |
-| QUELVO Booking | /quelvo/book/ | MISSING | CREATE (adapted from reservar.html) |
-| Music Ride | /music-ride/ | EXISTS | KEEP + minor updates |
-| About | /nosotros.html | EXISTS stub | UPDATE content |
-| Contact | /contacto.html | EXISTS | UPDATE service dropdown |
-| Privacy | /privacidad.html | EXISTS stub | KEEP (legal work deferred) |
-| Terms | /terminos.html | EXISTS stub | KEEP (legal work deferred) |
-| Login | /login.html | EXISTS | KEEP |
-| My Account | /mi-cuenta.html | EXISTS | KEEP |
-| Admin | /admin/ | EXISTS | KEEP |
-| QR Card | /qrcard.html | EXISTS | KEEP |
-| Chauffeur Legacy | /chofer-privado/ | EXISTS | KEEP for backward compat |
-| Blog | /blog/ | EXISTS stub | KEEP placeholder |
-| Automations | /automatizaciones/ | EXISTS stub | KEEP / redirect to /services |
-| Smart Home | /domotica/ | EXISTS stub | KEEP / redirect to /services |
-| Software | /software/ | EXISTS stub | KEEP / redirect to /services |
-
----
-
-## Navigation (New)
-
-```
-JCDM  |  Services  |  QUELVO  |  Projects  |  About  |  Contact  |  [ Book a Ride ]
-```
-
-Mobile: hamburger → vertical list of same links.
-
----
-
-## Redirects (vercel.json — additions)
-
-| From | To | Type | Reason |
-|------|-----|------|--------|
-| /quelvo | /quelvo/ | 301 | Clean URL |
-| /services | /services/ | 301 | Clean URL |
-| /projects | /projects/ | 301 | Clean URL |
-| /chofer-privado → | /quelvo/ | 302 | QUELVO rebrand (temp while transitioning) |
-| /about | /nosotros.html | 301 | English URL alias |
-| /contact | /contacto.html | 301 | English URL alias |
-| /automatizaciones/* | /services/ | 302 | Updated redirect target |
-| /domotica/* | /services/ | 302 | Updated redirect target |
-| /software/* | /services/ | 302 | Updated redirect target |
-| /blog/* | /blog/ | 302 | Blog stub |
-
----
-
-## Component Reuse
-
-| Component | File | Used In |
-|-----------|------|---------|
-| Header | partials/header.html | All pages |
-| Footer | partials/footer.html | All pages |
-| styles.css | styles.css | All pages |
-| app.js | js/app.js | All pages |
-| booking.js | js/booking.js | reservar.html, quelvo/book/ |
-| supabase.config.js | js/supabase.config.js | All pages (auth nav) |
+| Componente | Archivo | Usado en |
+|---|---|---|
+| Header | `partials/header.html` | Todas las páginas con `#header` (excepto `qrcard.html`) |
+| Footer | `partials/footer.html` | Todas las páginas con `#footer` |
+| Estilos | `styles.css` | Todas |
+| Core JS | `js/app.js` | Todas excepto `qrcard.html` |
+| Config Supabase | `js/supabase.config.js` | Todas salvo stubs legado, `404`, `privacy`, `terms`, `qrcard` |
+| Reserva legado | `js/booking.js` | `chofer-privado/reservar.html` |
