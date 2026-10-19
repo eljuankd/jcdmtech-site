@@ -97,7 +97,12 @@ Fuera del plan de 8 fases; las fases 4 (QUELVO) y 5 (Music Ride) quedan **en pau
 - [x] Plantilla de pantalla OneSound y diseño del flag de backend (`docs/MAINTENANCE_MODE.md` §3)
 - [x] Pruebas locales (Node + Chrome headless, activado y desactivado)
 - [x] Revisión técnica rev. 2: runtime del middleware, flag inequívoco, SQL con preflight + prueba en seco (PGlite 19/19), `vercel build` local, otros canales QUELVO, script de verificación
-- [ ] **Autorización:** commit + push a rama `maintenance/quelvo-onesound` → Vercel Preview; `scripts/verify-maintenance.sh <preview>` con 0 fallos; revisar R-M1 (URLs `.html`)
+- [x] Commits `70479ca` + `abc90c8` y push a `maintenance/quelvo-onesound` (autorizado)
+- [x] Pruebas de navegador locales del commit (Puppeteer, 39/39: productos visibles con avisos, 4 servicios, menú móvil, EN/ES)
+- [x] **R-M9:** `vercel.json` corregido en la rama con la opción B (autorizado): sin `errors`, `cleanUrls`, `trailingSlash`; idéntico a `29c4b6f`; `vercel build` local OK
+- [ ] Confirmar en el Preview que el despliegue compila (valida la hipótesis de la causa)
+- [ ] Token de bypass del Preview fuera del repo (`MAINTENANCE_MODE.md` §6.1)
+- [ ] Repetir Preview: `scripts/verify-maintenance.sh <preview>` con 0 fallos + pruebas de navegador contra el Preview
 - [ ] **Autorización:** merge/push a `main` → producción; script contra producción
 - [ ] **Autorización:** restaurar Supabase `jcdmtech-prod` (después del despliegue web) y confirmar plazo de restauración
 - [ ] **Autorización:** preflight + `quelvo-maintenance.test.sql` + instalación de `docs/sql/quelvo-maintenance.sql`

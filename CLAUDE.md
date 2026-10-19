@@ -56,7 +56,7 @@ Reglas adicionales derivadas de la auditoría:
 |---|---|
 | Tipo | Sitio estático multipágina (MPA): HTML + CSS + JavaScript vanilla. Sin framework, sin build, sin `package.json`. |
 | Raíz del sitio | `jcdmtech/` (todo lo publicado vive aquí; `vercel.json` está en esta carpeta) |
-| Hosting | Vercel. Producción `https://www.jcdmtech.com` (el apex redirige 307 a `www`). Producción coincide con `main` (verificado por hash de archivos). |
+| Hosting | Vercel. Producción `https://www.jcdmtech.com` (el apex redirige 307 a `www`). **Producción NO coincide con `main`:** sirve el commit `29c4b6f` (2026-06-30); todos los despliegues desde `569df74` (2026-08-02) fallan (estado de GitHub verificado 2026-10-19; causa inferida, logs no consultados: propiedad no válida `errors` en `vercel.json`, ver `docs/MAINTENANCE_MODE.md` §8.1). Corrección (opción B: `vercel.json` = versión de `29c4b6f`) aplicada en la rama `maintenance/quelvo-onesound`; `main` sin corregir. |
 | Servidor local | VS Code Live Server con raíz `/jcdmtech` (`.vscode/settings.json`). Los partials se cargan con `fetch()`, por lo que **no funciona abriendo los HTML con `file://`**. |
 | Backend | Supabase (Auth + Postgres) consumido desde el navegador. Config en `jcdmtech/js/supabase.config.js`. |
 | CSS global | `jcdmtech/styles.css` + mucho CSS inline por página (ver `docs/DESIGN_SYSTEM.md`). |

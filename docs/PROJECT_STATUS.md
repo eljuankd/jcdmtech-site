@@ -3,8 +3,9 @@
 - **Última actualización:** 2026-10-19
 - **Fase actual:** Fase 1 completada → **siguiente: Fase 2 (Rediseño de Home)**, pendiente de aprobación
 - **Trabajo intercalado:** suspensión temporal de QUELVO y OneSound (D-013) — **preparada en local, NO activa en producción**
-- **Rama:** `main` · último commit `4d0350a` · cambios de Fase 1 y de la suspensión **sin commit**
-- **Producción:** `https://www.jcdmtech.com` = `main` (verificado 2026-10-19). QUELVO y OneSound siguen respondiendo 200.
+- **Rama de trabajo:** `maintenance/quelvo-onesound` (push hecho) = `4d0350a` + `70479ca` (docs Fase 1) + `abc90c8` (suspensión). `main` local y remota = `4d0350a`, sin cambios. Documentación de resultados posterior **sin commit**.
+- **Producción:** `https://www.jcdmtech.com` sirve **`29c4b6f` (2026-06-30)**, no `main`: los despliegues fallan desde `569df74` (R-M9). QUELVO y OneSound siguen respondiendo 200.
+- **Vercel Preview de `abc90c8`:** **fallido** (misma causa R-M9) y protegido con Vercel Authentication.
 
 ---
 
@@ -14,7 +15,7 @@ Procedimiento completo: `docs/MAINTENANCE_MODE.md`. Bitácora: `IMPLEMENTATION_L
 
 | Plataforma | Estado real | Qué falta para activarla |
 |---|---|---|
-| QUELVO (web) | Preparado y revisado (rev. 2): middleware Node.js validado con `vercel build` local y ejecución del artefacto; flags inequívocos. **Listo para Vercel Preview.** | Autorizar commit + push a rama → Preview → `main` |
+| QUELVO (web) | En la rama `maintenance/quelvo-onesound`. Pruebas de navegador locales 39/39. `vercel.json` corregido (opción B, autorizado); resultado del nuevo Preview: ver bitácora | Pruebas contra el Preview (requiere acceso, §6.1 de MAINTENANCE_MODE) → autorización de producción |
 | QUELVO (base de datos) | SQL + prueba en seco listos (PGlite 19/19), **no aplicados**. Supabase `jcdmtech-prod` **PAUSADO** (admin y login caídos hoy) | Autorizar restaurar el proyecto **después** del despliegue web, luego preflight → prueba en seco → instalar |
 | QUELVO app (`D:\quelvo`) | Sólo desarrollo local; no pública; Supabase `quelvo-prod` pausado | Nada mientras no se despliegue |
 | OneSound | **No suspendido.** Sólo se ocultarán sus enlaces en JCDM. App y API siguen públicas | Acceso y autorización: repo `jcdm-music-ride`, Render, Vercel de OneSound |
@@ -104,7 +105,7 @@ Fases 4 y 5 en pausa mientras dure la suspensión.
 
 ## 5. Próximo paso inmediato
 
-1. **Suspensión:** el propietario decide si autoriza (a) commit + push a la rama `maintenance/quelvo-onesound` para Vercel Preview, (b) despliegue a `main`, (c) restaurar Supabase `jcdmtech-prod` y aplicar el SQL, (d) acceso a OneSound (repo/Render/Vercel). Orden obligatorio: `docs/MAINTENANCE_MODE.md` §5.
+1. **Suspensión:** el propietario decide (a) cómo corregir `vercel.json` (R-M9: opción A o B) y autoriza ese commit + push a la rama, (b) configura el token de bypass del Preview según `MAINTENANCE_MODE.md` §6.1, (c) autoriza el commit de la documentación de resultados. Después: repetir Preview y pruebas. Producción, SQL/Supabase y OneSound siguen requiriendo autorizaciones posteriores (orden en §5).
 2. Después: revisar B-2, B-3, B-6 y B-7 e iniciar el Paso 0 de la Fase 2 (el rediseño de Home debe respetar el marcado `data-maint-*`).
 
 ## 6. Cómo retomar si se pierde el contexto

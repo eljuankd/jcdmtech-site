@@ -3,6 +3,21 @@
 Historial de cambios del sitio y de la documentación (más reciente primero).
 Desde 2026-10-19 cada entrada indica la fase del plan de 8 fases.
 
+## 2026-10-19 — fix(vercel): `vercel.json` restaurado (opción B), rama `maintenance/quelvo-onesound`
+
+### Corregido
+- `jcdmtech/vercel.json`: retiradas `errors` (propiedad no válida), `cleanUrls` y `trailingSlash` (añadidas en `569df74`, nunca publicadas). Queda idéntico al de `29c4b6f` (producción actual); 22 redirects intactos.
+
+### Documentado
+- Hechos confirmados vs. hipótesis sobre los despliegues fallidos (`MAINTENANCE_MODE.md` §8.1, `PROJECT_AUDIT.md` §10, riesgo R-22).
+
+## 2026-10-19 — Rama `maintenance/quelvo-onesound` y Vercel Preview
+
+- Commits `70479ca` (docs Fase 1) y `abc90c8` (suspensión) en la rama; push sólo a esa rama; `main` sin cambios.
+- Vercel Preview **fallido**. Descubierto: todos los despliegues fallan desde `569df74` (`vercel.json` con `errors`, propiedad no válida); producción sirve `29c4b6f` (2026-06-30). Corregidas las afirmaciones "producción = main" en `CLAUDE.md` y `PROJECT_AUDIT.md`.
+- Pruebas de navegador locales del commit: 39/39.
+- Documentado el acceso seguro a Previews protegidos (`MAINTENANCE_MODE.md` §6.1).
+
 ## 2026-10-19 — Revisión técnica de la suspensión (rev. 2, no desplegado)
 
 ### Corregido

@@ -39,8 +39,11 @@
 
 Procedimiento: `docs/MAINTENANCE_MODE.md`. Comprobación automática: `scripts/verify-maintenance.sh <url>`.
 
-> ⚠ R-M1 (2026-10-19): `vercel build` con la CLI actual genera reglas `cleanUrls` que redirigirían `/about.html` → `/about/`,
-> distinto de producción (`/about.html` 200, `/about/` 404). Verificar en el primer Preview cualquier despliegue nuevo.
+> ⚠ R-M9 / R-M1 (2026-10-19): producción sirve `29c4b6f` (2026-06-30); los despliegues fallan desde `569df74`, que añadió
+> `cleanUrls`, `trailingSlash` y la propiedad no válida `errors` a `vercel.json`. Los códigos medidos en este documento son
+> los de `29c4b6f`. Si se despliega `cleanUrls`/`trailingSlash`, `/about.html` pasaría a 308 → `/about/`. Ver `MAINTENANCE_MODE.md` §8.
+> **Rama `maintenance/quelvo-onesound`:** `vercel.json` restaurado al de `29c4b6f` (opción B) ⇒ se conservan `/about.html`, `/contact.html`,
+> `/qrcard.html` (200) y `/about` → 308 → `/about.html`. Cualquier ruta inexistente → `404.html` (generado por el build; pendiente de confirmar en Preview).
 
 ## 2. Rutas de cuenta / protegidas [VERIFICADO]
 

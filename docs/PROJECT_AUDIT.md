@@ -208,7 +208,7 @@ Severidad: 🔴 alta · 🟠 media · 🟡 baja.
 | Comprobación | Método | Resultado |
 |---|---|---|
 | Estado Git | `git status`, `git log`, `git branch -a` | `main` limpio, al día con `origin/main` |
-| Producción = repo | MD5 de 7 archivos clave local vs. `https://www.jcdmtech.com` | Idénticos |
+| Producción = repo | MD5 de 7 archivos clave local vs. `https://www.jcdmtech.com` | Idénticos — **corregido 2026-10-19:** coincidían sólo porque esos 7 archivos no cambiaron; producción sirve `29c4b6f`, no `main` (despliegues fallidos desde `569df74`) |
 | Sintaxis JS | `node --check js/app.js js/booking.js js/version.js` | OK |
 | Enlaces/recursos internos | Script sobre todos los `href`/`src`/`url('/…')` absolutos | 1 roto: `/assets/safari-pinned-tab.svg` |
 | Codificación | Búsqueda de mojibake (`Ã`, `Â`) | Sin coincidencias (problema de marzo resuelto) |
@@ -227,3 +227,17 @@ grep -rhoE '(href|src)="/[^"#?]*' --include=*.html . | sed -E 's/^(href|src)="//
 while read p; do t=".$p"; if [ -d "$t" ]; then [ -f "$t/index.html" ] || echo "MISSING: $p";
 elif [ ! -f "$t" ]; then echo "MISSING: $p"; fi; done
 ```
+
+---
+
+## 10. Correcciones posteriores (2026-10-19)
+
+**Confirmado:**
+- Producción **no** sirve `main`: sirve `29c4b6f` (2026-06-30). La comprobación §9 "Producción = repo" comparó 7 archivos que no cambiaron desde ese commit, por eso coincidían.
+- Vercel marca como fallidos todos los despliegues desde `569df74` (2026-08-02), que añadió `cleanUrls`, `trailingSlash` y `errors` a `vercel.json`. La página 404 (`569df74`) y las páginas legales completas (`4d0350a`) **no están publicadas**.
+- Los códigos HTTP de `ROUTES.md` corresponden a `29c4b6f`.
+- Supabase `jcdmtech-prod` está pausado (INACTIVE): el *timeout* de §9 no era un fallo de conexión del MCP.
+
+**Hipótesis:** el fallo de despliegue se debe a la propiedad no válida `errors` (sin logs; se verifica con el Preview de la rama `maintenance/quelvo-onesound`, que retira `errors`, `cleanUrls` y `trailingSlash`).
+
+Nuevo riesgo **R-22 🔴 Despliegues bloqueados desde 2026-08-02** — cualquier cambio en `main` no llega a producción hasta corregir `vercel.json` (detalle: `docs/MAINTENANCE_MODE.md` §8.1).

@@ -212,3 +212,59 @@ OneSound y Survivor intactos (sólo lecturas HTTP y de archivos locales).
 
 ### Resultado
 Listo para Vercel Preview (pendiente de autorización). Sin cambios en producción, Supabase, OneSound, Survivor ni DNS.
+
+---
+
+## 2026-10-19 — Commits, push a rama y Vercel Preview (autorizado)
+
+Autorización del propietario: dos commits y push **sólo** a `maintenance/quelvo-onesound`. Sin merge/push a `main`, sin producción, sin SQL ni restauración de Supabase, sin tocar OneSound ni Survivor.
+
+### Commits (rama `maintenance/quelvo-onesound`, sobre `4d0350a`)
+- `70479ca` docs(project): phase 1 audit and project documentation — versión "Fase 1" de los documentos mixtos generada quitando los bloques de la suspensión y preparada en el índice con `git hash-object` + `update-index` (sin `add -p`); escaneo de palabras clave y de credenciales: limpio.
+- `abc90c8` feat(maintenance): reversible temporary suspension of QUELVO and OneSound links — 30 archivos; escaneo de credenciales: limpio.
+- Push con refspec explícito. Remoto tras el push: `main` = `4d0350a` (sin cambios), `maintenance/quelvo-onesound` = `abc90c8`.
+
+### Vercel Preview
+- Deployment `dpl_7qMWbRLDDcERZ86i4JNCY1842D1B`, URL `https://jcdmtech-site-7bkiifxe8-juanks-projects-50846d74.vercel.app` → **estado `failure`** (GitHub commit status). La URL responde 302 "Protected by Vercel Authentication".
+- **Causa (fuera de este cambio):** todos los despliegues de `main` fallan desde `569df74` (2026-08-02); el último correcto es `29c4b6f` (2026-06-30). Producción sirve `29c4b6f` (MD5 de `privacy.html` en producción = `29c4b6f`, ≠ `4d0350a`; la 404 personalizada no está publicada). `569df74` añadió `cleanUrls`, `trailingSlash` y `errors` a `vercel.json`; `errors` no es una propiedad documentada y el estado de `569df74` enlaza a la documentación de configuración de proyectos. Logs no consultados (requieren acceso a Vercel).
+- Corrige dos afirmaciones previas: "producción = main" (CLAUDE.md, PROJECT_AUDIT §9, PROJECT_STATUS) y el origen de R-M1 (no era la versión del builder, sino configuración nunca desplegada).
+- Opciones de corrección validadas con `npx vercel@64.5.0 build` en copias del scratchpad: A (quitar `errors`) y B (quitar `errors`, `cleanUrls`, `trailingSlash`); ambas compilan con la ruta del middleware; B reproduce las rutas de producción actuales y sirve `/404.html`. **No aplicado**: requiere autorización (zona protegida, tercer commit).
+
+### Pruebas de navegador (Puppeteer 24.22.0 + Chrome, contra `abc90c8` servido en local)
+39/39 PASS, a 1280 px y 375 px:
+- Home: QUELVO y Music Ride visibles como productos con avisos "Bookings temporarily paused" / "App temporarily unavailable"; 0 enlaces visibles a reserva o app; enlaces a los 4 servicios (`#web`, `#automation`, `#smarthome`, `#support`).
+- Projects: secciones QUELVO y Music Ride con "Platform · Temporarily unavailable"; 0 enlaces de reserva/app.
+- Services: 200 con las 4 secciones.
+- Móvil: botón hamburguesa visible, menú abre (`aria-expanded=true`) con Home/Services/QUELVO/Projects/About/Contact/Sign in, y cierra.
+- Idioma: EN → ES (avisos en español, `lang=es`) → EN; página de mantenimiento en ES.
+- `/quelvo/`, `/quelvo/book/`, `/chofer-privado/` → página de mantenimiento (en local por el respaldo del cliente; el 503 sólo es verificable en Vercel).
+- `/about.html`, `/contact.html`, `/qrcard.html` → 200 en local. 1 error de consola preexistente en `/qrcard.html` (recurso 404).
+- Capturas revisadas: página de mantenimiento móvil y menú móvil abierto, correctas.
+
+### Pendiente de Preview (no ejecutable hasta corregir R-M9 y disponer de acceso)
+503 + `Retry-After` reales del middleware; script `verify-maintenance.sh` contra el Preview; rutas `.html` en Vercel.
+
+### Archivos de documentación actualizados (sin commit; requiere autorización)
+`CLAUDE.md`, `docs/PROJECT_AUDIT.md`, `docs/MAINTENANCE_MODE.md`, `docs/IMPLEMENTATION_LOG.md`, `docs/PROJECT_STATUS.md`, `docs/ROUTES.md`, `docs/TODO.md`, `docs/CHANGELOG.md`.
+
+---
+
+## 2026-10-19 — fix(vercel): corrección de `vercel.json` (opción B, autorizada)
+
+Autorización: un commit y push sólo a `maintenance/quelvo-onesound`. Prohibido `main`, producción, Supabase, OneSound, Survivor, DNS.
+
+### Cambio
+- `jcdmtech/vercel.json`: retiradas `errors`, `cleanUrls`, `trailingSlash`. Resto intacto (22 redirects idénticos a `HEAD`).
+
+### Comprobaciones antes del commit
+| Comprobación | Resultado |
+|---|---|
+| Sintaxis JSON | OK — claves: `redirects` (22) |
+| `git diff 29c4b6f -- jcdmtech/vercel.json` | vacío ⇒ idéntico a la configuración que sirve producción |
+| `git diff --stat HEAD -- jcdmtech` | sólo `vercel.json` (5 líneas eliminadas) |
+| `npx vercel@64.5.0 build` (copia en scratchpad) | OK; `middleware.func` `nodejs24.x`, `useWebApi: true`, `js/maintenance.config.js` empaquetado; 0 reglas `cleanUrls`/`trailingSlash`; ruta `404 → /404.html`; `404.html`, `/maintenance/quelvo/` y `js/maintenance.config.js` en la salida estática; `middleware.js` no publicado |
+| Middleware compilado ejecutado (Node 22, salida estática del build) | 5 rutas QUELVO/legado → 503, `Retry-After: 86400`, página con estilo |
+| Survivor (línea base, sólo lectura) | `https://survivor.jcdmtech.com/` → 200 `text/html` 539 B |
+
+### Confirmado vs. hipótesis
+Ver `docs/MAINTENANCE_MODE.md` §8.1 y `docs/PROJECT_AUDIT.md` §10.
