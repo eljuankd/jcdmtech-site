@@ -1,0 +1,11 @@
+# Never publish internal artefacts from the site root (docs/SECURITY_REMEDIATION.md, J-04).
+# Keep SQL in /supabase/ and archives in /archive/ (outside jcdmtech/).
+*.zip
+*.sql
+*.bak
+*.old
+*.orig
+*.tmp
+*.log
+.env
+.env.*
