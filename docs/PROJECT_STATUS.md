@@ -44,7 +44,16 @@
 | J-01/J-02/J-06 Supabase | Migración + preflight + verify + rollback; PGlite 83/83; **no ejecutada**; sólo en la rama de mantenimiento | Autorización: restaurar Supabase y `SECURITY_REMEDIATION.md` §4.4 |
 | OneSound O-01…O-05 | Documentado en `docs/private/` (no versionado; repo público). Nada implementado | Fase independiente, en el repo de OneSound |
 
-## 0b. Sincronización `main` → `maintenance/quelvo-onesound` (preparada, NO ejecutada)
+> **Actualización 2026-10-19 (sincronización local hecha, sin push):** commit documental `dbd555c` + merge `--no-ff`
+> `4585d9e` (`origin/main` → mantenimiento) en la rama **local** `maintenance/quelvo-onesound` (7 commits por delante de
+> `origin/maintenance/quelvo-onesound` = `c10ce02`). Respaldo local: `backup/maintenance-pre-main-sync-2026-10-19` = `dbd555c`.
+> `origin/main` sigue en `4ef6506`; `main` local sigue en `4d0350a`. Pruebas locales en la bitácora (navegador 88/88,
+> PGlite RLS 83/83, login 4/4). Copia privada permanente: `D:\JCDM-private-backups\2026-10-19-pre-merge\`.
+> Sin cambios en producción: mantenimiento preparado pero **no activo**; `privacy.html`/`terms.html` (versiones de `29c4b6f`) y
+> la retirada de `404.html` se mantienen; Supabase sigue INACTIVE y **no se ha ejecutado ningún SQL**.
+> **Pendiente:** autorización de push a la rama de mantenimiento (genera Preview).
+
+## 0b. Sincronización `main` → `maintenance/quelvo-onesound` (pasos 1–5 ejecutados en local el 2026-10-19; push pendiente)
 
 Simulación no destructiva (2026-10-19, `git merge-tree --write-tree maintenance/quelvo-onesound origin/main`, Git 2.49):
 - Base común `4d0350a`. `origin/main` aporta 5 commits: `324ecfc`, `fee2858`, `c9611e1`, `d30c02c`, `4ef6506`.
@@ -97,12 +106,12 @@ Procedimiento de reincorporación (tras revisión legal y aprobación del propie
 4. Push a esa rama → Preview → revisión del propietario → autorización → merge a `main` (producción).
 5. Después, sincronizar `main` → mantenimiento como en §0b.
 
-## 0d. Documentación sin commit (rama de mantenimiento)
+## 0d. Copias de seguridad de la documentación (rama de mantenimiento)
 
-Copias de seguridad previas a la edición (2026-10-19, fuera del repo, verificadas con SHA-256):
-`C:\Users\eljua\AppData\Local\Temp\claude\d--jcdmtech-jcdmtech-site\fb82d0b1-afc0-472a-a070-c78e804c7b57\scratchpad\backup-2026-10-19\`
-(`docs/IMPLEMENTATION_LOG.md`, `docs/PROJECT_STATUS.md`, `uncommitted.diff`, `docs/private/`). Es una carpeta temporal:
-copiarla a un lugar permanente si se quiere conservar.
+Copia privada permanente (2026-10-19, fuera del repo, verificada con SHA-256): `D:\JCDM-private-backups\2026-10-19-pre-merge\`
+— documentos previos al commit `dbd555c`, patch, plan privado de OneSound y `MANIFEST.txt`. Incluye la copia anterior,
+hecha en una carpeta temporal de la sesión (ruta local omitida aquí). La documentación quedó commiteada en `dbd555c` y en
+el commit siguiente.
 
 Pruebas: `node --test scripts/tests/safe-next.test.mjs`; `JCDM_TOOLS=… node scripts/tests/security-rls.pglite.mjs`; navegador 88/88 con `scripts/tests/e2e-security.mjs` contra la salida de `vercel build` servida por `scripts/tests/serve-vercel-output.mjs` (SECURITY_REMEDIATION §7).
 Bloqueo: B-6 (hotfix de R-03) **resuelto y publicado en producción** (`4ef6506`; antes: resuelto en la rama).
@@ -207,8 +216,9 @@ Fases 4 y 5 en pausa mientras dure la suspensión.
 ## 5. Próximo paso inmediato
 
 **Actualizado 2026-10-19 (tras publicar `4ef6506`):**
-1. Propietario: revisar la documentación sin commit y autorizar su commit en la rama de mantenimiento (B-9).
-2. Propietario: autorizar la sincronización `main` → mantenimiento (§0b). No fusionar en sentido inverso.
+1. ~~Propietario: revisar la documentación sin commit y autorizar su commit en la rama de mantenimiento (B-9).~~ Hecho: `dbd555c`.
+2. ~~Propietario: autorizar la sincronización `main` → mantenimiento (§0b).~~ Hecho en local: `4585d9e`. **Siguiente:** autorizar
+   el push de `maintenance/quelvo-onesound` (sólo esa rama; Preview, no producción) y el commit de esta actualización documental. No fusionar en sentido inverso.
 3. Seguridad de datos (B-10): restaurar Supabase y aplicar la migración RLS siguiendo `SECURITY_REMEDIATION.md` §4.4 y
    el orden de `MAINTENANCE_MODE.md` §5 (decidir antes si QUELVO se suspende en producción).
 4. Textos legales (B-8): revisión → procedimiento §0c.

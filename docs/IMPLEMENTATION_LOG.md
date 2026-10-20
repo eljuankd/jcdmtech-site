@@ -506,3 +506,56 @@ Scratchpad `backup-2026-10-19/`: ambos documentos (SHA-256 idénticos al origina
 ### Comprobaciones
 `git diff --check`; recuento de líneas eliminadas por archivo; escaneo de credenciales en el diff; refs sin cambios.
 Resultados en el informe de la sesión.
+
+---
+
+## 2026-10-19 — Commit documental y sincronización local `origin/main` → mantenimiento (autorizado; sin push)
+
+Autorización: corrección documental, copia permanente, commit de documentación, rama de respaldo local, merge local
+`origin/main` → `maintenance/quelvo-onesound` y pruebas locales. **Sin** push, Preview, producción, Supabase, SQL real,
+OneSound/Render, DNS ni Survivor.
+
+### Estado inicial (tras `git fetch`)
+`origin/main` `4ef6506`, `main` local `4d0350a`, mantenimiento `c10ce02` (= remoto), hotfix `4ef6506`. Sin merge en curso,
+sin conflictos; sólo los 11 documentos de la sesión anterior modificados; `docs/private/` y `.claude/` ignorados.
+
+### Copia de seguridad permanente
+`D:\JCDM-private-backups\2026-10-19-pre-merge\` (fuera del repo; ACL: propietario, SYSTEM, Administradores):
+11 documentos tal como se commitearon, `uncommitted-docs.patch`, `private/ONESOUND_SECURITY_PLAN.md`, copia previa del
+scratchpad y `MANIFEST.txt` (refs + SHA-256). Verificado: `cmp` con el repo, `sha256sum -c` del manifiesto, el patch se
+aplica en inverso sobre el árbol.
+
+### Commits (locales)
+| Hash | Contenido |
+|---|---|
+| `dbd555c` | docs(project): record R1 production state and branch sync plan — 11 archivos (`CLAUDE.md` + 10 de `docs/`). Incluye la corrección de la cabecera de `MAINTENANCE_MODE.md` (estado actual primero; `29c4b6f` sólo como histórico/recuperación) |
+| `4585d9e` | merge `--no-ff` de `origin/main` (`4ef6506`) — sin conflictos (estrategia `ort`) |
+Rama de respaldo local (sin upstream): `backup/maintenance-pre-main-sync-2026-10-19` = `dbd555c`. `c10ce02` sigue como referencia previa.
+
+### Validación del merge
+- `git diff dbd555c 4585d9e`: sólo `D jcdmtech/404.html`, `M privacy.html`, `M terms.html`. Árbol = simulación `e0ec7f2` + los 11 documentos.
+- `privacy.html`/`terms.html` = blobs de `29c4b6f`; `404.html` ausente (árbol y disco).
+- Mismo hash en `c10ce02`, `dbd555c` y `4585d9e`: `maintenance.config.js` (QUELVO y OneSound `maintenance: true`),
+  `middleware.js`, `maintenance/quelvo/`, `vercel.json`, `.vercelignore`, `login.html`, `js/safe-next.js`, `app.js`,
+  `styles.css`, `index.html`, `services/`, `quelvo/`, `music-ride/`, `projects/`, `partials/`, `contact.html`, `booking.js`,
+  `chofer-privado/`, `supabase/`, `scripts/`, `docs/sql/`, `docs/maintenance-templates/`.
+- `vercel.json`, `.vercelignore`, `login.html`, `safe-next.js` idénticos a `origin/main`; 22 redirects; 5 cabeceras (CSP Report-Only).
+- Marcado `data-maint` en 9 archivos de la rama y en 0 de `origin/main`; `origin/main` sin middleware.
+
+### Pruebas (locales; herramientas PGlite/puppeteer-core de una sesión anterior en el scratchpad, sin modificarlas)
+| Prueba | Resultado |
+|---|---|
+| `node --check` (`js/*.js`, `middleware.js`) | OK |
+| `node --test scripts/tests/safe-next.test.mjs` | 4/4 |
+| `scripts/tests/security-rls.pglite.mjs` (migración RLS, no ejecutada en real) | 83/83 |
+| `npx vercel@64.5.0 build` sobre `git archive 4585d9e` (flags `true`) y variante de control con flags `false` | OK ambos; middleware `nodejs24.x` sólo para `/quelvo*` y `/chofer-privado*`; 22 redirects; 54 estáticos sin `404.html`, `.zip`, `.sql`, `middleware.js` |
+| `curl` local (servidor `serve-vercel-output.mjs`) | flags `true`: `/quelvo/`, `/quelvo/book/`, `/chofer-privado/` 503 + `Retry-After: 86400`, nosniff, XFO, Referrer-Policy, `X-Robots-Tag`; control `false`: 200. `/`, `/admin/`, legales 200; `/copy.zip`, `/supabase-setup.sql`, `/middleware.js` 404; `/about`, `/privacidad.html` 308 |
+| `scripts/tests/e2e-security.mjs` (Chrome headless, tráfico externo bloqueado, supabase-js simulado) | **88/88** (login seguro, CSP sin violaciones, 4 servicios, avisos, 503, menú, idioma, tema, contacto) |
+| `docs/sql/quelvo-maintenance.test.sql` en PGlite | **No repetida**: sin arnés versionado; archivos idénticos (hash) a los probados 19/19 |
+Nota: el build local genera la ruta de error `404 → /404.html` aunque el archivo no exista; en producción (`4ef6506`, mismo
+`vercel.json`) se verificó que Vercel sirve su 404 estándar.
+
+### Estado final
+Local: mantenimiento `4585d9e` (7 por delante de `origin/maintenance/quelvo-onesound` `c10ce02`), respaldo `dbd555c`,
+`main` `4d0350a` (sin tocar). Remoto (`git ls-remote`): `main` y hotfix `4ef6506`, mantenimiento `c10ce02`. Sin push.
+Esta entrada y la actualización de `PROJECT_STATUS.md` quedan **sin commit** para revisión.
